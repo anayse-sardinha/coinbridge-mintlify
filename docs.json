@@ -25,9 +25,10 @@
       },
       {
         "tab": "SDKs",
-        "groups": [
+        "menu": [
           {
-            "group": "Android",
+            "item": "Android",
+            "icon": "android",
             "pages": [
               "docs/android-sdk/sdk-integration-overview",
               "docs/android-sdk/release-notes",
@@ -80,7 +81,8 @@
             ]
           },
           {
-            "group": "iOS",
+            "item": "iOS",
+            "icon": "apple",
             "pages": [
               "docs/ios-sdk/sdk-integration-overview",
               "docs/ios-sdk/release-notes",
