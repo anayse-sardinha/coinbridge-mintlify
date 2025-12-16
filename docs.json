@@ -27,121 +27,116 @@
         "tab": "SDKs",
         "groups": [
           {
-            "group": "Platforms",
+            "group": "Android",
             "pages": [
+              "docs/android-sdk/sdk-integration-overview",
+              "docs/android-sdk/release-notes",
               {
-                "group": "Android",
+                "group": "Requirements",
                 "pages": [
-                  "docs/android-sdk/sdk-integration-overview",
-                  "docs/android-sdk/release-notes",
+                  "docs/android-sdk/customer-technology-requirements",
+                  "docs/android-sdk/coinbridge-requirements"
+                ]
+              },
+              {
+                "group": "Account Setup",
+                "pages": [
                   {
-                    "group": "Requirements",
+                    "group": "Session Setup",
                     "pages": [
-                      "docs/android-sdk/customer-technology-requirements",
-                      "docs/android-sdk/coinbridge-requirements"
+                      "docs/android-sdk/account-setup/authentication",
+                      "docs/android-sdk/account-setup/initialization"
                     ]
                   },
                   {
-                    "group": "Account Setup",
+                    "group": "Virtual Card Generation",
                     "pages": [
-                      {
-                        "group": "Session Setup",
-                        "pages": [
-                          "docs/android-sdk/account-setup/authentication",
-                          "docs/android-sdk/account-setup/initialization"
-                        ]
-                      },
-                      {
-                        "group": "Virtual Card Generation",
-                        "pages": [
-                          "docs/android-sdk/account-setup/user-eligibility",
-                          "docs/android-sdk/account-setup/virtual-card-status",
-                          "docs/android-sdk/account-setup/create-virtual-card"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Payment",
-                    "pages": [
-                      "docs/android-sdk/payment/payment-flow",
-                      "docs/android-sdk/payment/transaction-scenarios",
-                      "docs/android-sdk/payment/manage-transactions",
-                      "docs/android-sdk/payment/transaction-results-history",
-                      "docs/android-sdk/payment/refunds",
-                      "docs/android-sdk/payment/corrections",
-                      "docs/android-sdk/payment/user-logout",
-                      "docs/android-sdk/payment/error-codes"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/android-sdk/sdk-reference/methods-classes"
+                      "docs/android-sdk/account-setup/user-eligibility",
+                      "docs/android-sdk/account-setup/virtual-card-status",
+                      "docs/android-sdk/account-setup/create-virtual-card"
                     ]
                   }
                 ]
               },
               {
-                "group": "iOS",
+                "group": "Payment",
                 "pages": [
-                  "docs/ios-sdk/sdk-integration-overview",
-                  "docs/ios-sdk/release-notes",
+                  "docs/android-sdk/payment/payment-flow",
+                  "docs/android-sdk/payment/transaction-scenarios",
+                  "docs/android-sdk/payment/manage-transactions",
+                  "docs/android-sdk/payment/transaction-results-history",
+                  "docs/android-sdk/payment/refunds",
+                  "docs/android-sdk/payment/corrections",
+                  "docs/android-sdk/payment/user-logout",
+                  "docs/android-sdk/payment/error-codes"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "docs/android-sdk/sdk-reference/methods-classes"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "iOS",
+            "pages": [
+              "docs/ios-sdk/sdk-integration-overview",
+              "docs/ios-sdk/release-notes",
+              {
+                "group": "Requirements",
+                "pages": [
+                  "docs/ios-sdk/customer-technology-requirements",
+                  "docs/ios-sdk/coinbridge-requirements",
+                  "docs/ios-sdk/apple-requirements"
+                ]
+              },
+              {
+                "group": "Account Setup",
+                "pages": [
                   {
-                    "group": "Requirements",
+                    "group": "Session Setup",
                     "pages": [
-                      "docs/ios-sdk/customer-technology-requirements",
-                      "docs/ios-sdk/coinbridge-requirements",
-                      "docs/ios-sdk/apple-requirements"
+                      "docs/ios-sdk/account-setup/authentication",
+                      "docs/ios-sdk/account-setup/initialization"
                     ]
                   },
                   {
-                    "group": "Account Setup",
+                    "group": "Virtual Card Generation",
                     "pages": [
-                      {
-                        "group": "Session Setup",
-                        "pages": [
-                          "docs/ios-sdk/account-setup/authentication",
-                          "docs/ios-sdk/account-setup/initialization"
-                        ]
-                      },
-                      {
-                        "group": "Virtual Card Generation",
-                        "pages": [
-                          "docs/ios-sdk/account-setup/user-eligibility",
-                          "docs/ios-sdk/account-setup/virtual-card-status",
-                          "docs/ios-sdk/account-setup/create-virtual-card"
-                        ]
-                      },
-                      {
-                        "group": "Apple Wallet",
-                        "pages": [
-                          "docs/ios-sdk/account-setup/add-to-wallet-flow",
-                          "docs/ios-sdk/account-setup/wallet-ui-button-logic"
-                        ]
-                      }
+                      "docs/ios-sdk/account-setup/user-eligibility",
+                      "docs/ios-sdk/account-setup/virtual-card-status",
+                      "docs/ios-sdk/account-setup/create-virtual-card"
                     ]
                   },
                   {
-                    "group": "Payment",
+                    "group": "Apple Wallet",
                     "pages": [
-                      "docs/ios-sdk/payment/payment-flow",
-                      "docs/ios-sdk/payment/transaction-scenarios",
-                      "docs/ios-sdk/payment/manage-transactions",
-                      "docs/ios-sdk/payment/transaction-results-history",
-                      "docs/ios-sdk/payment/refunds",
-                      "docs/ios-sdk/payment/corrections",
-                      "docs/ios-sdk/payment/user-logout",
-                      "docs/ios-sdk/payment/error-codes",
-                      "docs/ios-sdk/payment/apple-communication-guide-review"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/ios-sdk/sdk-reference/methods-classes"
+                      "docs/ios-sdk/account-setup/add-to-wallet-flow",
+                      "docs/ios-sdk/account-setup/wallet-ui-button-logic"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Payment",
+                "pages": [
+                  "docs/ios-sdk/payment/payment-flow",
+                  "docs/ios-sdk/payment/transaction-scenarios",
+                  "docs/ios-sdk/payment/manage-transactions",
+                  "docs/ios-sdk/payment/transaction-results-history",
+                  "docs/ios-sdk/payment/refunds",
+                  "docs/ios-sdk/payment/corrections",
+                  "docs/ios-sdk/payment/user-logout",
+                  "docs/ios-sdk/payment/error-codes",
+                  "docs/ios-sdk/payment/apple-communication-guide-review"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "docs/ios-sdk/sdk-reference/methods-classes"
                 ]
               }
             ]
