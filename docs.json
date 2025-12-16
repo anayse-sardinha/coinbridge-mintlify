@@ -16,7 +16,7 @@
           {
             "group": "Get Started",
             "pages": [
-              "docs/get-started/solution-overview",
+              "docs/get-started/index",
               "docs/get-started/coinbridge-components",
               "docs/get-started/integration-process"
             ]
@@ -30,13 +30,13 @@
             "item": "Android",
             "icon": "android",
             "pages": [
-              "docs/android-sdk/sdk-integration-overview",
+              "docs/android-sdk/index",
               "docs/android-sdk/release-notes",
               {
                 "group": "Requirements",
                 "pages": [
-                  "docs/android-sdk/customer-technology-requirements",
-                  "docs/android-sdk/coinbridge-requirements"
+                  "docs/android-sdk/customer-technology",
+                  "docs/android-sdk/coinbridge"
                 ]
               },
               {
@@ -62,7 +62,7 @@
               {
                 "group": "Payment",
                 "pages": [
-                  "docs/android-sdk/payment/payment-flow",
+                  "docs/android-sdk/payment/index",
                   "docs/android-sdk/payment/transaction-scenarios",
                   "docs/android-sdk/payment/manage-transactions",
                   "docs/android-sdk/payment/transaction-results-history",
@@ -84,14 +84,14 @@
             "item": "iOS",
             "icon": "apple",
             "pages": [
-              "docs/ios-sdk/sdk-integration-overview",
+              "docs/ios-sdk/index",
               "docs/ios-sdk/release-notes",
               {
                 "group": "Requirements",
                 "pages": [
-                  "docs/ios-sdk/customer-technology-requirements",
-                  "docs/ios-sdk/coinbridge-requirements",
-                  "docs/ios-sdk/apple-requirements"
+                  "docs/ios-sdk/customer-technology",
+                  "docs/ios-sdk/coinbridge",
+                  "docs/ios-sdk/apple"
                 ]
               },
               {
@@ -124,7 +124,7 @@
               {
                 "group": "Payment",
                 "pages": [
-                  "docs/ios-sdk/payment/payment-flow",
+                  "docs/ios-sdk/payment/index",
                   "docs/ios-sdk/payment/transaction-scenarios",
                   "docs/ios-sdk/payment/manage-transactions",
                   "docs/ios-sdk/payment/transaction-results-history",
@@ -151,7 +151,7 @@
           {
             "group": "Configuration",
             "pages": [
-              "docs/back-end-integration/integration-overview",
+              "docs/back-end-integration/index",
               "docs/back-end-integration/authentication",
               "docs/back-end-integration/environments"
             ]
@@ -187,7 +187,7 @@
             ]
           },
           {
-            "group": "Back-End Integration Reference",
+            "group": "Reference",
             "pages": [
               "docs/back-end-integration/endpoints/data-transfer-objects"
             ]
