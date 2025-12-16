@@ -203,7 +203,7 @@
           {
             "group": "CoinBridge API",
             "pages": [
-              "index"
+              "docs/coinbridge-api/coinbridge-api"
             ]
           }
         ]
