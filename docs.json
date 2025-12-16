@@ -11,77 +11,204 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Get Started",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "docs/get-started/solution-overview",
+              "docs/get-started/coinbridge-components",
+              "docs/get-started/integration-process"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "SDKs",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Platforms",
             "pages": [
-              "api-reference/introduction"
+              {
+                "group": "Android",
+                "pages": [
+                  "docs/android-sdk/sdk-integration-overview",
+                  "docs/android-sdk/release-notes",
+                  {
+                    "group": "Requirements",
+                    "pages": [
+                      "docs/android-sdk/customer-technology-requirements",
+                      "docs/android-sdk/coinbridge-requirements"
+                    ]
+                  },
+                  {
+                    "group": "Account Setup",
+                    "pages": [
+                      {
+                        "group": "Session Setup",
+                        "pages": [
+                          "docs/android-sdk/account-setup/authentication",
+                          "docs/android-sdk/account-setup/initialization"
+                        ]
+                      },
+                      {
+                        "group": "Virtual Card Generation",
+                        "pages": [
+                          "docs/android-sdk/account-setup/user-eligibility",
+                          "docs/android-sdk/account-setup/virtual-card-status",
+                          "docs/android-sdk/account-setup/create-virtual-card"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Payment",
+                    "pages": [
+                      "docs/android-sdk/payment/payment-flow",
+                      "docs/android-sdk/payment/transaction-scenarios",
+                      "docs/android-sdk/payment/manage-transactions",
+                      "docs/android-sdk/payment/transaction-results-history",
+                      "docs/android-sdk/payment/refunds",
+                      "docs/android-sdk/payment/corrections",
+                      "docs/android-sdk/payment/user-logout",
+                      "docs/android-sdk/payment/error-codes"
+                    ]
+                  },
+                  {
+                    "group": "Reference",
+                    "pages": [
+                      "docs/android-sdk/sdk-reference/methods-classes"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "iOS",
+                "pages": [
+                  "docs/ios-sdk/sdk-integration-overview",
+                  "docs/ios-sdk/release-notes",
+                  {
+                    "group": "Requirements",
+                    "pages": [
+                      "docs/ios-sdk/customer-technology-requirements",
+                      "docs/ios-sdk/coinbridge-requirements",
+                      "docs/ios-sdk/apple-requirements"
+                    ]
+                  },
+                  {
+                    "group": "Account Setup",
+                    "pages": [
+                      {
+                        "group": "Session Setup",
+                        "pages": [
+                          "docs/ios-sdk/account-setup/authentication",
+                          "docs/ios-sdk/account-setup/initialization"
+                        ]
+                      },
+                      {
+                        "group": "Virtual Card Generation",
+                        "pages": [
+                          "docs/ios-sdk/account-setup/user-eligibility",
+                          "docs/ios-sdk/account-setup/virtual-card-status",
+                          "docs/ios-sdk/account-setup/create-virtual-card"
+                        ]
+                      },
+                      {
+                        "group": "Apple Wallet",
+                        "pages": [
+                          "docs/ios-sdk/account-setup/add-to-wallet-flow",
+                          "docs/ios-sdk/account-setup/wallet-ui-button-logic"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Payment",
+                    "pages": [
+                      "docs/ios-sdk/payment/payment-flow",
+                      "docs/ios-sdk/payment/transaction-scenarios",
+                      "docs/ios-sdk/payment/manage-transactions",
+                      "docs/ios-sdk/payment/transaction-results-history",
+                      "docs/ios-sdk/payment/refunds",
+                      "docs/ios-sdk/payment/corrections",
+                      "docs/ios-sdk/payment/user-logout",
+                      "docs/ios-sdk/payment/error-codes",
+                      "docs/ios-sdk/payment/apple-communication-guide-review"
+                    ]
+                  },
+                  {
+                    "group": "Reference",
+                    "pages": [
+                      "docs/ios-sdk/sdk-reference/methods-classes"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Back-End Integration",
+        "groups": [
+          {
+            "group": "Configuration",
+            "pages": [
+              "docs/back-end-integration/integration-overview",
+              "docs/back-end-integration/authentication",
+              "docs/back-end-integration/environments"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Endpoints",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              {
+                "group": "User Data",
+                "pages": [
+                  "docs/back-end-integration/endpoints/get-user-details",
+                  "docs/back-end-integration/endpoints/get-user-balance",
+                  "docs/back-end-integration/endpoints/get-spending-policies"
+                ]
+              },
+              {
+                "group": "Transaction Management",
+                "pages": [
+                  "docs/back-end-integration/endpoints/authorize-transaction",
+                  "docs/back-end-integration/endpoints/report-transaction",
+                  "docs/back-end-integration/endpoints/report-refund",
+                  "docs/back-end-integration/endpoints/report-correction"
+                ]
+              },
+              {
+                "group": "Events & Notifications",
+                "pages": [
+                  "docs/back-end-integration/endpoints/notify-user-event",
+                  "docs/back-end-integration/endpoints/apple-compliance-events",
+                  "docs/back-end-integration/endpoints/user-status-events"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Back-End Integration Reference",
+            "pages": [
+              "docs/back-end-integration/endpoints/data-transfer-objects"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "CoinBridge API",
+        "groups": [
+          {
+            "group": "CoinBridge API",
+            "pages": [
+              "index"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
