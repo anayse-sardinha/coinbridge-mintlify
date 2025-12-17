@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "coinbridge-mintlify",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#FEC70B",
+    "light": "#FEC70B",
+    "dark": "#FEC70B"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -40,7 +40,7 @@
                 ]
               },
               {
-                "group": "Account Setup",
+                "group": "Card Issuance Flow",
                 "pages": [
                   {
                     "group": "Session Setup",
@@ -60,7 +60,7 @@
                 ]
               },
               {
-                "group": "Payment",
+                "group": "Payment Flow",
                 "pages": [
                   "docs/android-sdk/payment/index",
                   "docs/android-sdk/payment/transaction-scenarios",
@@ -95,7 +95,7 @@
                 ]
               },
               {
-                "group": "Account Setup",
+                "group": "Card Issuance Flow",
                 "pages": [
                   {
                     "group": "Session Setup",
@@ -122,7 +122,7 @@
                 ]
               },
               {
-                "group": "Payment",
+                "group": "Payment Flow",
                 "pages": [
                   "docs/ios-sdk/payment/index",
                   "docs/ios-sdk/payment/transaction-scenarios",
