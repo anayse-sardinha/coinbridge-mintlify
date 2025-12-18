@@ -31,7 +31,7 @@ For security, you must generate a JSON Web Token (JWT) on your **server-side**. 
 * **Payload Requirements**: The payload must include specific entries for user identification and security:
     * `jti`: A unique identifier for this specific JWT.
     * `iat`: Unix time (seconds) when the JWT was issued.
-    * `exp`: Expiration time. This must be no later than **2 minutes** after the `iat` time.
+    * `exp`: Expiration time. This must be no later than two minutes after the `iat` time.
     * `aud`: Must be set to `"CoinBridge"`.
     * `iss`: Set to the unique application key provided by CoinBridge.
     * `sub`: A unique identifier for the logged-in user in your system.
@@ -60,4 +60,4 @@ CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallb
 
 ## Next Steps
 
-Once the 'onAuthenticated' callback is received, the SDK is associated with the user, but service is not yet active. Your next mandatory step is to Initialize the SDK to sync wallet and card status.
+Once the `onAuthenticated` callback is received, the SDK is associated with the user, but service is not yet active. Your next mandatory step is to Initialize the SDK to sync wallet and card status.
