@@ -1,4 +1,45 @@
 ---
 title: "Refunds"
-description: "Instructions for initiating full or partial refunds through the SDK."
 ---
+
+A refund occurs when a merchant returns funds to a user after a purchase. Refunds are handled as independent transactions within the CoinBridge system and must be reflected accurately in the user's balance and history.
+
+---
+
+## 1. How Refunds Work
+
+When a merchant processes a refund, the CoinBridge platform receives the data and communicates it to your platform through the **Refund Report Endpoint**.
+
+* **Independent IDs**: Every refund is treated as a new transaction with its own unique Transaction ID.
+* **Historical Links**: If the refund is related to a previous purchase, the system will include the **Original Transaction ID** and related details in the report.
+* **Positive Values**: The refund amount is always reported as a non-negative (positive) value.
+* **Automatic Approval**: The status for a refund transaction reported by CoinBridge is always "Approved".
+
+---
+
+## 2. Processing a Refund
+
+To ensure the user's account stays accurate, your back-end must perform the following actions when a refund is reported:
+
+1.  **Receive Feedback**: CoinBridge sends the refund data, including the amount and merchant details, to your management platform.
+2.  **Top-up Balance**: You must credit (top-up) the user's account balance by the specific refund amount received.
+3.  **Record the Event**: Save the refund as an independent entry in your database using its unique ID.
+
+---
+
+## 3. User Experience & History
+
+It is important to clearly communicate the refund to the user so they understand why their balance has increased.
+
+* **Notifications**: We suggest informing the user that a refund has been processed and their balance has been credited.
+* **History Display**: Update the transaction history screen to show the refund. We recommend a message such as: *"You have been refunded the amount of [xx] points"*.
+* **Transparency**: If the original transaction ID is available, display it so the user can track which purchase was returned.
+
+---
+
+## 4. Partial Refunds
+
+In some cases, a merchant may issue a **Partial Refund** for only a portion of the original purchase. 
+
+* These are handled through the **Correction Report Endpoint**.
+* Just like a full refund, you must adjust the user's balance based on the positive correction amount received from the system.

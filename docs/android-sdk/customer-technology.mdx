@@ -1,4 +1,43 @@
 ---
 title: "Customer Technology Requirements"
-description: "Outlines requirements for the Customer Mobile Application and Loyalty/User Management Platform."
 ---
+
+To integrate the CoinBridge payment service, your infrastructure must meet two core technology prerequisites: a compatible mobile application and a robust loyalty or user management platform.
+
+---
+
+## Customer Mobile Application
+
+Your existing mobile application serves as the primary interface for the end-user's "Tap & Go" payment experience. To support the CoinBridge SDK, the application must fulfill the following:
+
+* **SDK Implementation**: You must update your existing mobile app to implement the CoinBridge SDK.
+* **Feature Support**: Beyond payments, the integrated SDK provides the application with additional services and features.
+* **Security Configuration**:
+    * **iOS**: Users must configure Face ID, Touch ID, or a passcode for secure Apple Wallet access.
+    * **Android**: Users must have a passcode, pattern, or fingerprint lock configured to ensure flexible and robust security.
+* **Device Compatibility**:
+    * **Android**: The solution is incompatible with devices lacking NFC hardware or the ability to pay using the currently open (foreground) application.
+    * **iOS**: The SDK is compatible with any iOS mobile application.
+
+---
+
+## Loyalty or User Management Platform
+
+A back-end platform is required to manage the financial logic and user data that powers the CoinBridge service. This platform performs several essential functions:
+
+* **Real-time Assessment**: It enables the dynamic evaluation of user balances and related spending policies against every transaction request.
+* **Transaction Authorization**: The data from your platform is essential for CoinBridge to either approve or decline a purchase.
+* **Policy Management**: Your platform manages spending rules, such as Merchant Category Code (MCC) restrictions, Merchant ID (MID) limits, or transaction amount thresholds.
+* **Data Exchange**: Your platform must be able to receive transaction details, refund feedback, and correction updates from the CoinBridge platform via the Backend Connector.
+
+---
+
+## Connectivity Standards (SLA)
+
+Because the connection between CoinBridge and your platform is time-critical, you must meet the following performance standards:
+
+| Requirement | Data-Fetching Endpoints | Data-Reporting Endpoints |
+| :--- | :--- | :--- |
+| **Uptime (SLA)** | 99.96% monthly uptime | 99.96% monthly uptime |
+| **Response Time** | Up to 400ms | Up to 60s |
+| **Criticality** | High (Critical for real-time operations) | Medium (Acknowledging events) |

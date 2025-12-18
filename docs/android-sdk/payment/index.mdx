@@ -1,4 +1,53 @@
 ---
 title: "Card Operation Process"
-description: "An architectural guide to the payment process, illustrating how the SDK, app, and backend interact to complete a transaction. Includes methods and UI suggestions. "
 ---
+
+The payment journey is a real-time interaction between your mobile app, the CoinBridge SDK, and the back-end systems. This process enables a "Tap & Go" experience using the NFC/EMV protocol at any point of sale (POS).
+
+---
+
+## Payment Screen Requirements
+
+To ensure a smooth user experience, your main payment screen must include the following elements:
+
+* **Available Balance**: Display the user's balance in the correct currency.
+* **Virtual Card Image**: A visual representation of the card following the official style guide.
+* **Spending Policies**: Clear notes on any payment restrictions or guidelines.
+* **Call to Action (CTA)**: A dedicated "Pay" button.
+    * **iOS**: Use the official Apple "Pay with Apple Pay" button.
+    * **Android**: Use a prominent CTA button that triggers the biometric prompt.
+
+---
+
+## The Payment Flow
+
+### Step 1: Prepare to Pay
+When the user taps the payment button, the app must notify the SDK to get the NFC component ready.
+* **Action**: Call the `prepareToPay` method.
+* **Android Note**: You must trigger the system Biometric Prompt *before* calling this method to request fingerprint or face recognition.
+
+### Step 2: NFC Activation
+Once the SDK returns a `ReadyToPay` signal, the device is prepared for the tap.
+* **iOS**: The user is automatically redirected to the Apple Wallet with the virtual card selected.
+* **Android**: The device NFC tool opens to allow communication with the EMV terminal.
+
+### Step 3: The Tap
+The user holds their device near the merchant's POS terminal.
+* **Technical Detail**: The terminal transmits data via NFC. A successful tap signal only means data was sent; it does not mean the payment is approved yet.
+
+### Step 4: Transaction Resolution
+The merchant terminal communicates with the card network (Visa/Mastercard) to authorize the request.
+* **Back-End Validation**: The CoinBridge Back-End Connector receives the request and checks the user's real-time balance and spending policies.
+* **Decision**: The system determines whether to approve or decline based on fraud, risk, and funds.
+
+---
+
+## Handling Results
+
+The final decision is sent back to your platform via the Back-End Connector. You must then notify the user of the outcome.
+
+* **Approved**: Show a success message along with the transaction amount and merchant name.
+* **Declined**: Show a decline message along with the specific reason (e.g., "Insufficient Funds").
+
+> ### 💡 Technical Tip
+> If a user cancels the payment or the app decides to stop the process, you must call the `stopPayment` method (on Android) or restart the flow as a new action to reset the SDK state.

@@ -1,4 +1,30 @@
 ---
-title: "Authetication"
-description: "Step-by-step instructions to perform an Auth Check and validate user credentials. "
+title: "Authentication"
 ---
+The Authentication (Auth) process connects a user’s unique ID between the **CoinBridge SDK** and the **Back-End Integration**. This link is required to make sure payment data is correctly matched to the right user and their loyalty profile.
+
+---
+
+## Check Auth Status
+
+To make sure everything works correctly, your app must check the user’s status every time it starts. 
+
+1. **Call the `isAuthenticated`** method when the app opens.
+2. **Result**:
+    * **If `true`**: The SDK already recognizes the user. You should move on to call the **Initialization** method.
+    * **If `false`**: The SDK does not recognize the user or device. You must start the [Authentication Process](#the-authentication-process).
+
+---
+
+## The Authentication Process
+
+Only start this process if the `isAuthenticated` check returns `false`.
+
+### 1. Prepare the ID
+The authentication call must include the user’s unique ID. This ID is used for all future messages between the CoinBridge Back-End and your own loyalty platform.
+
+### 2. Add Eligibility Data
+If your region requires extra details to decide if a user can use the service, you must provide that data during the Authentication call. This information is saved in the CoinBridge system to check for service access later.
+
+### 3. Watch for Results
+After calling the method, wait for the success or error message (callback). Once you get a successful result, your next step is to call the **Initialization** method.

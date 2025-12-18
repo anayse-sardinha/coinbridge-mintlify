@@ -1,4 +1,44 @@
 ---
 title: "SDK Integration Overview"
-description: "Explains the lifecycle of the SDK integration and the necessary prerequisites."
 ---
+
+The CoinBridge Mobile SDK is a tool that you add to your existing mobile app to turn it into an internal e-wallet. It allows your users to pay at any shop worldwide using the NFC protocol, providing a fast "Tap & Go" experience.
+
+## Technical Prerequisites
+
+Before you start the integration, make sure your platform meets these core requirements:
+
+### 1. Security & Authentication
+* **Multi-Factor Authentication (MFA)**: Your app must use MFA for user login to stay secure and follow financial rules. This includes a password and a one-time code (OTP) sent via SMS or email.
+* **Account Lockout**: For safety, the app must lock a user's account after five failed login attempts.
+* **Device Biometrics**: 
+    * **iOS**: Users must set up Face ID, Touch ID, or a passcode for Apple Wallet access.
+    * **Android**: Users must have a passcode, pattern, or fingerprint lock configured for payment features.
+
+### 2. Device Requirements
+* **NFC Hardware**: The device must have NFC to make contactless payments.
+* **Android Settings**: Android devices must support the "pay with currently open app" (foreground) setting.
+* **App Updates**: You must have a "Force Update" feature so users always have the latest SDK security and features.
+
+### 3. Management Tools
+* **Feature Flag**: You need a server-based flag to remotely turn CoinBridge features on or off without a new app store release.
+
+---
+
+## The Integration Lifecycle
+
+The integration process is divided into two main parts:
+
+### Phase 1: Card Creation
+This is the one-time process a user goes through to get their virtual card ready.
+1. **Authentication**: Syncing the user's ID between the SDK and the CoinBridge platform.
+2. **Initialization**: Checking the SDK status and card readiness every time the app starts.
+3. **Eligibility Check**: Verifying the user meets all rules before they sign up.
+4. **Card Issuing**: Creating the virtual card account.
+5. **Provisioning**: Pushing the card token into the device wallet (like Apple Wallet).
+
+### Phase 2: Payment 
+This is what happens every time the user wants to pay.
+1. **Prepare to Pay**: The app triggers the NFC component to start the transaction.
+2. **The Tap**: The user holds their device near the payment terminal.
+3. **Transaction Resolution**: The system checks the balance and spending rules in real-time to approve or decline the purchase.

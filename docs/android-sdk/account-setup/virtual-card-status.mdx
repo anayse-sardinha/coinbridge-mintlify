@@ -1,4 +1,47 @@
 ---
 title: "Virtual Card Status"
-description: "Explains the lifecycle states of a card (CBPaymentStatus) and status reporting logic."
 ---
+
+A virtual card goes through a few different stages before a user can start paying with it. You can check these stages using the `CBPaymentStatus` object, which tells your app the current state of both the card and its digital tokens.
+
+## Card vs. Token Status
+
+It is important to understand the two parts of creating a payment method:
+* **Virtual Card Issuing**: This creates the actual virtual card for the user.
+* **Virtual Card Provisioning**: This adds a digital "token" of that card to the device (like an iPhone or Android phone) so it can be used for Tap & Go payments.
+
+A user can have a card that is "Active" but still needs to "Provision" it to their specific device before they can pay.
+
+---
+
+## Understanding Status Values
+
+The `CBPaymentStatus` object gives you the following details to help you manage the user experience:
+
+### 1. Card Status (`CBCardStatus`)
+This tells you the status of the main card account:
+* **Active**: The card is ready for use.
+* **Not Active**: The card is suspended, usually because of suspected fraud or a request to block the service.
+
+### 2. Token Status (`tokenStatus`)
+This tells you if the card has been successfully added to a device wallet:
+* **Active**: The token is in the wallet and ready for use.
+* **None**: The card is issued but has not been added to the device wallet yet.
+* **Not Active**: The token is suspended. This means the device link is broken, even if the card account is still fine.
+
+---
+
+## Handling Suspensions
+
+If a card or token is suspended, your app should guide the user based on what happened:
+
+* **If the Card is `notActive`**: The user cannot use any CoinBridge services. We recommend showing a clear message asking them to contact customer support.
+* **If a Token is `notActive`**: Only that specific device is affected. On iOS, for example, the user must remove the suspended token from their Apple Wallet before they can try to add it again.
+
+---
+
+## Technical Notes
+
+* **When to check**: The SDK will send your app the latest status after initialization completes or whenever the status changes (like after a card is added to a wallet).
+* **Device Logic**: On iOS, your app might see statuses for different devices, like an iPhone (`deviceWallet`) or an Apple Watch (`watchWallet`).
+* **Waiting for Details**: If you try to add a card to a wallet but the card details haven't arrived yet, the SDK will return a "Card_Details_Not_Arrived" error. You should wait for the details before showing the "Add to Wallet" button.

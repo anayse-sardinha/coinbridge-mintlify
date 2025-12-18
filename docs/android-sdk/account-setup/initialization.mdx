@@ -1,4 +1,35 @@
 ---
 title: "Initialization"
-description: "Guide to initializing the SDK and handling initial error values. "
 ---
+
+The Initialization method is a task that runs in the background to get the CoinBridge SDK ready for payments. You must run this process every time the app starts to check if the user is ready to pay.
+
+---
+
+## Overview
+
+Initialization tells the app if a virtual card has already been created for the user and shows the current status of that card. You must complete this step successfully before you can start creating a card or beginning a payment journey.
+
+## Prerequisites
+
+Before calling the initialization method, make sure:
+* **Authentication**: The user is already logged in and the SDK recognizes them (the `isAuthenticated` call must return `true`).
+* **Where to add it**: We highly recommend putting the initialization code in the `onCreate()` method of your payment activity.
+
+---
+
+## The Initialization Process
+
+1. **Call the Method**: Start the initialization method in the background.
+2. **Wait for the Result**: Once the process finishes, the `OnInitCallback` gives you the status of the user's payment method.
+3. **Check if Ready**: The result includes two important details:
+    * **`HasCard = True`**: The user already has a virtual card.
+    * **`HasCard = False`**: You need to create a card using the `IssueCard` method.
+
+---
+
+## Technical Notes
+
+* **Reliability**: Always make sure the user is authenticated before starting initialization to avoid errors.
+* **Device Requirements**: This feature will not work on Android devices without NFC or the "pay with currently open app" setting. You should let your users know about these limits.
+* **Helper Toolkit**: Use the **CoinBridge Helper toolkit** to check if NFC is turned on. It can also send users to the right phone settings page if they need to enable it.

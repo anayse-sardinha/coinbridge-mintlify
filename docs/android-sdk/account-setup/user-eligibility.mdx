@@ -1,4 +1,37 @@
 ---
 title: "User Eligibility"
-description: "How to check and validate user parameters before issuing a card. "
+description: "How to check and validate user parameters before issuing a card."
 ---
+
+The CoinBridge Eligibility Service sets the rules that users must meet to use payment services. You must check that a user is eligible before they can sign up or receive a virtual card.
+
+## Overview
+
+Checking eligibility makes sure users meet legal and platform rules, like living in a supported country, before they start the setup process. We highly recommend doing this check before you show the CoinBridge solution to the user to avoid any disappointment if they cannot use it.
+
+## What you need first
+
+Before you call the eligibility method, make sure:
+* **Authentication**: The SDK is logged in and authenticated.
+* **Initialization**: The SDK has finished its startup process.
+* **No Existing Card**: The `HasCard` check has returned `False`, meaning the user doesn't already have a card.
+
+## How to check eligibility
+
+To see if a user is allowed to join, call the `IsEligible` method. This is most effective if you do it right after you find out the user has no card (`HasCard = False`) and just before you try to create one (`IssueCard`).
+
+### Implementation Steps
+
+1. **Call the Method**: Use the `IsEligible` method in your app's code.
+2. **Handle the Result**:
+    * **If Success**: If the method returns `onSuccess`, send the user to the "Getting Started" and promotion pages.
+    * **If Error**: If you get an error, you must fix the specific reason for the failure before the user can use CoinBridge.
+
+> ### 💡 Tip
+> The exact reason why a user is not eligible is sent from the CoinBridge Back-End to your platform.
+
+## Validation
+
+The check is complete when:
+1. The `IsEligible` method returns `onSuccess`.
+2. Your app successfully moves the user to the first onboarding page.
