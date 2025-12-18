@@ -1,4 +1,95 @@
 ---
-title: "Authetication"
-description: "Step-by-step instructions to perform an Auth Check and validate user credentials. "
+title: "Authentication"
 ---
+
+The Authentication (Auth) process correlates a user's unique identifier between the **CoinBridge SDK** and the **CoinBridge Back-End Connector**. This synchronization is essential for CoinBridge to dynamically retrieve information from your platform whenever a user makes a purchase.
+
+## Check Authentication Status
+
+To ensure a seamless experience, your application must check the SDK authentication state every time it starts or returns from the background.
+
+### 1. Call the status method
+Invoke the `isAuthenticated` method as early as possible in your app lifecycle.
+
+* **Android**: Call `isAuthenticated(context)`.
+* **iOS**: Call `isAuthenticated()` which returns a boolean value.
+
+### 2. Result
+* **If `true`**: The SDK is already authenticated for this device. You must proceed to the **Initialization** method.
+* **If `false`**: The SDK does not recognize the session. You must perform the [Authentication Process](#the-authentication-process).
+
+---
+
+## The Authentication Process
+
+Initiate this process only if the `isAuthenticated` check returns `false`.
+
+### 1. Generate a JWT (Back-End)
+For security, you must generate a JSON Web Token (JWT) on your **server-side**. Storing private keys or generating tokens on the client side is not secure and is considered bad practice.
+
+* **Algorithm**: The JWT must be signed using the `RS256` algorithm.
+* **Payload Requirements**: The payload must include specific entries for user identification and security:
+    * `jti`: A unique identifier for this specific JWT.
+    * `iat`: Unix time (seconds) when the JWT was issued.
+    * `exp`: Expiration time. This must be no later than **2 minutes** after the `iat` time.
+    * `aud`: Must be set to `"CoinBridge"`.
+    * `iss`: Set to the unique application key provided by CoinBridge.
+    * `sub`: A unique identifier for the logged-in user in your system.
+
+> **Privacy Note:** For data protection, do not use real user IDs, phone numbers, or emails as the `sub` value, as CoinBridge systems do not apply special encryption to this field.
+
+### 2. Add Eligibility Data
+Depending on your country's regulations, extra details (such as country of residence) may be required to assess eligibility. You must provide this data during the Authentication process to allow the backend to evaluate service access.
+
+### 3. Call the Authenticate Method
+Pass the JWT from your back-end to the SDK and wait for the success or error callback.
+
+#### Android: Authentication Example 
+```java
+CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallback() {
+    @Override
+    public void onAuthenticated() {
+        // Success: Proceed to call Initialization
+    }
+    @Override
+    public void onError(CBError<AuthError> error) {
+        // Handle authentication failure
+    }
+});
+
+
+
+## iOS: Authentication Example
+CoinBridge.sharedInstance.authenticate(jwt: "YOUR_JWT_VALUE") { completion in
+    switch completion {
+    case .onAuthenticated:
+        // Success: Proceed to call Initialization
+    case .onError(let error):
+        // Handle authentication failure
+    }
+}
+```
+
+## Mandatory Security Requirements
+
+To comply with financial regulations, your application must enforce the following:
+
+Multi-Factor Authentication (MFA): Users must log in using a first factor (Username/Password with predefined complexity) and a second factor (One-Time Passcode via SMS or Email).
+
+Account Lockout: The application must automatically lock an account after five consecutive failed login attempts to protect against unauthorized access.
+
+---
+
+## Troubleshooting Reference
+
+Refer to these common error values if the authentication process fails:
+| Error Code | Description | Recommended Action |
+| :--- | :--- | :--- |
+| `invalidAuthentication` | Authentication failed, likely due to an invalid JWT or User ID. | Verify JWT claims and RSA signature on your backend. |
+| `networkError` | The SDK could not access the network. | Check device internet connectivity or network permissions. |
+| `alreadyAuthenticated` | The SDK is already associated with a user. | Treat this as a success and proceed to the Initialization method. |
+| `generalError` | An unknown system error occurred. | Contact CoinBridge support for assistance. |
+
+## Next Steps
+
+Once the onAuthenticated callback is received, the SDK is associated with the user, but service is not yet active. Your next mandatory step is to Initialize the SDK to sync wallet and card status.

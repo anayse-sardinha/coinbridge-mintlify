@@ -1,30 +1,63 @@
 ---
 title: "Authentication"
 ---
-The Authentication (Auth) process connects a user’s unique ID between the **CoinBridge SDK** and the **Back-End Integration**. This link is required to make sure payment data is correctly matched to the right user and their loyalty profile.
 
----
+The Authentication (Auth) process correlates a user's unique identifier between the **CoinBridge SDK** and the **CoinBridge Back-End Connector**. This synchronization is essential for CoinBridge to dynamically retrieve information from your platform whenever a user makes a purchase.
 
-## Check Auth Status
+## Check Authentication Status
 
-To make sure everything works correctly, your app must check the user’s status every time it starts. 
+To ensure a seamless experience, your application must check the SDK authentication state every time it starts or returns from the background.
 
-1. **Call the `isAuthenticated`** method when the app opens.
-2. **Result**:
-    * **If `true`**: The SDK already recognizes the user. You should move on to call the **Initialization** method.
-    * **If `false`**: The SDK does not recognize the user or device. You must start the [Authentication Process](#the-authentication-process).
+### 1. Call the status method
+Invoke the `isAuthenticated` method as early as possible in your app lifecycle.
+
+* **Android**: Call `isAuthenticated(context)`.
+* **iOS**: Call `isAuthenticated()` which returns a boolean value.
+
+### 2. Result
+* **If `true`**: The SDK is already authenticated for this device. You must proceed to the **Initialization** method.
+* **If `false`**: The SDK does not recognize the session. You must perform the [Authentication Process](#the-authentication-process).
 
 ---
 
 ## The Authentication Process
 
-Only start this process if the `isAuthenticated` check returns `false`.
+Initiate this process only if the `isAuthenticated` check returns `false`.
 
-### 1. Prepare the ID
-The authentication call must include the user’s unique ID. This ID is used for all future messages between the CoinBridge Back-End and your own loyalty platform.
+### 1. Generate a JWT (Back-End)
+For security, you must generate a JSON Web Token (JWT) on your **server-side**. Storing private keys or generating tokens on the client side is not secure and is considered bad practice.
+
+* **Algorithm**: The JWT must be signed using the `RS256` algorithm.
+* **Payload Requirements**: The payload must include specific entries for user identification and security:
+    * `jti`: A unique identifier for this specific JWT.
+    * `iat`: Unix time (seconds) when the JWT was issued.
+    * `exp`: Expiration time. This must be no later than **2 minutes** after the `iat` time.
+    * `aud`: Must be set to `"CoinBridge"`.
+    * `iss`: Set to the unique application key provided by CoinBridge.
+    * `sub`: A unique identifier for the logged-in user in your system.
+
+> **Privacy Note:** For data protection, do not use real user IDs, phone numbers, or emails as the `sub` value, as CoinBridge systems do not apply special encryption to this field.
 
 ### 2. Add Eligibility Data
-If your region requires extra details to decide if a user can use the service, you must provide that data during the Authentication call. This information is saved in the CoinBridge system to check for service access later.
+Depending on your country's regulations, extra details (such as country of residence) may be required to assess eligibility. You must provide this data during the Authentication process to allow the backend to evaluate service access.
 
-### 3. Watch for Results
-After calling the method, wait for the success or error message (callback). Once you get a successful result, your next step is to call the **Initialization** method.
+### 3. Call the Authenticate Method
+Pass the JWT from your back-end to the SDK and wait for the success or error callback.
+
+#### Android: Authentication Example 
+```java
+CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallback() {
+    @Override
+    public void onAuthenticated() {
+        // Success: Proceed to call Initialization
+    }
+    @Override
+    public void onError(CBError<AuthError> error) {
+        // Handle authentication failure
+    }
+});
+```
+
+## Next Steps
+
+Once the 'onAuthenticated' callback is received, the SDK is associated with the user, but service is not yet active. Your next mandatory step is to Initialize the SDK to sync wallet and card status.
