@@ -2,19 +2,15 @@
 title: "Authentication"
 ---
 
-The Authentication (Auth) process correlates a user's unique identifier between the **CoinBridge SDK** and the **CoinBridge Back-End Connector**. This synchronization is essential for CoinBridge to dynamically retrieve information from your platform whenever a user makes a purchase.
+The Authentication process correlates a user's unique identifier between the **CoinBridge SDK** and the **CoinBridge Back-End Connector**. This synchronization is essential for CoinBridge to dynamically retrieve information from your platform whenever a user makes a purchase.
 
 ## Check Authentication Status
 
-To ensure a seamless experience, your application must check the SDK authentication state every time it starts or returns from the background.
+To ensure a seamless experience, follow these steps to ensure your application checks the SDK authentication state every time it starts or returns from the background:
 
-### 1. Call the status method
-Invoke the `isAuthenticated` method as early as possible in your app lifecycle.
+### 1. Call the `isAuthenticated(context)` method as early as possible in your app lifecycle.
 
-* **Android**: Call `isAuthenticated(context)`.
-* **iOS**: Call `isAuthenticated()` which returns a boolean value.
-
-### 2. Result
+### 2. Check the result:
 * **If `true`**: The SDK is already authenticated for this device. You must proceed to the **Initialization** method.
 * **If `false`**: The SDK does not recognize the session. You must perform the [Authentication Process](#the-authentication-process).
 

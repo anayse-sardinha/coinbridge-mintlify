@@ -15,28 +15,28 @@ A user may possess an **Active** virtual card but still require **Provisioning**
 
 ---
 
-## Understanding Status Values
+## Understand Status Values
 
 The `CBPaymentStatus` object contains the following components to help you manage the user interface and journey:
 
-### 1. Card Status (`CBCardStatus`)
+### Card Status (`CBCardStatus`)
 This value indicates the status of the primary virtual card account. Note that naming conventions differ slightly by platform:
 * **ACTIVE / active**: The virtual card is successfully enrolled and ready for service.
 * **NOT_ACTIVE / notActive**: The card is suspended and cannot be used for any CoinBridge services. This typically occurs due to suspected fraud, unexpected user activity, or a customer request to block the service.
 
-### 2. Token Status
+### Token Status
 This indicates whether the card has been successfully pushed to the device wallet. The parameter name and structure depend on your platform:
 * **Android**: Access via `getProvisioningStatuses()`, which returns a map of `WalletType` and `TokenStatus`.
 * **iOS**: Access via `provisioningStatuses`, which returns a dictionary of `[walletType: tokenStatus]`.
 
-**Possible values for Token Status:**
+**Possible Values for Token Status:**
 * **ACTIVE / active**: The card is provisioned to the wallet, and the token is ready for use.
 * **NONE / none**: The card has been issued but is not yet provisioned to the device wallet.
 * **NOT_ACTIVE / notActive**: The card is provisioned, but the token is suspended. While the card account may be fine, the specific device link is restricted.
 
 ---
 
-## Handling Suspensions
+## Manage Suspensions
 
 When the SDK reports a suspension, your application should provide clear instructions based on the suspension level:
 

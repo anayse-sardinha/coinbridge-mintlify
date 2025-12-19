@@ -16,7 +16,7 @@ Before starting the card creation flow, verify that the following conditions are
 
 ---
 
-## 1. Choose the Creation Flow
+## Choose the Creation Flow
 
 The card creation process is handled differently depending on your application's configuration and regional regulations:
 
@@ -26,25 +26,21 @@ The card creation process is handled differently depending on your application's
 > ### 💡 Note
 > Consult with your CoinBridge onboarding team to determine which flow applies to your application.
 
----
-
 ## 2. Start the Process
 
 When initiating the creation process, ensure a smooth user experience by following these guidelines:
 
 ### Manage the Waiting Time
-The virtual card issuing and provisioning process usually takes up to **10 seconds**. During this brief interval:
+The virtual card issuing and provisioning process usually takes up to ten seconds. During this brief interval:
 * **Show a Loader**: Display a loader animation with appropriate text notifying the user to wait.
 * **Stay in the App**: Inform the user not to leave or close the application until the process is finalized.
 * **Automatic Restart**: If the process is aborted (e.g., the user leaves the app), it will automatically restart upon re-entry and initialization.
 
-### Handle Additional Data Requirements
+### Manage Additional Data Requirements
 Based on financial regulations in your country, card issuance may require additional user-specific data, such as a **National ID** or **SSN**.
 * **Data Payload**: If required, you must include this information as part of the `IssueCard` payload.
 * **User Consent**: The SDK may prompt the user to provide details via a dedicated form or consent to additional terms from the issuer.
 * **No Additional Data**: If your configuration does not require extra data, the SDK creates the card in the background without further user action.
-
----
 
 ## 3. Handle the Response
 
@@ -54,7 +50,6 @@ The SDK will return a callback indicating the result of the process.
 Once the virtual card issuing flow has been finalized, you will receive a success callback.
 * **User Notification**: Congratulate the user and notify them that their device is ready for payments.
 * **Next Step**: Redirect the user to finalize the setup through **Provisioning** (adding the card to the device wallet).
-
 
 ## Technical Implementation
 
