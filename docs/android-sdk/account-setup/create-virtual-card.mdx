@@ -13,8 +13,6 @@ Before starting the card creation flow, verify that the following conditions are
 * **Eligibility**: You have confirmed the end-user is eligible for CoinBridge services.
 * **Check Status**: The initialization callback has returned `HasCard = False`.
 
----
-
 ## Choose the Creation Flow
 
 The card creation process is handled differently depending on your application's configuration and regional regulations:
@@ -44,8 +42,6 @@ Based on financial regulations in your country, card issuance may require additi
 ## Handle the Response
 
 The SDK will return a callback indicating the result of the process.
-
-### On Success
 Once the virtual card issuing flow has been finalized, you will receive a success callback.
 * **User Notification**: Congratulate the user and notify them that their device is ready for payments.
 * **Next Step**: Redirect the user to finalize the setup through **Provisioning** (adding the card to the device wallet).

@@ -14,13 +14,12 @@ To ensure a seamless experience, follow these steps to ensure your application c
 * **If `true`**: The SDK is already authenticated for this device. You must proceed to the **Initialization** method.
 * **If `false`**: The SDK does not recognize the session. You must perform the [Authentication Process](#the-authentication-process).
 
----
 
 ## The Authentication Process
 
 Initiate this process only if the `isAuthenticated` check returns `false`.
 
-### 1. Generate a JWT (Back-End)
+### Generate a JWT (Back-End)
 For security, you must generate a JSON Web Token (JWT) on your **server-side**. Storing private keys or generating tokens on the client side is not secure and is considered bad practice.
 
 * **Algorithm**: The JWT must be signed using the `RS256` algorithm.
@@ -34,10 +33,10 @@ For security, you must generate a JSON Web Token (JWT) on your **server-side**. 
 
 > **Privacy Note:** For data protection, do not use real user IDs, phone numbers, or emails as the `sub` value, as CoinBridge systems do not apply special encryption to this field.
 
-### 2. Add Eligibility Data
+### Add Eligibility Data
 Depending on your country's regulations, extra details (such as country of residence) may be required to assess eligibility. You must provide this data during the Authentication process to allow the backend to evaluate service access.
 
-### 3. Call the Authenticate Method
+### Call the Authenticate Method
 Pass the JWT from your back-end to the SDK and wait for the success or error callback.
 
 #### Android: Authentication Example 

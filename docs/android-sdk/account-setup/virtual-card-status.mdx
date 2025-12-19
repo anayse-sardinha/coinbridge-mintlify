@@ -13,8 +13,6 @@ The process for creating a CoinBridge payment method involves two distinct flows
 
 A user may possess an **Active** virtual card but still require **Provisioning** to their specific mobile device before the Tap & Go experience is enabled.
 
----
-
 ## Understand Status Values
 
 The `CBPaymentStatus` object contains the following components to help you manage the user interface and journey:
@@ -34,8 +32,6 @@ This indicates whether the card has been successfully pushed to the device walle
 * **NONE / none**: The card has been issued but is not yet provisioned to the device wallet.
 * **NOT_ACTIVE / notActive**: The card is provisioned, but the token is suspended. While the card account may be fine, the specific device link is restricted.
 
----
-
 ## Manage Suspensions
 
 When the SDK reports a suspension, your application should provide clear instructions based on the suspension level:
@@ -44,8 +40,6 @@ When the SDK reports a suspension, your application should provide clear instruc
 * **If a Token is `NOT_ACTIVE` or `notActive`**: Only the link to that specific device is affected.
     * **Android**: Inform the user that the service is restricted on the current device.
     * **iOS**: The user must manually remove the suspended token from their Apple Wallet before they can attempt to re-provision the card.
-
----
 
 ## Technical Notes
 

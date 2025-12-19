@@ -3,3 +3,25 @@ title: "CoinBridge Components"
 description: "Breakdown of the primary architecture including the SDK, Back-End Connector, and Cloud services."
 ---
 
+The CoinBridge solution architecture consists of two primary technological elements: the Mobile SDK and the Back-End Connector. These components work together to enable payments via the NFC/EMV protocol, providing a seamless "Tap & Go" experience.
+
+## CoinBridge Mobile SDK
+
+The **CoinBridge Mobile SDK** is the client-side component designed to reside within any Android or iOS mobile application.
+
+* **Internal e-Wallet**: It functions as an internal e-Wallet, allowing users to make payments over the credit card network.
+* **Asset Redemption**: It enables the redemption of virtual assets (such as points, rewards, or virtual currencies) into real currency transactions directly from the mobile app.
+* **POS Compatibility**: The SDK enables transactions at any Point of Sale (POS) worldwide that accepts NFC/EMV protocols.
+* **Security Management**: It manages device-level security requirements and user authentication flows.
+
+## CoinBridge Back-End Connector
+
+The **CoinBridge Back-End Connector** is the server-side link between your loyalty or user management platform and the CoinBridge platform.
+
+* **Real-Time Assessment**: It allows for dynamic, real-time assessment of user balances and spending policies against transaction requests.
+* **Transaction Authorization**: When CoinBridge receives a transaction request, the connector instantly checks spending rules to approve or decline the purchase.
+* **Core Processes Supported**:
+    * **Eligibility Verification**: Checks if the user is eligible for the service.
+    * **Balance Retrieval**: Fetches the user's available balance(s) immediately prior to a transaction.
+    * **Policy Retrieval**: Fetches spending rules, such as restrictions on specific Merchant IDs (MIDs) or Category Codes (MCCs).
+    * **Data Feedback**: Transmits transaction results (approvals/declines), refund details, and transaction corrections back to your platform.
