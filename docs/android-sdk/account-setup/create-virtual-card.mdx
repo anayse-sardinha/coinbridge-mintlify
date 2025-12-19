@@ -1,6 +1,5 @@
 ---
 title: "Create Virtual Card"
-description: "A guide to generating a card, handling data consent, and displaying details."
 ---
 
 Once the user is eligible and the SDK is ready, you can initiate the payment method creation process. This step issues the virtual card that enables the Tap & Go payment experience.
@@ -26,7 +25,7 @@ The card creation process is handled differently depending on your application's
 > ### 💡 Note
 > Consult with your CoinBridge onboarding team to determine which flow applies to your application.
 
-## 2. Start the Process
+## Start the Process
 
 When initiating the creation process, ensure a smooth user experience by following these guidelines:
 
@@ -42,7 +41,7 @@ Based on financial regulations in your country, card issuance may require additi
 * **User Consent**: The SDK may prompt the user to provide details via a dedicated form or consent to additional terms from the issuer.
 * **No Additional Data**: If your configuration does not require extra data, the SDK creates the card in the background without further user action.
 
-## 3. Handle the Response
+## Handle the Response
 
 The SDK will return a callback indicating the result of the process.
 
