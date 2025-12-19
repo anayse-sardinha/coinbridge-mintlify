@@ -8,9 +8,9 @@ The Authentication process correlates a user's unique identifier between the **C
 
 To ensure a seamless experience, follow these steps to ensure your application checks the SDK authentication state every time it starts or returns from the background:
 
-### 1. Call the `isAuthenticated(context)` method as early as possible in your app lifecycle.
+1. Call the `isAuthenticated(context)` method as early as possible in your app lifecycle.
 
-### 2. Check the result:
+2. Check the result:
 * **If `true`**: The SDK is already authenticated for this device. You must proceed to the **Initialization** method.
 * **If `false`**: The SDK does not recognize the session. You must perform the [Authentication Process](#the-authentication-process).
 
