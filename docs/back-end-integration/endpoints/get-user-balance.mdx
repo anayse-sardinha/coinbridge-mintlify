@@ -1,4 +1,62 @@
 ---
 title: "Get User Balance"
-description: "Schema for the real-time request to validate available funds."
+description: "Retrieve the current available balance and currency for a specific user in real-time."
+api: "GET /coinbridge/api/v1/user/{userId}/balance"
 ---
+
+The **Get User Balance** endpoint is a critical data-fetching component used to retrieve a user's currently available balance immediately prior to a transaction. 
+
+This call is triggered by the CoinBridge Backend when a user initiates a `prepareToPay` request from the mobile SDK. Upon successful retrieval, the SDK enables the device's NFC component to proceed with the payment.
+
+### Performance Requirements
+As a data-fetching endpoint, this must meet strict performance standards to ensure a smooth user experience:
+* **Response Time**: Up to 400ms.
+* **SLA**: 99.96% monthly uptime.
+
+## Path Parameters
+
+<ParamField path="userId" type="string" required>
+  The unique identifier of the logged-in user in your platform. This ID was synchronized during the [Authentication](/sdk/authentication) process.
+</ParamField>
+
+## Response Body
+
+<ResponseField name="amount" type="float" required>
+  The current available spending balance for the user.
+</ResponseField>
+
+<ResponseField name="currencyCode" type="string" required>
+  The 3-letter ISO-4217 currency code of the user balance (e.g., `USD`, `GBP`, `EUR`).
+</ResponseField>
+
+<ResponseField name="validUntil" type="string">
+  An optional ISO-8601 timestamp in UTC. Indicates how long this balance is considered valid.
+  
+> **Note:** Transactions received after this timestamp will be rejected without a new preparation process. Use this only if there is a specific business requirement for balance expiration.
+</ResponseField>
+
+<ResponseExample>
+```json
+{
+  "amount": 115.75,
+  "currencyCode": "EUR",
+  "validUntil": "2025-12-22T14:02:28.137Z"
+}
+```
+</ResponseExample>
+
+## Security
+
+This request includes a **JSON Web Token (JWT)** signed with the **RS256** algorithm in the `Authorization` header with the `Bearer` prefix. Your backend must verify the signature using the **RSA public key** provided by CoinBridge during the initial setup.
+
+| Header | Value |
+| :--- | :--- |
+| **Authorization** | `Bearer <JWT_TOKEN>` |
+
+### JWT Payload Details
+
+The JWT payload includes specific entries to identify the context of the request:
+* **iss**: Set to `CoinBridge`.
+* **sub**: Contains the unique `userId` for which the balance is being requested.
+* **aud**: The name of your receiving application.
+* **exp**: The expiration time, which is typically no later than 1 minute after the issued time (`iat`).

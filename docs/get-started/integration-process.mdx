@@ -1,4 +1,41 @@
 ---
-title: "Integration Process"
-description: "A high-level descriptions covering the end-to-end journey from credentials to production launch. (It can include a flowchart.)"
+title: "Integration Process" 
 ---
+The integration of the CoinBridge solution is a structured journey that connects your mobile application and back-end infrastructure with the CoinBridge ecosystem. This process ensures a secure, compliant, and seamless "Tap & Go" payment experience for your users.
+
+## Phase 1: Preparation and Prerequisites
+
+Before technical implementation begins, you must establish the necessary accounts and parameters with CoinBridge.
+
+* **Account Setup**: You must contact CoinBridge to create an account for your specific application on the CoinBridge system.
+* **Application Parameters**: Provide CoinBridge with your Application Package Name (Android) or Bundle ID (iOS), Team ID, and signing key hashes.
+* **Key-Pair Generation**: Generate a unique RSA key pair (at least 2048-bit). Send the public key to CoinBridge; the private key is used by your back-end to sign JWTs for user authentication.
+* **Credentials Receipt**: CoinBridge will provide you with a unique Application Key and credentials for a private repository (Gradle for Android, SPM for iOS) to pull the SDK.
+
+## Phase 2: Core Integration Steps
+
+The integration follows a specific lifecycle to move from a standard application to a payment-ready solution.
+
+### 1. SDK Installation and Configuration
+* **Import SDK**: Add the CoinBridge SDK dependency to your mobile project using the provided repository credentials.
+* **Initialize Configuration**: Call the configuration method in your Application class (Android) or link lifecycle events in your AppDelegate (iOS).
+* **Permissions**: Grant mandatory device permissions, including NFC, Internet, and Biometrics, in your app's manifest or property files.
+
+### 2. Back-End Connectivity
+* **Endpoint Implementation**: Develop the required data-fetching endpoints (Balance and Eligibility checks) and data-reporting endpoints (Transaction reports) on your platform.
+* **Authentication Sync**: Implement the JWT (RS256) signature process on your back-end to allow the SDK to authenticate your users against the CoinBridge platform.
+
+### 3. Implementing the User Journey
+* **Account Setup**: Integrate the `isAuthenticated`, `isEligible`, and `Initialization` methods to prepare the user's session.
+* **Card Issuance**: Implement the `IssueCard` method to create the user's virtual payment method.
+* **Provisioning**: Push the virtual card token to the internal SDK wallet (Android) or Apple Wallet (iOS).
+
+## Phase 3: Launch and Compliance
+
+To move to production, your application must meet specific regulatory and brand requirements.
+
+* **Security Compliance**: Ensure Multi-Factor Authentication (MFA) is active for login and the account lockout policy is implemented.
+* **Feature Control**: Implement a server-based feature flag and force-update mechanism to manage the solution's rollout and maintenance.
+* **Apple/Android Guidelines**: For iOS, adhere to Apple’s communication and design guidelines, including specific "Add to Wallet" button logic and email notification triggers.
+* **Certification**: Cooperate with CoinBridge to complete mandatory certification and system testing.
+

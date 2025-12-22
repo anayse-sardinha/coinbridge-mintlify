@@ -1,4 +1,46 @@
 ---
-title: "Authetication"
+title: "Authentication"
 description: "Details the JWT (RS256) signature verification process, including header/payload structure and public key implementation."
 ---
+
+The CoinBridge Back-End API v2 utilizes JSON Web Token (JWT) for secure authentication. This mechanism facilitates a smooth and verified data exchange between the CoinBridge backend system and your loyalty or CRM platform.
+
+## The Signature Process
+
+To secure the communication, CoinBridge uses an asymmetric RSA signing process:
+
+1.  **Public Key Provisioning**: Before integration begins, CoinBridge will provide an RSA public key to your back-end development team.
+2.  **Signing**: With each outgoing request, the CoinBridge back-end generates and signs a JWT token using its RSA private key.
+3.  **Verification**: Your system must use the provided public key to verify the signature of the incoming JWT to ensure the request originated from CoinBridge.
+
+## JWT Structure
+
+### Header
+The JWT header specifies the signing algorithm and token type.
+```json
+{
+  "alg": "RS256",
+  "typ": "JWT"
+}
+alg: RS256 (RSA Signature with SHA-256)
+typ: JWT
+```
+### Payload
+The payload contains the following standardized claims:
+
+| Claim | Description |
+| :--- | :--- |
+| **jti** | A unique identifier for the specific JWT. |
+| **iat** | Issued At: The Unix timestamp (in seconds) when the token was created. |
+| **exp** | Expiration: Must be no later than 1 minute after the iat time. |
+| **aud** | Audience: The name of the receiving application. |
+| **iss** | Issuer: This claim is always set to "CoinBridge". |
+| **sub** | Subject: The unique UserID for which the request is being made. |
+
+### Implementation Example
+CoinBridge provides the signed JWT in the Authorization header of the HTTP request using the Bearer prefix.
+
+```http
+Authorization: Bearer <signed_jwt_token>
+```
+>💡**Note:** While RS256 is the standard, CoinBridge can support alternative authorization types if your back-end architecture requires a specific protocol.

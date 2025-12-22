@@ -1,4 +1,26 @@
 ---
-title: "Integration Overview"
-description: "An introduction explaining the integration's core capabilities, key concepts, and strategic value. It answers 'what' the solution is and 'why' developers should use it. "
+title: "Back-End Integration Overview"
 ---
+
+The CoinBridge Back-End Integration (also referred to as the Back-End Connector) is the essential link that connects your loyalty, user management, or CRM platform directly to the CoinBridge platform. This connection allows CoinBridge to dynamically retrieve critical user data in real-time whenever a user initiates a purchase and provides the necessary feedback once the transaction is finalized.
+
+The integration is primarily composed of two types of endpoints:
+* **Data-Fetching Endpoints**: These are time-critical endpoints used by CoinBridge to retrieve user data, available balances, and spending policies from your platform.
+* **Data-Reporting Endpoints**: These endpoints are used by CoinBridge to transmit transaction results, refunds, and adjustments back to your management system.
+
+## Core Capabilities
+
+The back-end integration enables several mission-critical processes required for a functional mobile payment solution:
+
+* **Transaction Authorization**: CoinBridge verifies user eligibility and checks if sufficient funds are available to cover a purchase in real-time.
+* **Dynamic Rule Enforcement**: The system fetches and applies spending policies managed by your platform, such as merchant restrictions (MIDs/MCCs) or spending limits per transaction.
+* **Real-Time Balance Sync**: Before enabling a device's NFC for payment, the system retrieves the user's current available balance to ensure accuracy.
+* **Automated Feedback**: Your platform receives immediate updates on payment results, including detailed metadata for both approved and declined transactions.
+* **Lifecycle Management**: The connector handles complex scenarios such as merchant refunds and transaction corrections (adjustments due to settlements or expirations).
+
+### Technical Reliability
+
+To support global payment standards, the back-end integration operates under high-performance requirements:
+* **Availability**: A monthly uptime guarantee of 99.96% is required for data-fetching endpoints.
+* **Latency**: Data-fetching endpoints must respond within 400ms to ensure the transaction can be authorized within the card scheme's time constraints.
+* **Scalability**: The system handles both synchronous authorization and asynchronous reporting to balance performance with data integrity.

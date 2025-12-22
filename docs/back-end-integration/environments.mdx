@@ -1,4 +1,24 @@
 ---
 title: "Environments"
-description: "Base URLs for production and sandbox environments."
 ---
+
+CoinBridge provides dedicated credentials and separate environments for Sandbox and Production to allow for rigorous testing without impacting live operations.
+
+## Sandbox Environment
+The Sandbox environment uses a dedicated infrastructure designed to provide a faster and more reliable environment for initial development and testing.
+* **Purpose**: Used to validate API connectivity, authentication flows, and transaction reporting logic before going live.
+* **Credentials**: A unique set of credentials to the private repository (e.g., `AndroidSDKSandbox` or `losSDKSandbox`) is provided during the setup phase.
+* **SDK Dependency**: Developers must import the sandbox-specific version of the SDK (e.g., `cbsdk-sb` for Android) to point to the correct testing endpoints.
+
+## Production Environment
+The Production environment is the live infrastructure used for actual user transactions over the credit card network.
+* **Certification**: Access is granted only after the implementer has successfully completed mandatory certification testing.
+* **Uptime Standards**: To ensure a seamless user experience, production endpoints must adhere to a monthly uptime guarantee of 99.96%.
+* **Security**: Mandatory production-grade RSA key pairs and signed JWTs are required for all communications.
+
+## Base URLs and Versioning
+Specific Base URLs for each environment are provided by the CoinBridge team following the initial application setup. Once the Base URL is configured, the back-end connector utilizes the following versioned endpoint paths:
+* **v1 Endpoints**: Typically used for real-time data fetching, such as `/coinbridge/api/v1/user/{userId}/balance`.
+* **v2 Endpoints**: Used for transaction reporting and authorization, such as `/coinbridge/api/v2/transaction`.
+
+> **Note**: Your credentials and the `coinbridge.properties` file contain private information and must not be committed to source control.
