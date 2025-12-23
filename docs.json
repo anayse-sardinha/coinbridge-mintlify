@@ -14,11 +14,10 @@
         "tab": "Get Started",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Overview",
             "pages": [
               "docs/get-started/index",
-              "docs/get-started/coinbridge-components",
-              "docs/get-started/integration-process"
+              "docs/get-started/coinbridge-components"
             ]
           }
         ]
