@@ -12,14 +12,9 @@
     "tabs": [
       {
         "tab": "Get Started",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "docs/get-started/index",
-              "docs/get-started/coinbridge-components"
-            ]
-          }
+        "pages": [
+          "docs/get-started/index",
+          "docs/get-started/coinbridge-components"
         ]
       },
       {
