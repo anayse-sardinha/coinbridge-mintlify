@@ -11,6 +11,12 @@
   "navigation": {
     "tabs": [
       {
+        "tab": "Home",
+        "pages": [
+          "index"
+        ]
+      },
+      {
         "tab": "Get Started",
         "pages": [
           "docs/get-started/index",
