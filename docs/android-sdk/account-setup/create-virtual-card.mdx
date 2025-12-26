@@ -1,24 +1,17 @@
-# Issuing a Payment Method (IssueCard)
+# Create a Virtual Card (IssueCard)
 
-Finalize the pre-payment journey by creating and provisioning the user's virtual payment card.
-
-## Overview
 The `IssueCard` method is the core SDK function that generates the virtual card. Depending on your country's regulations, this process may occur automatically in the background or require additional user data (such as a National ID or SSN).
-
-
 
 ## Implementation Scenarios
 
-#### Scenario 1: No Additional Data Required
+### Scenario 1: No Additional Data Required
 CoinBridge creates the payment method and automatically pushes it to the SDK wallet in the background. No further user action is needed.
 
-#### Scenario 2: Additional Data Required
+### Scenario 2: Additional Data Required
 The user must provide specific details (e.g., SSN/National ID) and consent to terms via a dedicated card-issuer form.
 > **Note:** You must properly onboard and explain *why* this data is needed to ensure a high onboarding rate.
 
 ## Technical Implementation
-
-### Platform Implementation
 
 Call the `issueCard` method from the `CoinBridgeSDK` instance:
 
@@ -41,10 +34,6 @@ CoinBridgeSDK.getInstance().issueCard(activity, new OnIssueCardCallback() {
 });
 ```
 
-### User Experience Guidelines
+## UX Guidelines
 
-The virtual card issuing and provisioning process usually takes up to **10 seconds** to complete.
-* **Loader Animation**: You must show a loader animation with appropriate on-screen text, notifying the user to wait a few moments until the process is completed.
-* **Stay in App**: The user must not leave the application before this process is finalized to ensure the handshake completes successfully.
-* **Abort Handling**: If the process is aborted (e.g., the user leaves the application), it will automatically restart upon re-entering the app and performing a successful initialization of the CoinBridge SDK.
-
+Card provisioning takes about 10 seconds. Show a loader to keep users in the app until finished; if they leave and the process is interrupted, it will automatically restart once the CoinBridge SDK re-initializes.

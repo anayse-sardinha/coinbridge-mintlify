@@ -1,48 +1,51 @@
+# Understanding Virtual Card Status
+
+The status of a virtual card determines whether a user can perform payments, needs to provision their card, or must contact support due to a suspension. CoinBridge provides this information via the `CBPaymentStatus` object, which is returned after initialization or whenever a state change occurs.
+
+## Status Components
+
+The `CBPaymentStatus` object contains three critical pieces of data that your application must evaluate:
+
+### 1. Card Existence (`HasCard`)
+This boolean indicates if a virtual card has been issued for the user.
+* **True**: A card exists; you should move to provisioning or payment.
+* **False**: No card exists; the user must go through the "Issue Card" flow.
+
+### 2. Card Service Status (`CBCardStatus`)
+This reflects the overall standing of the virtual card account.
+* **ACTIVE**: The card is valid and ready for use or provisioning.
+* **NOT_ACTIVE**: The card is suspended (e.g., due to fraud or user request).
+
+### 3. Token Provisioning Status (`TokenStatus`)
+This identifies if the card has been successfully added to a specific device's wallet.
+* **ACTIVE**: Provisioned and ready for "Tap & Go" payments.
+* **NOT_ACTIVE**: Provisioned, but the specific token is suspended.
+* **NONE**: Not yet provisioned; the user must click "Add to Wallet".
+
 ---
-title: "Virtual Card Status"
+
+## Managing Suspensions
+
+CoinBridge distinguishes between account-level (Card) and device-level (Token) issues.
+
+### Card Suspension
+If `CBCardStatus` is `NOT_ACTIVE`, the entire service is restricted. This usually occurs due to suspected fraud or a manual block.
+**Action**: Display a clear message prompting the user to contact customer support.
+
+### Token Suspension
+If the card is `ACTIVE` but a specific token is `NOT_ACTIVE`, only that device is affected. On iOS, a user might suspend a token via the "Find My" app.
+**Action**: Instruct the user to remove the suspended token from their wallet and re-provision the card.
+
 ---
 
-A virtual card transitions through several critical stages before it is ready for transactions. You can monitor these stages using the `CBPaymentStatus` object, which provides real-time information regarding the state of both the virtual card and its associated digital tokens.
+## Technical Reference: Status Retrieval
 
-## Card vs. Token Status
+You should monitor the card status at several points in the application lifecycle:
 
-The process for creating a CoinBridge payment method involves two distinct flows that must be completed for a user to perform payments:
+| Trigger | Method / Callback | Purpose |
+| :--- | :--- | :--- |
+| **App Launch** | `onInitComplete` | Determine if the user should see the Payment screen or Onboarding. |
+| **State Change** | `onPaymentMethodStatusChange` | Update the UI in real-time when a card is provisioned or suspended. |
+| **Manual Check** | `CBPaymentStatus` | Verify device readiness immediately before a "Prepare to Pay" call. |
 
-* **Virtual Card Issuing**: The process of issuing a unique virtual card for a specific user.
-* **Virtual Card Provisioning**: The process of adding a digital "token" of that virtual card to the CoinBridge SDK wallet on a specific device.
-
-A user may possess an **Active** virtual card but still require **Provisioning** to their specific mobile device before the Tap & Go experience is enabled.
-
-## Understand Status Values
-
-The `CBPaymentStatus` object contains the following components to help you manage the user interface and journey:
-
-### Card Status (`CBCardStatus`)
-This value indicates the status of the primary virtual card account. Note that naming conventions differ slightly by platform:
-* **ACTIVE / active**: The virtual card is successfully enrolled and ready for service.
-* **NOT_ACTIVE / notActive**: The card is suspended and cannot be used for any CoinBridge services. This typically occurs due to suspected fraud, unexpected user activity, or a customer request to block the service.
-
-### Token Status
-This indicates whether the card has been successfully pushed to the device wallet. The parameter name and structure depend on your platform:
-* **Android**: Access via `getProvisioningStatuses()`, which returns a map of `WalletType` and `TokenStatus`.
-* **iOS**: Access via `provisioningStatuses`, which returns a dictionary of `[walletType: tokenStatus]`.
-
-**Possible Values for Token Status:**
-* **ACTIVE / active**: The card is provisioned to the wallet, and the token is ready for use.
-* **NONE / none**: The card has been issued but is not yet provisioned to the device wallet.
-* **NOT_ACTIVE / notActive**: The card is provisioned, but the token is suspended. While the card account may be fine, the specific device link is restricted.
-
-## Manage Suspensions
-
-When the SDK reports a suspension, your application should provide clear instructions based on the suspension level:
-
-* **If the Card is `NOT_ACTIVE` or `notActive`**: The user is completely restricted from utilizing CoinBridge services. We highly recommend displaying a prominent message prompting the user to contact customer support for investigation.
-* **If a Token is `NOT_ACTIVE` or `notActive`**: Only the link to that specific device is affected.
-    * **Android**: Inform the user that the service is restricted on the current device.
-    * **iOS**: The user must manually remove the suspended token from their Apple Wallet before they can attempt to re-provision the card.
-
-## Technical Notes
-
-* **Status Updates**: The SDK notifies your application of the current status following successful initialization or whenever a state change occurs, such as after a card is provisioned or updated.
-* **Device Context (iOS)**: The `CBPaymentStatus` includes a `walletType` parameter to differentiate between an iPhone (`deviceWallet`) and an Apple Watch (`watchWallet`).
-* **Waiting for Card Details**: If you attempt to provision a card before the card information has fully arrived from the backend, the SDK will return the error `Card_Details_Not_Arrived`. In this case, you must wait for the updated status via the notification service before displaying the provisioning CTA.
+> **Note**: If `CBCardStatus` returns as `null`, your application must wait for the `onPaymentMethodStatusChange` event from the `CBNotification` service to receive the updated data.
