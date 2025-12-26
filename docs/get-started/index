@@ -1,0 +1,49 @@
+---
+title: "Get Started"
+---
+
+### Get ready to build
+Follow these steps to set up your environment and start making requests.
+
+<Steps>
+  <Step title="Process Overview">
+    Sign up for the [CoinBridge Dashboard](https://dashboard.coinbridge.com) to access your developer portal and sandbox environment.
+  </Step>
+</Steps>
+
+---
+
+### Explore by use case
+CoinBridge provides the infrastructure for various financial flows. Select a path below to see specific implementation guides.
+
+<CardGroup cols={2}>
+  <Card title="Virtual Card Issuance" icon="credit-card" href="/docs/android-sdk/account-setup/create-virtual-card">
+    Generate instant virtual cards for your users with customizable spending limits.
+  </Card>
+  <Card title="Mobile Contactless Payments" icon="nfc" href="/docs/android-sdk/payment/index">
+    Enable Tap-to-Pay and digital wallet integrations for a seamless checkout.
+  </Card>
+  <Card title="Back-End Management" icon="server" href="/docs/back-end-integration/index">
+    Manage balances, webhooks, and transaction history from your server.
+  </Card>
+  <Card title="Compliance & Reporting" icon="shield-check" href="/docs/back-end-integration/endpoints/apple-compliance-events">
+    Automate reporting and stay compliant with banking regulations.
+  </Card>
+</CardGroup>
+
+---
+
+### Integration SDKs
+Our SDKs handle the heavy lifting of security, encryption, and hardware communication.
+
+<CardGroup cols={3}>
+  <Card title="Android" icon="android" href="/docs/android-sdk/index" />
+  <Card title="iOS" icon="apple" href="/docs/ios-sdk/index" />
+  <Card title="REST API" icon="code" href="/docs/coinbridge-api/coinbridge-api" />
+</CardGroup>
+
+---
+
+<Note>
+  **Need help?** Our support team is available to help you with your integration. Reach out at [hi@mintlify.com](mailto:hi@mintlify.com) or check our API reference.
+</Note>
