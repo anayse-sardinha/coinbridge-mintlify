@@ -11,7 +11,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Get Started",
+        "tab": "How the CoinBridge Payment Process Works",
         "pages": [
           "docs/get-started/index"
         ]
