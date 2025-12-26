@@ -25,3 +25,83 @@ The **CoinBridge Back-End Connector** is the server-side link between your loyal
     * **Balance Retrieval**: Fetches the user's available balance(s) immediately prior to a transaction.
     * **Policy Retrieval**: Fetches spending rules, such as restrictions on specific Merchant IDs (MIDs) or Category Codes (MCCs).
     * **Data Feedback**: Transmits transaction results (approvals/declines), refund details, and transaction corrections back to your platform.
+
+
+---
+title: "How the CoinBridge Payment Process Works" 
+---
+CoinBridge technology enables real-world purchases using digital assets by leveraging the NFC/EMV protocol at any point of sale worldwide. This guide outlines the end-to-end integration of the mobile SDK and webhooks.
+### The Integration Process
+The integration process consists of four primary phases:
+1.  **Authenticate & Verify:** Establish user identity and regulatory eligibility.
+2.  **Initialize:** Check the user's current card and wallet status.
+3.  **Provision:** Create a virtual card and add it to the device's secure wallet.
+4.  **Transact:** Execute payments and sync data via webhooks.
+
+---
+
+### Step 1: Install the SDK
+Add the CoinBridge library to your mobile project to enable NFC capabilities.
+
+* **Android:** Update your `build.gradle` file to include the dependency (Minimum API Level 26).
+* **iOS:** Add the package via **Swift Package Manager (SPM)** (Minimum iOS 13.4).
+
+---
+
+### Step 2: Authenticate the User 
+Secure the connection between your app and the CoinBridge platform.
+
+1.  Create a JSON Web Token on your backend using the **RS256** algorithm.
+2.  Use a consistent Unique ID across your mobile app, backend webhooks, and the CoinBridge platform.
+3.  Verify the user meets regulatory criteria (e.g., country of residence) before proceeding.
+4.  Ensure RSA private keys are stored exclusively on your server; never bundle them in the mobile app.
+
+---
+
+### Step 3: Initialize the SDK
+Determine the user's current onboarding state to provide the correct UI flow.
+
+1.  Call the `init` method after the user is authenticated.
+2.  Use the returned `hasCard` (Boolean) and `CBPaymentStatus` (Object) to route the user:
+    * **If `hasCard` is false:** Direct the user to **Step 4 (Create Card)**.
+    * **If `hasCard` is true but no wallet token exists:** Direct the user to **Step 5 (Push to Wallet)**.
+    * **If fully setup:** Allow the user to proceed to payment.
+
+---
+
+### Step 4: Create a Card
+Issue a virtual card to act as the bridge between digital assets and the payment terminal.
+
+1.  Call the `IssueCard` method to generate the user's virtual credentials.
+2.  Present a form to collect required information (e.g., SSN or National ID) and obtain agreement to Terms & Conditions.
+3.  Ensure your backend responds to the CoinBridge issuance webhook to validate user funds and risk policies in real-time.
+---
+
+### Step 5: Push to Wallet
+Enable "Tap & Go" by adding the virtual card to the device's native secure element.
+
+1.  Enable **Entitlements** (iOS) or **Play Services** (Android) in your project settings.
+2.  Trigger Provisioning:
+    * **Android:** Call `provisionCard` to add the token to **Google Wallet**.
+    * **iOS:** Call `addToApplePay` to add the card to **Apple Wallet**.
+3.  Verify that `CBPaymentStatus` now reflects a valid wallet token.
+
+---
+
+### Step 6: Execute Payments (iOS Implementation)
+On iOS, a manual trigger is required to launch the payment interface.
+
+1.  Display "Pay Now" Button (Only after the card is successfully provisioned.)
+2.  Trigger NFC/EMV protocol when the user taps the button.
+3.  Ensure your loyalty platform is ready to respond to real-time requests to verify balances and approve spending rules when the device contacts a POS terminal.
+
+---
+
+### Step 7: Connect the Webhooks
+Keep your platform synchronized with real-world spending.
+
+1.  Connect webhooks to the **Transaction Report Endpoint**.
+2.  Deduct the appropriate digital assets from the user's account immediately upon receiving a successful transaction report.
+3.  Populate the user's in-app transaction history with the data provided by the webhook.
+
+
