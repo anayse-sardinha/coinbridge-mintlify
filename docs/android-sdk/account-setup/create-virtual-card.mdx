@@ -1,72 +1,50 @@
----
-title: "Create Virtual Card"
----
+# Issuing a Payment Method (IssueCard)
 
-Once the user is eligible and the SDK is ready, you can initiate the payment method creation process. This step issues the virtual card that enables the Tap & Go payment experience.
+Finalize the pre-payment journey by creating and provisioning the user's virtual payment card.
 
-## Prerequisites
+## Overview
+The `IssueCard` method is the core SDK function that generates the virtual card. Depending on your country's regulations, this process may occur automatically in the background or require additional user data (such as a National ID or SSN).
 
-Before starting the card creation flow, verify that the following conditions are met:
 
-* **Authentication**: The user is authenticated against the CoinBridge SDK.
-* **Initialization**: The SDK has completed the initialization process.
-* **Eligibility**: You have confirmed the end-user is eligible for CoinBridge services.
-* **Check Status**: The initialization callback has returned `HasCard = False`.
 
-## Choose the Creation Flow
+## Implementation Scenarios
 
-The card creation process is handled differently depending on your application's configuration and regional regulations:
+#### Scenario 1: No Additional Data Required
+CoinBridge creates the payment method and automatically pushes it to the SDK wallet in the background. No further user action is needed.
 
-* **Automatic Flow**: Triggered automatically by the SDK following a successful initialization.
-* **Manual Flow**: Requires the application to explicitly call the `IssueCard` method.
-
-> 💡 **Note:** Consult with your CoinBridge onboarding team to determine which flow applies to your application.
-
-## Start the Process
-
-When initiating the creation process, ensure a smooth user experience by following these guidelines:
-
-### Manage the Waiting Time
-The virtual card issuing and provisioning process usually takes up to ten seconds. During this brief interval:
-* **Show a Loader**: Display a loader animation with appropriate text notifying the user to wait.
-* **Stay in the App**: Inform the user not to leave or close the application until the process is finalized.
-* **Automatic Restart**: If the process is aborted (e.g., the user leaves the app), it will automatically restart upon re-entry and initialization.
-
-### Manage Additional Data Requirements
-Based on financial regulations in your country, card issuance may require additional user-specific data, such as a **National ID** or **SSN**.
-* **Data Payload**: If required, you must include this information as part of the `IssueCard` payload.
-* **User Consent**: The SDK may prompt the user to provide details via a dedicated form or consent to additional terms from the issuer.
-* **No Additional Data**: If your configuration does not require extra data, the SDK creates the card in the background without further user action.
-
-## Handle the Response
-
-The SDK will return a callback indicating the result of the process.
-Once the virtual card issuing flow has been finalized, you will receive a success callback.
-* **User Notification**: Congratulate the user and notify them that their device is ready for payments.
-* **Next Step**: Redirect the user to finalize the setup through **Provisioning** (adding the card to the device wallet).
+#### Scenario 2: Additional Data Required
+The user must provide specific details (e.g., SSN/National ID) and consent to terms via a dedicated card-issuer form.
+> **Note:** You must properly onboard and explain *why* this data is needed to ensure a high onboarding rate.
 
 ## Technical Implementation
 
-<CodeGroup>
-```java 
+### Platform Implementation
+
+Call the `issueCard` method from the `CoinBridgeSDK` instance:
+
+```java
 CoinBridgeSDK.getInstance().issueCard(activity, new OnIssueCardCallback() {
     @Override
     public void onSuccess() {
-        // Notify user and proceed to provisioning
+        // Success: Virtual card issuing flow finalized.
+        // Notify the user and redirect to the payment home screen.
     }
 
     @Override
     public void onError(CBError<IssueCardError> error) {
-        // Handle failure
+        // Handle failure (e.g., INVALID_REQUEST_DATA). 
     }
+
+    // Optional UI callbacks if CoinBridge presents a form:
+    @Override public void onShown() { } 
+    @Override public void onAbandon() { } 
 });
-CoinBridge.sharedInstance.issueCard(viewController: self) { result in
-    switch result {
-    case .onSuccess:
-        // Notify user and proceed to provisioning
-    case .onError(let error):
-        // Handle failure
-    }
-}
 ```
-</CodeGroup>
+
+### User Experience Guidelines
+
+The virtual card issuing and provisioning process usually takes up to **10 seconds** to complete.
+* **Loader Animation**: You must show a loader animation with appropriate on-screen text, notifying the user to wait a few moments until the process is completed.
+* **Stay in App**: The user must not leave the application before this process is finalized to ensure the handshake completes successfully.
+* **Abort Handling**: If the process is aborted (e.g., the user leaves the application), it will automatically restart upon re-entering the app and performing a successful initialization of the CoinBridge SDK.
+

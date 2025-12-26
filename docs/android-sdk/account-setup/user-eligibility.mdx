@@ -1,37 +1,47 @@
----
-title: "User Eligibility"
----
+# End-User Eligibility
 
-The CoinBridge Eligibility Service sets the specific criteria end-users must meet to access CoinBridge payment services. You must verify that a user is eligible before they can subscribe to services or receive a virtual card.
+Before a user can subscribe to CoinBridge services or issue a virtual card, they must pass an eligibility check to ensure they meet all financial and regulatory criteria.
 
 ## Overview
+The CoinBridge Eligibility Service defines specific criteria—such as country of residence—that users must satisfy to access payment features. [cite: 89, 97, 1387, 1393] CoinBridge strongly recommends verifying eligibility early in the user journey to prevent frustration during the onboarding process. [cite: 91, 100, 1390, 1396]
 
-Checking eligibility ensures users meet legal and platform rules, such as country of residence, before starting the onboarding process. To provide an optimal user experience and prevent potential frustration, CoinBridge strongly recommends performing this check before introducing the solution to the user.
 
-## Prerequisites
+## Implementation
+The `isEligible` method is used to validate the user. This call is typically performed after receiving a `False` response from `hasCard` and immediately before invoking `issueCard`.
 
-Before calling the eligibility method, ensure the following conditions are met:
+### Platform Implementation
 
-* **Authentication**: The SDK must be successfully authenticated.
-* **Initialization**: The SDK must have finished its startup process.
-* **No Existing Card**: The `HasCard` check must return `False`, meaning the user doesn't already have an assigned virtual card.
 
-## How to Check Eligibility
+Use the `isEligible` method from the `CoinBridgeSDK` instance:
 
-To see if a user is permitted to join, call the `isEligible` method. This is most effective if you do it right after confirming the user has no card (`HasCard = False`) and immediately before invoking the `IssueCard` method.
+```java
+CoinBridgeSDK.getInstance().isEligible(context, new OnIsEligibleCallback() {
+    @Override
+    public void onSuccess() {
+        // User is eligible. 
+        // Proceed to redirect the end-user to the onboarding/IssueCard process. 
+    }
 
-### Implementation Steps
+    @Override
+    public void onError(CBError<EligibilityError> error) {
+        // User is NOT eligible.
+        // Address the specific reason for ineligibility provided in the error.
+    }
+});
+```
+#### iOS Implementation
+For iOS, utilize the `isEligible` method within the `CoinBridge` singleton class: 
 
-1.  Call the `isEligible` method within your application code.
-2.  Check the result:
-    * **If Success**: If the method returns `onSuccess`, redirect the user to the onboarding and promotion pages.
-    * **If Error**: If you receive an error, you must address the specific reason for ineligibility before the user can access CoinBridge services.
 
-> ### 💡 Tip
-> The specific reason for ineligibility is provided through the CoinBridge Backend Connector to your platform.
-
-## Validation
-
-The eligibility check is complete when:
-1.  The `isEligible` method returns a successful callback.
-2.  Your app successfully transitions the user to the first onboarding and introduction page.
+```swift
+CoinBridge.sharedInstance.isEligible { result in
+    switch result {
+    case .onSuccess:
+        // User is eligible. 
+        // Redirect the user to the onboarding process.
+    case .onError(let error):
+        // User is NOT eligible. 
+        // The reason for ineligibility is provided through the Backend Connector.
+    }
+}
+```

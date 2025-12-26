@@ -1,36 +1,73 @@
----
-title: "Initialization"
----
+# SDK Initialization
 
-The Initialization process synchronizes the SDK with the CoinBridge platform to retrieve the user's specific wallet configuration and card status. This step is mandatory and must be performed after successful authentication before any payment features can be used.
+Initialize the end-user's device to synchronize the CoinBridge backend with the application's digital wallet.
+
+## Overview
+
+The Initialization method is an asynchronous operation that sets up the payment environment for the user. It is a critical step in the "Pre-Payment" journey that determines the readiness of the user's payment method and retrieves current card statuses.
 
 ## Prerequisites
 
-Before calling the initialization method, ensure that:
-1. The SDK has been successfully authenticated (`isAuthenticated` returns `true`).
-2. The device has an active internet connection.
+Before calling the initialization method, you must ensure the following:
+* The `isAuthenticated` method must return **True**. If it returns **False**, you must complete the [SDK Authentication](./authentication) process first.
+* Ensure the application has been granted all required permissions (e.g., NFC, internet).
 
-## The Initialization Process
+## Implementation
 
-Once the `onAuthenticated` callback is triggered (or if `isAuthenticated` is true), call the initialization method. This pulls the latest card metadata and balance information.
+For an optimal experience, it is strongly recommended to perform SDK initialization in the `onCreate()` method of your payment activity or view controller.
 
-#### Android: Initialization Example
+### Platform Implementation
+
+
+Use the `init` method from the `CoinBridgeSDK` singleton:
+
 ```java
-CoinBridgeSDK.getInstance().initialize(context, new OnInitializationCallback() {
+CoinBridgeSDK.getInstance().init(activity, new OnInitCallback() {
     @Override
-    public void onInitialized() {
-        // Success: The SDK is ready for payment operations
+    public void onInitComplete(boolean hasCard, CBPaymentStatus status) {
+        // Handle successful initialization
+        // hasCard: indicates if a card is already issued for this user
+        // status: contains details like card status and provisioning state
     }
 
     @Override
     public void onError(CBError<InitError> error) {
-        // Handle initialization failure (e.g., network timeout)
+        // Handle initialization failure
     }
 });
 ```
-### Initialization States
-| State | Description |
-| :--- | :--- |
-| **Initialized** | The SDK has successfully synced data. You can now display the virtual card or initiate payments. |
-| **Not Initialized** | The SDK is authenticated but lacks local data. UI components will remain in a loading or hidden state. |
 
+Use the `initialize` method within the `CoinBridge` singleton class to synchronize the local environment with the backend:
+
+
+```swift
+CoinBridge.sharedInstance.initialize { cbInitCompletion in
+    switch cbInitCompletion {
+    case .initCompleted(let hasCard, let status):
+        // Handle successful initialization 
+        // hasCard: indicates if a card is already issued for this user 
+        // status: contains details like card status and provisioning state
+    case .onError(let error):
+        // Handle initialization failure
+    }
+}
+```
+
+
+## Interpreting Results
+Upon successful initialization, the SDK provides two key data points to guide your next steps:
+
+### `hasCard` state
+The `hasCard` boolean indicates the issuance status of the user's payment method: 
+
+* **True**: A virtual card has already been issued for this user.
+* **Action**: You can proceed to check the provisioning status to see if the device is ready for "Tap & Go" payments.
+* **False**: No virtual card is assigned to this user.
+* **Action**: You must guide the user through the `IssueCard` process to create their virtual payment method.
+
+### `CBPaymentStatus` object
+This object provides a real-time snapshot of the user's payment readiness:
+
+* **`CBCardStatus`**: Indicates if the card is `ACTIVE` (available for use) or `NOT_ACTIVE` (suspended). 
+* **`provisioningStatuses`**: A map/dictionary showing the status of tokens for available wallets. 
+* **Wallet Types**: This includes the `deviceWallet` (smartphone) or `watchWallet` (paired Apple Watch).

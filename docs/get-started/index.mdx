@@ -2,9 +2,7 @@
 
 While CoinBridge provides a sophisticated bridge between digital assets and traditional retail, the basic payment process always follows the same sequence. This guide provides a step-by-step breakdown of the process and key elements involved, clarifying how payments flow when utilizing the CoinBridge SDKs and webhooks.
 
-
-
-### The CoinBridge payment process
+### The CoinBridge Payment Process
 The payment process consists of four steps:
 * Authenticate and initialize
 * Issue a virtual card
@@ -42,10 +40,7 @@ To provision a card, the SDK facilitates the connection between:
 * The issued virtual card
 * The selected mobile wallet (Apple Pay or Google Pay)
 
-
-
-> **Info**
-> A wallet token is a secure, device-specific version of the card that prevents unauthorized reuse. It enhances security by ensuring the actual card details are never stored on your servers or exposed during transactions.
+> **Info:** A wallet token is a secure, device-specific version of the card that prevents unauthorized reuse. It enhances security by ensuring the actual card details are never stored on your servers or exposed during transactions.
 
 ---
 
@@ -59,6 +54,5 @@ To process a payment, the user interacts with a physical terminal using NFC tech
 
 The CoinBridge protocol organizes these transaction details, ensuring a clear and structured payment flow. This setup simplifies tracking and reconciliation for your backend.
 
-### Enhance the user's experience
+### Step 5: Add webhooks
 After creating the payment, CoinBridge will keep you informed about updates through webhooks. This allows you to update the user's balance and transaction history immediately. Additionally, you can integrate spending rules and risk checks into the authorization flow to prevent fraud and ensure a smooth transaction experience.
-
