@@ -105,13 +105,6 @@
                       "docs/ios-sdk/account-setup/virtual-card-status",
                       "docs/ios-sdk/account-setup/create-virtual-card"
                     ]
-                  },
-                  {
-                    "group": "Apple Wallet",
-                    "pages": [
-                      "docs/ios-sdk/account-setup/add-to-wallet-flow",
-                      "docs/ios-sdk/account-setup/wallet-ui-button-logic"
-                    ]
                   }
                 ]
               },
@@ -125,8 +118,7 @@
                   "docs/ios-sdk/payment/refunds",
                   "docs/ios-sdk/payment/corrections",
                   "docs/ios-sdk/payment/user-logout",
-                  "docs/ios-sdk/payment/error-codes",
-                  "docs/ios-sdk/payment/apple-communication-guide-review"
+                  "docs/ios-sdk/payment/error-codes"
                 ]
               },
               {
