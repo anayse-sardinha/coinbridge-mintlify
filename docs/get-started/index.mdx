@@ -2,11 +2,14 @@
 
 While CoinBridge provides a bridge between digital assets and traditional retail, the basic payment process always follows the same sequence. This guide provides a step-by-step breakdown of the process and key elements involved, clarifying how payments flow when utilizing the CoinBridge SDKs and webhooks.
 
+### The CoinBridge Payment Process
 The payment process consists of four steps:
 * Authenticate and initialize
 * Issue a virtual card
 * Provision to a digital wallet
 * Create the payment
+
+A successful payment leads to a completed transaction where digital assets are converted into usable currency at any shop worldwide based on the user's available funds.
 
 The steps below explain each part of the process in detail.
 
@@ -52,5 +55,5 @@ The CoinBridge protocol organizes these transaction details, ensuring a clear an
 
 ---
 
-### Step 5: Connect the webhooks
+### Step 5: Connect webhooks
 After creating the payment, CoinBridge will keep you informed about updates through webhooks. This allows you to update the user's balance and transaction history immediately. Additionally, you can integrate spending rules and risk checks into the authorization flow to prevent fraud and ensure a smooth transaction experience.
