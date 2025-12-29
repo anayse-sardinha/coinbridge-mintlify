@@ -20,8 +20,7 @@
         "tab": "Get Started",
         "pages": [
           "docs/get-started/index",
-          "docs/get-started/coinbridge-process",
-          "docs/get-started/coinbridge-components"
+          "docs/get-started/coinbridge-process"
         ]
       },
       {
