@@ -11,9 +11,8 @@ The CoinBridge Eligibility Service defines specific criteria—such as country o
 ## Implementation
 The `isEligible` method is used to validate the user. This call is typically performed after receiving a `False` response from `hasCard` and immediately before invoking `issueCard`.
 
-### Platform Implementation
-
-
+<Tabs>
+  <Tab title="Android">
 Use the `isEligible` method from the `CoinBridgeSDK` instance:
 
 ```java
@@ -31,6 +30,9 @@ CoinBridgeSDK.getInstance().isEligible(context, new OnIsEligibleCallback() {
     }
 });
 ```
+
+ </Tab>
+  <Tab title="iOS">
 #### iOS Implementation
 For iOS, utilize the `isEligible` method within the `CoinBridge` singleton class: 
 
@@ -47,3 +49,5 @@ CoinBridge.sharedInstance.isEligible { result in
     }
 }
 ```
+ </Tab>
+</Tabs>
