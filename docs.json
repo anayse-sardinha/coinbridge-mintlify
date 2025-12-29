@@ -26,127 +26,66 @@
       },
       {
         "tab": "SDKs",
-        "menu": [
+        "pages": [
+          "docs/sdk/index",
           {
-            "item": "Android",
-            "icon": "android",
+            "group": "Requirements",
             "pages": [
-              "docs/android-sdk/index",
-              "docs/android-sdk/release-notes",
+              "docs/sdk/requirements/coinbridge",
+              "docs/sdk/requirements/customer-technology",
+              "docs/sdk/requirements/apple"
+            ]
+          },
+          {
+            "group": "Card Issuance Flow",
+            "pages": [
               {
-                "group": "Requirements",
+                "group": "Session Setup",
                 "pages": [
-                  "docs/android-sdk/customer-technology",
-                  "docs/android-sdk/coinbridge"
+                  "docs/sdk/account-setup/authentication",
+                  "docs/sdk/account-setup/initialization"
                 ]
               },
               {
-                "group": "Card Issuance Flow",
+                "group": "Virtual Card Generation",
                 "pages": [
-                  {
-                    "group": "Session Setup",
-                    "pages": [
-                      "docs/android-sdk/account-setup/authentication",
-                      "docs/android-sdk/account-setup/initialization"
-                    ]
-                  },
-                  {
-                    "group": "Virtual Card Generation",
-                    "pages": [
-                      "docs/android-sdk/account-setup/user-eligibility",
-                      "docs/android-sdk/account-setup/virtual-card-status",
-                      "docs/android-sdk/account-setup/create-virtual-card"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Payment Flow",
-                "pages": [
-                  "docs/android-sdk/payment/index",
-                  "docs/android-sdk/payment/transaction-scenarios",
-                  "docs/android-sdk/payment/manage-transactions",
-                  "docs/android-sdk/payment/transaction-results-history",
-                  "docs/android-sdk/payment/refunds",
-                  "docs/android-sdk/payment/corrections",
-                  "docs/android-sdk/payment/user-logout",
-                  "docs/android-sdk/payment/error-codes"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/android-sdk/sdk-reference/methods-classes"
+                  "docs/sdk/account-setup/user-eligibility",
+                  "docs/sdk/account-setup/virtual-card-status",
+                  "docs/sdk/account-setup/create-virtual-card"
                 ]
               }
             ]
           },
           {
-            "item": "iOS",
-            "icon": "apple",
+            "group": "Payment Flow",
             "pages": [
-              "docs/ios-sdk/index",
-              "docs/ios-sdk/release-notes",
-              {
-                "group": "Requirements",
-                "pages": [
-                  "docs/ios-sdk/customer-technology",
-                  "docs/ios-sdk/coinbridge",
-                  "docs/ios-sdk/apple"
-                ]
-              },
-              {
-                "group": "Card Issuance Flow",
-                "pages": [
-                  {
-                    "group": "Session Setup",
-                    "pages": [
-                      "docs/ios-sdk/account-setup/authentication",
-                      "docs/ios-sdk/account-setup/initialization"
-                    ]
-                  },
-                  {
-                    "group": "Virtual Card Generation",
-                    "pages": [
-                      "docs/ios-sdk/account-setup/user-eligibility",
-                      "docs/ios-sdk/account-setup/virtual-card-status",
-                      "docs/ios-sdk/account-setup/create-virtual-card"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Payment Flow",
-                "pages": [
-                  "docs/ios-sdk/payment/index",
-                  "docs/ios-sdk/payment/transaction-scenarios",
-                  "docs/ios-sdk/payment/manage-transactions",
-                  "docs/ios-sdk/payment/transaction-results-history",
-                  "docs/ios-sdk/payment/refunds",
-                  "docs/ios-sdk/payment/corrections",
-                  "docs/ios-sdk/payment/user-logout",
-                  "docs/ios-sdk/payment/error-codes"
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/ios-sdk/sdk-reference/methods-classes"
-                ]
-              }
+              "docs/sdk/payment/index",
+              "docs/sdk/payment/transaction-scenarios",
+              "docs/sdk/payment/manage-transactions",
+              "docs/sdk/payment/transaction-results-history",
+              "docs/sdk/payment/refunds",
+              "docs/sdk/payment/corrections",
+              "docs/sdk/payment/user-logout",
+              "docs/sdk/payment/error-codes"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "docs/sdk/sdk-reference/methods-classes"
             ]
           }
         ]
       },
       {
-        "tab": "Back-End Integration",
+        "tab": "Webhooks",
         "groups": [
           {
             "group": "Configuration",
             "pages": [
-              "docs/back-end-integration/index",
-              "docs/back-end-integration/authentication",
-              "docs/back-end-integration/environments"
+              "docs/webhooks/index",
+              "docs/webhooks/authentication",
+              "docs/webhooks/environments"
             ]
           },
           {
@@ -155,26 +94,26 @@
               {
                 "group": "User Data",
                 "pages": [
-                  "docs/back-end-integration/endpoints/get-user-details",
-                  "docs/back-end-integration/endpoints/get-user-balance",
-                  "docs/back-end-integration/endpoints/get-spending-policies"
+                  "docs/webhooks/endpoints/get-user-details",
+                  "docs/webhooks/endpoints/get-user-balance",
+                  "docs/webhooks/endpoints/get-spending-policies"
                 ]
               },
               {
                 "group": "Transaction Management",
                 "pages": [
-                  "docs/back-end-integration/endpoints/authorize-transaction",
-                  "docs/back-end-integration/endpoints/report-transaction",
-                  "docs/back-end-integration/endpoints/report-refund",
-                  "docs/back-end-integration/endpoints/report-correction"
+                  "docs/webhooks/endpoints/authorize-transaction",
+                  "docs/webhooks/endpoints/report-transaction",
+                  "docs/webhooks/endpoints/report-refund",
+                  "docs/webhooks/endpoints/report-correction"
                 ]
               },
               {
                 "group": "Events & Notifications",
                 "pages": [
-                  "docs/back-end-integration/endpoints/notify-user-event",
-                  "docs/back-end-integration/endpoints/apple-compliance-events",
-                  "docs/back-end-integration/endpoints/user-status-events"
+                  "docs/webhooks/endpoints/notify-user-event",
+                  "docs/webhooks/endpoints/apple-compliance-events",
+                  "docs/webhooks/endpoints/user-status-events"
                 ]
               }
             ]
@@ -182,7 +121,7 @@
           {
             "group": "Reference",
             "pages": [
-              "docs/back-end-integration/endpoints/data-transfer-objects"
+              "docs/webhooks/endpoints/data-transfer-objects"
             ]
           }
         ]
