@@ -25,8 +25,13 @@
       },
       {
         "tab": "SDKs",
-        "pages": [
-          "docs/sdk/index",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "docs/sdk/index"
+            ]
+          },
           {
             "group": "Requirements",
             "pages": [
@@ -36,27 +41,19 @@
             ]
           },
           {
-            "group": "Card Issuance Flow",
+            "group": "Installation",
             "pages": [
-              {
-                "group": "Session Setup",
-                "pages": [
-                  "docs/sdk/account-setup/authentication",
-                  "docs/sdk/account-setup/initialization"
-                ]
-              },
-              {
-                "group": "Virtual Card Generation",
-                "pages": [
-                  "docs/sdk/account-setup/user-eligibility",
-                  "docs/sdk/account-setup/virtual-card-status",
-                  "docs/sdk/account-setup/create-virtual-card"
-                ]
-              }
+              "docs/sdk/account-setup/authentication",
+              "docs/sdk/account-setup/initialization",
+              "docs/sdk/account-setup/user-eligibility",
+              "docs/sdk/account-setup/virtual-card-status",
+              "docs/sdk/account-setup/create-virtual-card",
+              "docs/sdk/account-setup/add-to-wallet",
+              "docs/sdk/account-setup/wallet-ui-button-logic"
             ]
           },
           {
-            "group": "Payment Flow",
+            "group": "Payment",
             "pages": [
               "docs/sdk/payment/index",
               "docs/sdk/payment/transaction-scenarios",
@@ -129,7 +126,7 @@
         "tab": "CoinBridge API",
         "groups": [
           {
-            "group": "CoinBridge API",
+            "group": "Reference",
             "pages": [
               "docs/coinbridge-api/coinbridge-api"
             ]
