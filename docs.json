@@ -48,8 +48,7 @@
               "docs/sdk/installation/user-eligibility",
               "docs/sdk/installation/virtual-card-status",
               "docs/sdk/installation/create-virtual-card",
-              "docs/sdk/installation/add-to-wallet",
-              "docs/sdk/installation/wallet-ui-button-logic"
+              "docs/sdk/installation/add-to-wallet"
             ]
           },
           {

@@ -1,5 +1,5 @@
 ---
-title: "Virtual Card Status"
+title: "Check Virtual Card Status"
 ---
 
 The status of a virtual card determines whether a user can perform payments, needs to provision their card, or must contact support due to a suspension. CoinBridge provides this information via the `CBPaymentStatus` object, which is returned after initialization or whenever a state change occurs.
@@ -24,8 +24,6 @@ This identifies if the card has been successfully added to a specific device's w
 * **NOT_ACTIVE**: Provisioned, but the specific token is suspended.
 * **NONE**: Not yet provisioned; the user must click "Add to Wallet".
 
----
-
 ## Managing Suspensions
 
 CoinBridge distinguishes between account-level (Card) and device-level (Token) issues.
@@ -37,8 +35,6 @@ If `CBCardStatus` is `NOT_ACTIVE`, the entire service is restricted. This usuall
 ### Token Suspension
 If the card is `ACTIVE` but a specific token is `NOT_ACTIVE`, only that device is affected. On iOS, a user might suspend a token via the "Find My" app.
 **Action**: Instruct the user to remove the suspended token from their wallet and re-provision the card.
-
----
 
 ## Technical Reference: Status Retrieval
 
