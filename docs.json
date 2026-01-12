@@ -20,7 +20,8 @@
         "tab": "Get Started",
         "pages": [
           "docs/get-started/coinbridge-overview",
-          "docs/get-started/integration-process"
+          "docs/get-started/integration-process",
+          "docs/get-started/payment-flow"
         ]
       },
       {
