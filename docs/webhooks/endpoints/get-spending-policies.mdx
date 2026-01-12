@@ -1,4 +1,59 @@
 ---
 title: "Get Spending Policies"
-description: "Schema for fetching limits and restrictions before authorization. "
+description: "Retrieve real-time spending rules and restrictions for a specific user."
+api: "GET /coinbridge/api/v1/user/{userId}/rules"
 ---
+
+[cite_start]The **Get Spending Policies** endpoint is an optional data-fetching service used to retrieve spending rulesets managed via your platform[cite: 2473, 2803]. [cite_start]This endpoint allows for real-time policy enforcement that can vary per user[cite: 2803].
+
+[cite_start]This call is triggered by the CoinBridge Backend when a user initiates a `prepareToPay` request from the mobile application[cite: 2474, 2801]. [cite_start]Upon successful retrieval of these rules (along with balance information), the SDK enables the device's NFC component to perform the payment[cite: 2475, 2802].
+
+### Performance Requirements
+[cite_start]As a time-critical data-fetching endpoint, this must meet strict performance standards to prevent service failures[cite: 2406, 2414, 2418]:
+* [cite_start]**Response Time**: Up to 400ms[cite: 2418].
+* [cite_start]**SLA**: 99.96% monthly uptime[cite: 2416].
+
+## Path Parameters
+
+<ParamField path="userId" type="string" required>
+  [cite_start]The unique identifier of the logged-in user in your platform[cite: 2716, 2800]. [cite_start]This value must be recognized across all your application systems[cite: 560, 1933].
+</ParamField>
+
+## Response Body
+
+<ResponseField name="rules" type="array" required>
+  [cite_start]An array of spending rule objects to be applied to the user's current transaction attempt[cite: 3125, 3128].
+  
+  <Expandable title="Supported Rule Objects">
+    * [cite_start]**allowOnlyMccCodes**: (string[]) Only transactions with these Merchant Category Codes will be approved[cite: 3133, 3135].
+    * [cite_start]**restrictMccCodes**: (string[]) Transactions with these MCCs will be declined[cite: 3139, 3141].
+    * [cite_start]**allowOnlyMerchantIds**: (string[]) Only transactions with these specific MIDs will be approved[cite: 3144, 3145].
+    * [cite_start]**restrictMerchantIds**: (string[]) Transactions with these MIDs will be declined[cite: 3150, 3152].
+    * [cite_start]**allowOnlyCountryCodes**: (string[]) Only transactions from these 3-letter ISO-3166 countries will be approved[cite: 3156, 3160].
+    * [cite_start]**restrictCountryCodes**: (string[]) Transactions from these countries will be declined[cite: 3164, 3166].
+    * [cite_start]**maxTransactionCardAmount**: (float) Transactions above this amount (inclusive) will be declined[cite: 3170, 3172].
+    * [cite_start]**minTransactionCardAmount**: (float) Transactions below this amount (inclusive) will be declined[cite: 3176, 3180].
+  </Expandable>
+</ResponseField>
+
+<ResponseExample>
+```json
+{
+  "rules": [
+    {
+      "restrictMccCodes": ["1731", "1520"]
+    },
+    {
+      "maxTransactionCardAmount": 1000.00
+    },
+    {
+      "restrictCountryCodes": ["AFG", "SYR"]
+    }
+  ]
+}
+```
+</ResponseExample>
+
+## Security
+Authentication is based on a JSON Web Token (JWT) signed using the RS256 algorithm. CoinBridge provides an RSA public key to your backend developers to verify each request.
+

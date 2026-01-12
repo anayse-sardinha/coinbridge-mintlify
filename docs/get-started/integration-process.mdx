@@ -1,0 +1,29 @@
+---
+title: "Integration Process"
+---
+
+Coinbridge's integration process follows several stages, ensuring the solution is implemented and tested before going live. The following diagram illustrates the integration process.
+
+![Integration Process diagram showing the workflow steps and connections between different system components for coinbridge integration](/images/integration-process.png)
+
+The steps in this process are as follows:
+
+### 1. Get JWT Keys for Sandbox
+Think of this as creating a digital ID card. You’ll create a secure "key pair" (RSA) on your end. You keep the private one and send us the public one. In return, CoinBridge will give you an **Application Key** and **Repository Credentials**. These act like your all-access pass to download our tools and securely sign in to our system.
+
+### 2. SDK Integration in Sandbox
+Now, you’ll plug the CoinBridge software (SDK) into your app code using standard tools like Gradle (for Android) or SPM (for iOS). At this stage, you’ll also make sure your app has permission to use the phone’s **NFC, Biometrics, and Internet**. This ensures the app is ready to talk to the hardware and manage its internal state when it’s time to pay.
+
+### 3. Webhook Integration
+To make sure payments actually work, your servers need to talk to ours. You’ll set up the CoinBridge Back-End Connector using **Webhooks**, which act like automated messengers. 
+* **Data-Fetching:** Tells us how much "money" (loyalty points or balance) a user has in real-time.
+* **Data-Reporting:** Sends you a notification the moment a transaction is finished, refunded, or adjusted.
+
+### 4. Test with Virtual EMV
+Before going live, you can simulate a real-world "Tap & Go" purchase. By calling the `prepareToPay` method, you’ll trigger the phone’s wallet or NFC tool. You’ll "tap" against a virtual terminal to make sure the encrypted payment data is sent correctly and that your app receives the `TapComplete` signal.
+
+### 5. CoinBridge Acceptance Testing
+We provide a **Helper toolkit** to make sure everything is perfect. This step checks if the user’s phone settings (like NFC and "Pay with open app") are configured correctly. You’ll also verify user eligibility via the `isEligible` method and do a final check to ensure your branded card art and UI meet design guidelines.
+
+### 6. Production Deployment
+Once you’re certified, you’ll switch to the Production repository and update your app with the live **Production Application Key**. We recommend using a "feature flag" (an on/off switch on your server) to control the launch and a "Force Update" mechanism to ensure everyone is using the latest, most secure version of the SDK.

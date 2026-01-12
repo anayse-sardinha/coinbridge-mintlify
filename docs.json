@@ -19,8 +19,8 @@
       {
         "tab": "Get Started",
         "pages": [
-          "docs/get-started/index",
-          "docs/get-started/coinbridge-process"
+          "docs/get-started/coinbridge-overview",
+          "docs/get-started/integration-process"
         ]
       },
       {
