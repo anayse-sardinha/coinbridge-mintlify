@@ -19,16 +19,12 @@ The steps in this process are as follows:
     * **Android**: The digital card is saved directly inside the app’s secure storage.
     * **iOS**: The card is added to the Apple Wallet so it can be used with an iPhone or Apple Watch.
 
----
-
 ## 2. Payment Flow (Transaction)
 
 Once the card is set up, the user goes through this flow every time they buy something. This uses "Tap & Go" technology (NFC) to make paying at a store as easy as touching the phone to the reader.
 
 ![Payment processing flow diagram showing the complete payment transaction sequence with status indicators and confirmation steps](/images/payment.png)
 The steps in this process are as follows:
-
-### Flow Breakdown
 
 1. **Verify User Biometrics**: For security, the app asks the user to unlock the payment with a fingerprint, face scan, or passcode. This must happen before the phone is allowed to send any payment signals.
 2. **Start SDK**: Once the user is verified, the app "wakes up" the payment system. It quickly checks the user's current balance and any spending rules (like daily limits) to make sure the purchase will be allowed.
