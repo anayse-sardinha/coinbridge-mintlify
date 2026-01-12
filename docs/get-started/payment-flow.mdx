@@ -1,0 +1,39 @@
+---
+title: "Payment Flow"
+---
+
+This guide provides a simple overview of how a user moves through the CoinBridge system. It explains how the app on the phone (the SDK) and the server (the Backend) work together so that everyone—from Developers to Product Managers—can see exactly how a payment happens.
+
+## 1. Pre-Payment User Journey (Onboarding)
+
+The Pre-Payment journey is a one-time setup. Think of it as "getting the wallet ready." This phase makes sure the user is who they say they are and gives them a digital card they can use to pay.
+
+![Pre-payment process diagram showing initial transaction setup with payment method selection and customer verification steps before processing payment](/images/pre-payment.png)
+The steps in this process are as follows:
+
+1. **Authenticate**: The app connects the user’s account to the CoinBridge system. This creates a secure link so the system knows which digital assets belong to which person.
+2. **Initialize**: Behind the scenes, the app and the server do a quick "handshake" to make sure the user’s wallet is ready. It double-checks that everything is synced up before the user tries to buy anything.
+3. **Create Card**: If the user doesn’t have a digital card yet, the app starts the setup. Depending on local rules, the user might need to enter some ID info (like an SSN) and agree to the terms.
+4. **Create Card Token**: Instead of using a real card number that could be stolen, the system creates a "Token." This is a digital stand-in for the card. It’s what actually talks to the store’s payment terminal, keeping the real card data safe and hidden.
+5. **Add Card to Wallet**: This is the final step, often called **Provisioning**.
+    * **Android**: The digital card is saved directly inside the app’s secure storage.
+    * **iOS**: The card is added to the Apple Wallet so it can be used with an iPhone or Apple Watch.
+
+---
+
+## 2. Payment User Journey (Transaction)
+
+Once the card is set up, the user follows this flow every time they buy something. This uses "Tap & Go" technology (NFC) to make paying at a store as easy as touching the phone to the reader.
+
+![Payment processing flow diagram showing the complete payment transaction sequence with status indicators and confirmation steps](/images/payment.png)
+The steps in this process are as follows:
+
+### Flow Breakdown
+
+1. **Verify User Biometrics**: For security, the app asks the user to unlock the payment with a fingerprint, face scan, or passcode. This must happen before the phone is allowed to send any payment signals.
+2. **Start SDK**: Once the user is verified, the app "wakes up" the payment system. It quickly checks the user's current balance and any spending rules (like daily limits) to make sure the purchase will be allowed.
+3. **Establish NFC Connection**: The app tells the user to "Hold Near Reader." When the phone touches the store's terminal, they exchange a secure, encrypted "digital handshake."
+4. **Handle Payment Result**: The store’s terminal talks to the bank networks, which then ask the CoinBridge server for a final "Yes" or "No."
+    * **Approval**: If the balance is good and the rules are followed, the transaction is approved. The app shows a "Success" screen with the receipt details.
+    * **Decline**: If there isn't enough money or if the store is restricted (like a card being blocked for certain types of purchases), the app will explain why the payment didn't go through.
+
