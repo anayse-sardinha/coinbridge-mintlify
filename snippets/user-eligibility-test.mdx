@@ -3,14 +3,18 @@ title: "Check User Eligibility"
 ---
 
 Before a user can subscribe to CoinBridge services or issue a virtual card, you can have them pass a eligibility check to ensure they meet all financial and regulatory criteria.
-Reasons why:
 
-## Overview
-The CoinBridge Eligibility Service defines specific criteria—such as country of residence—that users must satisfy to access payment features. CoinBridge strongly recommends verifying eligibility early in the user journey to prevent frustration during the onboarding process.
+## Why Check Eligibility?
+You might want to check eligibility for the following reasons:
+* **Regulatory Compliance**: Ensures the user meets country-specific regulations, such as residence requirements.
+* **KYC Requirements**: Confirms that required "Know Your Customer" data, such as SSN or National ID numbers, is valid.
+* **Fraud & Abuse Prevention**: Detects if a user has been blacklisted or flagged for abuse in your system.
+* **Prevent Issuance Errors**: Card issuance is a "point of no return". Checking eligibility first prevents attempting to issue a card to a user who the system will ultimately reject.
 
+> **Note**: While optional, calling this method allows you to proactively disable the CoinBridge feature in your UI for ineligible users to prevent frustration.
 
 ## Implementation
-The `isEligible` method is used to validate the user. This call is typically performed after receiving a `False` response from `hasCard` and immediately before invoking `issueCard`.
+The `isEligible` method is used to validate the user. This call is typically performed after receiving a `False` response from `hasCard` and immediately before calling`issueCard`.
 
 <Tabs>
   <Tab title="Android">
@@ -36,7 +40,6 @@ CoinBridgeSDK.getInstance().isEligible(context, new OnIsEligibleCallback() {
   <Tab title="iOS">
 #### iOS Implementation
 Use the `isEligible` method within the `CoinBridge` singleton class: 
-
 
 ```swift
 CoinBridge.sharedInstance.isEligible { result in

@@ -49,12 +49,12 @@
               {
                 "group": "Initialize",
                 "pages": [
-                  "docs/sdk/installation/start-sdk",
+                  "docs/sdk/installation/initialize",
                   "docs/sdk/installation/user-eligibility"
                 ]
               },
-              "docs/sdk/installation/virtual-card-status",
-              "docs/sdk/installation/create-virtual-card",
+              "docs/sdk/installation/issue-card",
+              "docs/sdk/installation/wallets",
               "docs/sdk/installation/add-to-wallet"
             ]
           },

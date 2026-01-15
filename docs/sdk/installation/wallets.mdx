@@ -1,0 +1,58 @@
+---
+title: "Understanding Wallets & Provisioning"
+---
+
+**Provisioning** is the process of moving a card from the internal system to the user's device wallet.
+
+## The Two Wallet Types
+There are two wallet types:
+| Wallet Type | Description |
+| :--- | :--- |
+| **CoinBridge Wallet (Internal)** | A digital entity in the backend that binds the user, device, and SDK together. |
+| **Device Wallet (External)** | Third-party wallets like **Apple Pay** or **Google Pay** used for contactless payments at physical POS terminals. |
+
+## Security via Tokenization
+When you provision a card to a native device wallet, it undergoes a tokenization to protect the user's data.
+These are the token characteristcs: 
+* **DPAN**: The device wallet uses a **Device Primary Account Number (DPAN)** rather than the real card number.
+* **Different Digits**: Because it is a token, the last four digits of the card displayed in the device wallet will **not match** the last four digits of the original virtual card.
+* **Security**: This process hides the real 16-digit card number (FPAN) from merchants. If a device is lost or a token is compromised, only that specific token needs to be replaced rather than the entire card.
+
+## Manage Card Status
+The state of a user's virtual card determines if they can pay, must provision, or need to contact support. You retrieve this state via the `CBPaymentStatus` object.
+
+| Component | Status | Required UI Action |
+| :--- | :--- | :--- |
+| **`hasCard`** | `false` | Redirect user to onboarding/subscription process.|
+| | `true` | Move to provisioning or payment flow.  |
+| **`CBCardStatus`** | `ACTIVE` | The card is valid and ready for use. |
+| | `NOT_ACTIVE` | Card is suspended; disable payments and prompt support contact.  |
+| **`TokenStatus`** | `NONE` | Card is issued but not yet in the device wallet; display **"Add to Wallet"**.  |
+| | `ACTIVE` | Card is provisioned and ready for Tap & Go; display **"Pay"**. |
+
+## Provisioning Logic
+Once the SDK indicates that `hasCard` is **True** and the card status is **ACTIVE**, you must provide the user with the option to provision the card.
+
+* **Android**: Call `provisionCard` to push the token into the SDK wallet.
+* **iOS**: Call `addToApplePay` to push the card to the iPhone or Apple Watch.
+* **Button Visibility**: You must keep the **"Add to Wallet"** button visible in your UI until the `tokenStatus` for all available paired devices is **ACTIVE**.
+
+## Respond to Suspensions
+CoinBridge distinguishes between account-level (Card) and device-level (Token) issues.
+
+### Card-Level Suspension
+If `CBCardStatus` is `NOT_ACTIVE`, the entire service is restricted due to suspected fraud or a manual block.
+* **Action**: Display a clear message instructing the user to contact customer support.
+
+### Token-Level Suspension
+If the card is `ACTIVE` but a specific token is `NOT_ACTIVE`, only that device is affected (e.g., the user suspended their iPhone token via "Find My").
+* **Action**: Instruct the user to remove the suspended token from their native wallet and re-provision the card.
+
+## Technical Reference: Status Retrieval
+| Trigger | Method / Callback | Purpose |
+| :--- | :--- | :--- |
+| **App Launch** | `onInitComplete` | Determine if the user should see the Payment screen or Onboarding. |
+| **State Change** | `onPaymentMethodStatusChange` | Update the UI in real-time when a card is provisioned or suspended. |
+| **Manual Check** | `CBPaymentStatus` | Verify device readiness immediately before a "Prepare to Pay" call. |
+
+> **Note**: If `CBPaymentStatus` returns as `null`, your application must wait for the `onPaymentMethodStatusChange` event from the `CBNotification` service to receive the initial data.

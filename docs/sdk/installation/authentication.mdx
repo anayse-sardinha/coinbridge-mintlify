@@ -2,25 +2,20 @@
 title: "Authenticate"
 ---
 
-Authentication (often referred to as **Auth**) connects your application and the CoinBridge platform establishing a secure link between a specific user and their current mobile device.
+Authentication (often referred to as **Auth**) connects your application and the CoinBridge platform establishing a secure link between a specific user and their current mobile device. This securely maps every transaction to the correct account and retrieves digital assets accurately.
 
 This process relies on the following back-end to back-end communication flow to ensure data integrity:
 * **JWT Generation**: Your backend generates a JSON Web Token (JWT) signed with your private RSA key.
 * **User Verification**: When the SDK passes this JWT to CoinBridge, our backend performs a "Get User Info" call to your platform's verification endpoint.
-* **Validation**: Your system confirms the user is valid and meets your specific eligibility requirements.
-* **Device Pairing**: Once validated, the CoinBridge system records the specific hardware details to authorize all future actions for that device.
+* **Validation**: Your system confirms the user is valid and meets your specific eligibility requirements. Once validated, the CoinBridge system records the specific hardware details to authorize all future actions for that device.
 
-This process ensures that every transaction is securely mapped to the correct user account and that digital assets (points/rewards) are retrieved accurately.
-
-## The `authenticate` Method
-
-The `authenticate` method performs the initial synchronization by matching your user's unique identifier with the CoinBridge SDK and Backend platform. To establish this secure connection, follow these steps:
+To establish this connection, follow these steps:
 
 ### Step 1: Check Current Session Status 
 
 Every time the application launches or returns from the background, call the `isAuthenticated` method to determine if a valid session exists on the device.
 
-* **If True**: The user is already securely paired with the device. Skip the authentication sync and proceed directly to **Initialization**.
+* **If True**: The user is already securely paired with the device. Skip the authentication sync and proceed directly to **[Initialize](docs/sdk/installation/initialize)**.
 * **If False**: The SDK does not recognize an active session. You must proceed with the full **Authentication** workflow to establish the initial **synchronization**.
 
 ### Step 2: Generate a JWT (Backend Only)
@@ -30,7 +25,7 @@ To secure the synchronization, your backend must generate a JSON Web Token (JWT)
 > **Security Note:** Never generate or store private RSA keys within the mobile application. JWT generation must occur strictly on the server side to prevent sensitive data leaks.
 
 <Accordion title="JWT Payload Requirements">
-  The JWT payload should contain the following entries to ensure the CoinBridge SDK can correctly identify the user and validate the security token:
+  The JWT payload must contain the following entries to ensure the CoinBridge SDK can correctly identify the user and validate the security token:
 
 | Claim | Description    | Required Value                                                       |
 | :---- | :------------- | :------------------------------------------------------------------- |
@@ -41,7 +36,7 @@ To secure the synchronization, your backend must generate a JSON Web Token (JWT)
 | `iss` | **Issuer**     | Must be set to the **Application Key** received from CoinBridge.     |
 | `sub` | **Subject**    | A unique identifier of the logged-in user in your application.       |
 
-> **Warning:** To protect user privacy, do not use PII (real user ID, phone number, or email) as the `sub` value. CoinBridge systems store this value without special encryption, so you must use an internal, anonymized identifier recognized across your systems.
+> **Warning:** To protect user privacy, do not use PII (real user ID, phone number, or email) as the `sub` value. Use an internal identifier recognized across your backend systems.
 
 </Accordion>
 
@@ -84,5 +79,3 @@ Once your application receives the signed JWT from your backend, pass it to the 
     ```
   </Tab>
 </Tabs>
-
-

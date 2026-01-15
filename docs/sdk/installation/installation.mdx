@@ -2,14 +2,17 @@
 title: "Installation"
 ---
 
-Add the CoinBridge SDK to your mobile app to use our bridge infrastructure. Follow these steps to configure your environment and add the SDK for both Android (Gradle) and iOS (Swift Package Manager).
+To use the CoinBridge bridge infrastructure, you must deploy the SDK into your mobile application. Follow these steps to configure your environment and add the SDK for both Android (Gradle) and iOS (Swift Package Manager).
 
-> **Note:** Before you begin, ensure you have the repository credentials and URL provided by the CoinBridge team.
 <Tabs>
   <Tab title="Android (Gradle)">
 Before starting the integration, ensure your environment meets the following requirements:
-* **Credentials**: You must have the repository URL and unique credentials provided by the CoinBridge team.
-* **Android**: Minimum SDK version 8.0 (API level 26).
+| Requirement | Android Specifications |
+| :--- | :--- |
+| **OS Version** | Android 8.0 Oreo (API level 26) or higher  |
+| **Development Tool** | Compiled with Android API level 30  |
+| **Credentials** | Repository URL and unique credentials (Username and Password)  |
+| **Hardware** | NFC-equipped and not rooted |
 
 Follow these steps to configure your private Maven repository and dependencies.
 1. Create a `coinbridge.properties` file in your project's root folder and add the credentials provided by the CoinBridge team.
@@ -45,12 +48,16 @@ dependencies {
   </Tab>
   <Tab title="iOS (Swift Package Manager)" >
  Before starting the integration, ensure your environment meets the following requirements:
-* **Credentials**: You must have the repository URL and unique credentials provided by the CoinBridge team.
-* **iOS**: Xcode 12.5.1 or later and iOS 13.4 or higher.
+| Requirement | iOS Specifications |
+| :--- | :--- |
+| **OS Version** | iOS 13.4 or higher  |
+| **Development Tool** | Xcode 12.5.1 or later |
+| **Credentials** | Repository URL and credentials (unique Application Key and repository login) |
+| **Hardware** | iPhone 7 or newer; NFC-equipped |
 
 To add the CoinBridge SDK to your iOS application using Swift Package Manager, follow these steps within Xcode:
 1. Open your project in Xcode.
-2. Navigate to File > Swift Packages > Add Package Dependency.
+2. Navigate to **File > Swift Packages > Add Package Dependency**.
 3. Enter the repository URL provided by CoinBridge: https://github.com/CoinBridgeGit/IosSDKSandbox 
 4. Follow the prompts to select the version and add it to your app target.
   </Tab>

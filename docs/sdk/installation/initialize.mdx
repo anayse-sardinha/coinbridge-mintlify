@@ -1,30 +1,20 @@
 ---
-title: "Start the SDK"
-description: "Initialize the CoinBridge SDK to synchronize user states and payment environments."
+title: "Initialize"
 ---
-
-The Initialization method sets up the payment environment for the user. It determines the readiness of the user's payment method and retrieves current card statuses.
 
 <Info>
   **Implementation Rules**
-  * **Initialization**: Wait for `onAuthenticated` before calling `initialize` to avoid sync errors.
+  * **Wait for Auth**: You must wait for the successful `onAuthenticated` callback before calling `initialize`.
   * **Manual Logout**: You **must** call `logout` to destroy the digital wallet on user exit.
-  * **Re-logins**: Treat as new sessions; repeat the full Authorization and Initialization cycle.
 </Info>
 
-## SDK Initialization & User States
+**Initialization** is a required state-management step that synchronizes the CoinBridge SDK with the backend. You must call it on every app launch to verify payment readiness and retrieve real-time card statuses.
 
-Initialization is the primary mechanism for synchronizing the CoinBridge SDK with the back-end. Rather than a one-time setup, it serves as a **state-management tool** that must be invoked every time the application starts.
-
-For an optimal experience, perform SDK initialization in the `onCreate()` method (Android) or the primary View Controller (iOS) of your payment flow.
-
-## Initialization Scenarios
-
-Initialization is not a one-time setup; it is a state-management tool that must be invoked every time the application starts to ensure data parity.
+> **Best Practice:** Call initialization within the Android `onCreate()` method or the primary iOS View Controller of your payment flow.
 
 <Tabs>
   <Tab title="First-Time Setup">
-    **Scenario A**: For new users who have no existing digital wallet or card.
+    **Scenario A**: For new users who have no existing digital card.
     **Trigger**: `hasCard == false` 
 
     <Steps>
@@ -59,13 +49,6 @@ Initialization is not a one-time setup; it is a state-management tool that must 
 
   </Tab>
 </Tabs>
-
-<Info>
-### Mandatory Logout
-When a user logs out of your application, you **must** call the `logout` method.
-This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
-Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
-</Info>
 
 ## UI Logic with CBPaymentStatus
 The `CBPaymentStatus` object provides the definitive state of the user's payment method. Use these parameters to drive your UI logic:
@@ -109,3 +92,10 @@ CoinBridge.sharedInstance.initialize { cbInitCompletion in
 }
 ```
 </CodeGroup>
+
+<Info>
+### Mandatory Logout
+When a user logs out of your application, you **must** call the `logout` method.
+This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
+Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
+</Info>

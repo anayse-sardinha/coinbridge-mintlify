@@ -1,58 +1,60 @@
 ---
 title: "Add Card to Wallet (Provisioning)"
-description: "Platform-specific implementation guides for adding virtual cards to Apple Wallet and the CoinBridge Android SDK."
 ---
 
-## iOS Implementation: Apple Wallet
+Provisioning is the mandatory final step of the onboarding journey. It moves your user's virtual card from the CoinBridge backend into a native device wallet to enable contactless Tap & Go payments.
+<Tabs>
+  <Tab title="Android Implementation: Google Wallet ">
+  On Android, the SDK handles card provisioning to the internal wallet. Your primary responsibility is ensuring the device's NFC and security settings are correctly configured for payments.
 
-On iOS, the process of pushing a virtual card to the iPhone or Apple Watch is called **Provisioning**. This step is essential to enable users to make Tap & Go payments via Apple Pay.
+   ### Prerequisites
+    * **OS Version**: Android 8.0 Oreo (API level 26) or higher.
+    * **Hardware**: The device must be NFC-equipped and not rooted.
+    * **Security**: Users must have a passcode, pattern, or fingerprint lock enabled for payment features.
 
-### Prerequisites
-* **OS/Hardware**: Requires iOS 13.4+ and iPhone 7 or newer.
-* **Security**: Users must have Face ID, Touch ID, or a passcode configured.
-* **Card State**: The card must be `active` and not already provisioned (`tokenStatus = none`).
+    ### Provisioning & NFC Configuration
+    <Steps>
+    1. **Provisioning Method**: Call the `provisionCard` method to push the virtual card token into the SDK wallet.
+    2. **Verify Settings**: Before allowing a payment attempt, your app should call these `CBHelper` methods to ensure hardware readiness:
+    * `isNFCEnabled`: Confirms NFC is turned on.
+    * `isPayWithCurrentlyOpenAppEnabled`: Verifies the "Pay with open app" flag is enabled.
+    3. **System Redirects**: If these settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the correct Android system menu.
+    </Steps>
+    ### UI & Logic Guidelines
+    * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
+    * **Ready to Pay**: Only display the **"Pay"** button once the wallet status returns as `ACTIVE`.
+  </Tab>
 
-### Provisioning Flow
-1. **Check Eligibility**: Verify if a device (iPhone or Watch) can receive the card.
-2. **Initiate Request**: Call the `addToApplePay` method.
-3. **Wait for Success**: Once the Apple Wallet form is completed, wait for the `onPaymentMethodStatusChange` notification to confirm the token is `active`.
+  <Tab title="iOS Implementation: Apple Wallet">
+   On iOS, users must add the virtual card to the iPhone or Apple Watch. This process uses Apple's native provisioning forms and does not require two-factor authentication.
 
-### UI & Logic Guidelines
-* **Button Visibility**: Keep the "Add to Apple Wallet" button visible until all paired devices (iPhone and Apple Watch) are provisioned.
-* **Existing Users**: If an existing user logs in on a new device, a new card is **not** issued; they simply re-perform this provisioning step.
-* **Apple Watch**: If a user has a linked watch, you must provide the option to provision the card there as well.
+    ### Prerequisites
+    * **OS/Hardware**: iOS 13.4+ and iPhone 7 or newer.
+    * **Security**: Users must have Face ID, Touch ID, or a device passcode configured.
+    * **Card State**: The card must be `active` and the `tokenStatus` for the device must be `none`.
 
----
+    ### Provisioning Flow
+    <Steps>
+    1. **Check Compatibility**: Use `cardCanAddToApplePay` to verify if the device or paired watch can receive the card.
+    2. **Initiate Request**: Call the `addToApplePay` method to open the native Apple Wallet overlay.
+    3. **Confirm Activation**: Wait for the `onPaymentMethodStatusChange` notification via the `CBNotification` service to confirm the `tokenStatus` has transitioned to `active`.
+    </Steps>
+    ### UI & Logic Guidelines
+    * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).
+    * **Apple Watch**: If a user has a linked watch, you must provide a dedicated hub or screen to allow watch-specific provisioning.
+    * **Existing Users**: If an existing user logs in on a new device, do not re-issue a card; initialization will return `hasCard = true`, and you should proceed directly to this provisioning step.
+</Tab>
+</Tabs>
 
-## Android Implementation: Google Wallet 
+## Mandatory Communication Requirements
 
-On Android, the process involves issuing the card and ensuring the device's NFC settings are correctly configured for "Tap & Go" payments.
+To comply with financial regulations and Apple's terms, you must establish an automated process to send notifications via a "tenured channel" (Email or SMS).
 
-### Prerequisites
-* **OS Version**: Requires Android 8.0 Oreo (API level 26) or higher.
-* **Hardware**: The device must be NFC-equipped and not rooted.
-* **Security**: Users must have a passcode, pattern, or fingerprint lock enabled.
-
-### Provisioning & NFC Configuration
-1. **Provisioning Method**: Use the `provisionCard` method to push the issued card token to the internal SDK wallet.
-2. **Verify Settings**: Use the `CBHelper` toolkit to ensure the following are enabled:
-    * **NFC Capability**: `isNFCEnabled`.
-    * **Foreground Payment**: `isPayWithCurrentlyOpenAppEnabled`.
-3. **Manual Redirect**: If settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the system menu.
-
-### UI & Logic Guidelines
-* **Initialization**: Call the `init` method in the `onCreate()` of your payment activity to check readiness.
-* **Background Process**: Unlike iOS, Android card provisioning is primarily performed by the SDK in the background once the user initiates `IssueCard`.
-* **Ready to Pay**: Only show the "Pay" button once the wallet status returns as `ACTIVE`.
-
-## Mandatory Communication (Apple & Android)
-
-Regardless of the platform, specific "Tenured Channel" (Email/SMS) notifications are required to comply with financial regulations.
-
-| Scenario | Platform | Requirement |
+| Scenario | Trigger | Mandatory Requirement |
 | :--- | :--- | :--- |
-| **Provisioning Success** | Both | Send confirmation within 1 hour of activation. |
-| **Abandoned Flow** | iOS | Notify users who started but didn't finish within 24 hours. |
-| **Inactive Users** | Both | If provisioned but unused for 7 days, send a "Benefits" email. |
-| **Incentives** | iOS | A minimum 20 ILS incentive must be offered for incomplete provisioning (>7 days). |
+| **Provisioning Success** | Successful activation. | Send confirmation within 1 hour of activation. |
+| **Abandoned Flow** | User started but did not finish. | Notify the user within 24 hours explaining how to complete activation. |
+| **Inactive Users** | Provisioned but unused. | If no transaction occurs within 7 days, send an email highlighting Apple Pay benefits. |
+| **User Incentives** | (iOS specific) Incomplete flow. | A minimum **20 ILS** incentive must be offered if provisioning is not completed within 7 days or first use within 14 days. |
+
 
