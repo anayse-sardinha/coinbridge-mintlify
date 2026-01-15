@@ -42,11 +42,17 @@
             ]
           },
           {
-            "group": "Installation",
+            "group": "Quick Start",
             "pages": [
+              "docs/sdk/installation/installation",
               "docs/sdk/installation/authentication",
-              "docs/sdk/installation/initialization",
-              "docs/sdk/installation/user-eligibility",
+              {
+                "group": "Initialize",
+                "pages": [
+                  "docs/sdk/installation/start-sdk",
+                  "docs/sdk/installation/user-eligibility"
+                ]
+              },
               "docs/sdk/installation/virtual-card-status",
               "docs/sdk/installation/create-virtual-card",
               "docs/sdk/installation/add-to-wallet"
