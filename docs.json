@@ -20,8 +20,8 @@
         "tab": "Get Started",
         "pages": [
           "docs/get-started/coinbridge-overview",
-          "docs/sdk/installation/to-start",
-          "docs/get-started/integration-process",
+          "docs/get-started/card-setup-overview",
+          "docs/get-started/to-start",
           "docs/get-started/payment-flow"
         ]
       },
@@ -43,7 +43,7 @@
             ]
           },
           {
-            "group": "Quick Start",
+            "group": "Set Up Your Card",
             "pages": [
               "docs/sdk/installation/authentication",
               {
