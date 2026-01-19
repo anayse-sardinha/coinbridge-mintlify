@@ -34,6 +34,7 @@ If you need to verify if a user meets registration criteria first, you can optio
 ### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
 Preparing the device for physical point-of-sale payments requires "Provisioning," which pushes the virtual card token into the device's native Apple or Google wallet. You must display a branded "Add to Wallet" button to initiate the `provisionCard` method. Once the `TokenStatus` updates to `ACTIVE`, the provisioning is successful and the device is ready for use.
 
+The following diagram shows the steps required to set up a card:
 ```mermaid
 graph TD
     %% Node Definitions
@@ -77,10 +78,10 @@ graph TD
     class Start terminal;
 
     %% Interactive Link Placeholders
-    click Auth "docs/sdk/installation/authentication" "View Authentication Guide"
-    click Init "docs/sdk/installation/initialize" "View Initialization Guide"
-    click Issue "docs/sdk/installation/issue-card" "View Issuing Guide"
-    click Add "docs/sdk/installation/add-to-wallet" "View Wallet Guide"
+    click Auth "/docs/sdk/installation/authentication" "View Authentication Guide"
+    click Init "/docs/sdk/installation/initialize" "View Initialization Guide"
+    click Issue "/docs/sdk/installation/issue-card" "View Issuing Guide"
+    click Add "/docs/sdk/installation/add-to-wallet" "View Wallet Guide"
     ```
 
 

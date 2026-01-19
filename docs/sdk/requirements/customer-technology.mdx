@@ -4,7 +4,6 @@ title: "Customer Technology Requirements"
 
 To integrate the CoinBridge payment service, your infrastructure must meet two core technology prerequisites: a compatible mobile application and a robust loyalty or user management platform.
 
----
 
 ## Customer Mobile Application
 
@@ -19,8 +18,6 @@ Your existing mobile application serves as the primary interface for the end-use
     * **Android**: The solution is incompatible with devices lacking NFC hardware or the ability to pay using the currently open (foreground) application.
     * **iOS**: The SDK is compatible with any iOS mobile application.
 
----
-
 ## Loyalty or User Management Platform
 
 A back-end platform is required to manage the financial logic and user data that powers the CoinBridge service. This platform performs several essential functions:
@@ -29,8 +26,6 @@ A back-end platform is required to manage the financial logic and user data that
 * **Transaction Authorization**: The data from your platform is essential for CoinBridge to either approve or decline a purchase.
 * **Policy Management**: Your platform manages spending rules, such as Merchant Category Code (MCC) restrictions, Merchant ID (MID) limits, or transaction amount thresholds.
 * **Data Exchange**: Your platform must be able to receive transaction details, refund feedback, and correction updates from the CoinBridge platform via the Backend Connector.
-
----
 
 ## Connectivity Standards (SLA)
 

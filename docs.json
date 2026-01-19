@@ -17,21 +17,21 @@
         ]
       },
       {
-        "tab": "Get Started",
-        "pages": [
-          "docs/get-started/what-is-coinbridge",
-          "docs/get-started/card-setup-overview",
-          "docs/get-started/to-start",
-          "docs/get-started/payment-flow"
-        ]
-      },
-      {
-        "tab": "SDKs",
+        "tab": "Guides",
         "groups": [
           {
-            "group": "Overview",
+            "group": "How CoinBridge Works",
             "pages": [
-              "docs/sdk/index"
+              "docs/get-started/what-is-coinbridge",
+              "docs/get-started/how-the-coinbridge-payment-process-works"
+            ]
+          },
+          {
+            "group": "Get Started with CoinBridge",
+            "pages": [
+              "docs/sdk/index",
+              "docs/get-started/to-start",
+              "docs/get-started/card-setup-overview"
             ]
           },
           {
@@ -81,7 +81,7 @@
       },
       {
         "tab": "Webhooks",
-        "groups": [
+        "pages": [
           {
             "group": "Configuration",
             "pages": [
@@ -92,6 +92,7 @@
           },
           {
             "group": "Endpoints",
+            "expanded": false,
             "pages": [
               {
                 "group": "User Data",
@@ -129,7 +130,7 @@
         ]
       },
       {
-        "tab": "CoinBridge API",
+        "tab": "API",
         "groups": [
           {
             "group": "Reference",
