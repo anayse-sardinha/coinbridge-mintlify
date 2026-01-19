@@ -19,7 +19,7 @@
       {
         "tab": "Get Started",
         "pages": [
-          "docs/get-started/coinbridge-overview",
+          "docs/get-started/what-is-coinbridge",
           "docs/get-started/card-setup-overview",
           "docs/get-started/to-start",
           "docs/get-started/payment-flow"
