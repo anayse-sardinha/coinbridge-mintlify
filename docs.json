@@ -20,6 +20,7 @@
         "tab": "Get Started",
         "pages": [
           "docs/get-started/coinbridge-overview",
+          "docs/sdk/installation/to-start",
           "docs/get-started/integration-process",
           "docs/get-started/payment-flow"
         ]
@@ -44,7 +45,6 @@
           {
             "group": "Quick Start",
             "pages": [
-              "docs/sdk/installation/installation",
               "docs/sdk/installation/authentication",
               {
                 "group": "Initialize",

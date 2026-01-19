@@ -45,3 +45,90 @@ See more about our process:
   </Card>
 </CardGroup>
 
+
+```mermaid
+graph TD
+    A[Install] --> B[Authenticate] --> C[Initialize]
+    C --> D{Has Card?}
+    D -- No --> E[Issue Card]
+    D -- Yes --> F[Provision to Wallet]
+    
+    click A "/docs/sdk/installation/installation" "Go to Installation"
+    click B "/docs/sdk/installation/authentication" "Go to Authentication"
+    click C "/docs/sdk/installation/initialize" "Go to Initialize"
+    click E "/docs/sdk/installation/issue-card" "Go to Issue Card"
+    click F "/docs/sdk/installation/add-to-wallet" "Go to Add to Wallet"
+```
+```mermaid
+graph TD
+    Start((App Launch)) --> AuthCheck{Is Authenticated?}
+    
+    AuthCheck -- No --> B[Authenticate]
+    AuthCheck -- Yes --> C[Initialize]
+
+    B -->|Wait for Callback| C
+    
+    C -->|onInitComplete| D{Has Card?}
+    
+    D -- No --> G[Issue Card]
+    D -- Yes --> F{Is Provisioned?}
+    
+    G -->|Wait for Success| F
+    
+    F -- No --> H[Provision to Wallet]
+    F -- Yes --> Ready((Ready to Pay))
+    
+    H -->|Wait for Change| Ready
+
+    click B "/docs/sdk/installation/authentication" "Go to Authentication"
+    click C "/docs/sdk/installation/initialize" "Go to Initialize"
+    click G "/docs/sdk/installation/issue-card" "Go to Issue Card"
+    click H "/docs/sdk/installation/add-to-wallet" "Go to Add to Wallet"
+    ```
+
+
+```mermaid
+  graph TD
+    %% Node Definitions
+    Start((App Launch))
+    AuthCheck{Authenticated?}
+    Auth[Authenticate]
+    Init[Initialize SDK]
+    Issue[Issue Card]
+    Prov{Provisioned?}
+    Add[Add to Wallet]
+    Ready((Ready to Pay))
+
+    %% Flow Logic
+    Start --> AuthCheck
+    AuthCheck -- No --> Auth
+    AuthCheck -- Yes --> Init
+    
+    Auth -->|Wait for Response| Init
+    
+    Init -->|onInitComplete| Issue
+    
+    Issue -->|hasCard=True| Prov
+    
+    Prov -- No --> Add
+    Prov -- Yes --> Ready
+    
+    Add -->|Token ACTIVE| Ready
+
+    %% Styling (Yellow Tones)
+    classDef yellowNode fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,color:#5D4037;
+    classDef goldNode fill:#FFECB3,stroke:#FFA000,stroke-width:2px,color:#5D4037;
+    classDef highlight fill:#FFD54F,stroke:#FF8F00,stroke-width:3px,color:#000,font-weight:bold;
+    classDef terminal fill:#FFFDE7,stroke:#FFEE58,stroke-width:1px,dasharray: 5 5;
+
+    class Auth,Init goldNode;
+    class Issue,Add yellowNode;
+    class Ready highlight;
+    class Start terminal;
+
+    %% Interactive Links
+    click Auth "/docs/sdk/auth" "View Authentication Guide"
+    click Init "/docs/sdk/init" "View Initialization Guide"
+    click Issue "/docs/sdk/issuing" "View Issuing Guide"
+    click Add "/docs/sdk/provisioning" "View Wallet Guide"
+    ```
