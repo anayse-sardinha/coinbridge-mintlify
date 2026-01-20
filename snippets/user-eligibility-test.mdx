@@ -14,7 +14,7 @@ You might want to check eligibility for the following reasons:
 > **Note**: While optional, calling this method allows you to proactively disable the CoinBridge feature in your UI for ineligible users to prevent frustration.
 
 ## Implementation
-The `isEligible` method is used to validate the user. This call is typically performed after receiving a `False` response from `hasCard` and immediately before calling`issueCard`.
+The `isEligible` method validates the user. The only requirement is that `initialize` must be called first.
 
 <Tabs>
   <Tab title="Android">
