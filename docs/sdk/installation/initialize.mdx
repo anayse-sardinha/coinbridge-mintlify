@@ -16,8 +16,6 @@ title: "Initialization"
   <Tab title="First-Time Setup">
     For new users who have no existing digital card.
 
-    **Trigger**: `hasCard == false` 
-
     <Steps>
       1. **Authenticate**: Correlate the user's unique identifier with the SDK and backend.
       2. **Initialize**: Start the backend synchronization. You must wait for the `onInitComplete` callback before proceeding.
@@ -29,21 +27,21 @@ title: "Initialization"
   </Tab>
 
   <Tab title="The Re-login">
-    For users who log back in or reinstall the app but already have a card associated with their ID.
-
-    **Trigger**: `hasCard == true` 
+    For users who log back in or reinstall the app but already have a card associated with their ID. Use this flow when `hasCard` returns true during authentication.
 
     <Steps>
       1. **Authenticate**: Re-establish the user session with the backend.
       2. **Initialize**: Fetch existing card details and token states. The backend will identify that a card already exists.
       3. **Add Card to Wallet**: Do **not** call `issueCard`. Simply add the existing card to the native wallet on the new device.
     </Steps>
+
+    <Note> When a user logs out of your application, you **must** call the `logout` method.
+    This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
+    Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload. </Note> 
   </Tab>
 
   <Tab title="Standard App Launch">
     Day-to-day use to ensure the SDK has the most up-to-date security and balance information.
-    
-    **Trigger**: Standard application startup or foreground launch.
 
     <Steps>
       1. **Initialize**: Request a status refresh. The SDK performs a "fast handshake" to get the latest parameters without re-creating the wallet.

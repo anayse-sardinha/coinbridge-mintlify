@@ -31,6 +31,9 @@ If `hasCard` is `false`, call `issueCard()` to create the payment credential. Us
 ### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
 Call `provisionCard()` to push the card token to the device's native wallet. Once `TokenStatus` is `ACTIVE`, the device is ready for payments.
 
+### 5. Logout 
+When a user logs out of your application, you **must** call the `logout` method.
+
 The following diagram shows the steps required to set up a card:
 ```mermaid
 graph TD
