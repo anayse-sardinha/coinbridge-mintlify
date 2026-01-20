@@ -17,22 +17,22 @@ Follow these steps to set up your card:
 
 <CardGroup cols={2}>
   <Card title="1. Install" icon="list-check" href="/docs/get-started/to-start">
-    Preparing your environment involves generating an RSA key pair, importing the SDK, and configuring mandatory app permissions for NFC and Biometrics.
+    Import the SDK and configure NFC and Biometrics permissions.
   </Card>
 
   <Card title="2. Authenticate" icon="key" href="/docs/sdk/installation/authentication">
-    Securing the user session requires synchronizing unique identifiers via a backend-generated JWT signed with your RSA-256 private key.
+    Authenticate users with a JWT token signed by your backend.
   </Card>
 
   <Card title="3. Initialize" icon="arrows-rotate" href="/docs/sdk/installation/initialize">
-    Syncing data with the CoinBridge backend happens through an asynchronous initialization call that must be triggered at every application launch.
+    Initialize the SDK by syncing with the CoinBridge backend on app launch.
   </Card>
 
   <Card title="4. Create a Virtual Card" icon="credit-card" href="/docs/sdk/installation/issue-card">
-    Generating a new payment credential involves executing the `IssueCard` method to establish a virtual card bound to the authenticated user profile.
+    Execute the `IssueCard` method to create a virtual card for the authenticated user.
   </Card>
 
   <Card title="5. Add Card to Wallet" icon="wallet" href="/docs/sdk/installation/add-to-wallet">
-    Enabling contactless payments is the final step, where you push the digital token into the native Android or Apple Wallet for NFC-ready transactions.
+    Push the digital token to Apple or Android Wallet for NFC payments.
   </Card>
 </CardGroup>
