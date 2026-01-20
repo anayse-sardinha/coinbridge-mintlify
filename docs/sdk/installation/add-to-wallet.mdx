@@ -16,13 +16,13 @@ Provisioning adds your user's virtual card to their device wallet for contactles
 
     ### Provisioning & NFC Configuration
     To add a card to Google Wallet and enable NFC, follow these steps:
-    <Steps>
+
     1. **Provisioning Method**: Call the `provisionCard` method to push the virtual card token into the SDK wallet.
     2. **Verify Settings**: Before allowing a payment attempt, your app should call these `CBHelper` methods to ensure hardware readiness:
     * `isNFCEnabled`: Confirms NFC is turned on.
     * `isPayWithCurrentlyOpenAppEnabled`: Verifies the "Pay with open app" flag is enabled.
     3. **System Redirects**: If these settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the correct Android system menu.
-    </Steps>
+    
     ### UI & Logic Guidelines
     Here are some important UI and logic considerations:
     * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
@@ -40,11 +40,11 @@ Provisioning adds your user's virtual card to their device wallet for contactles
 
     ### Provisioning Flow
      To add a card to Apple Wallet, follow these steps:
-    <Steps>
+   
     1. **Check Compatibility**: Use `cardCanAddToApplePay` to verify if the device or paired watch can receive the card.
     2. **Initiate Request**: Call the `addToApplePay` method to open the native Apple Wallet overlay.
     3. **Confirm Activation**: Wait for the `onPaymentMethodStatusChange` notification via the `CBNotification` service to confirm the `tokenStatus` has transitioned to `active`.
-    </Steps>
+   
     ### UI & Logic Guidelines
     Here are some important UI and logic considerations:
     * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).

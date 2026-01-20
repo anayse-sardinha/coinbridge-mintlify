@@ -5,10 +5,8 @@ title: "Wallets Overview"
 In the CoinBridge ecosystem, "wallets" refer to the bridge between our backend systems and the physical act of paying at a terminal. Understanding the distinction between internal and external wallets is key to managing the user journey.
 
 CoinBridge uses two wallet types that work together:
-| Wallet Type | Description |
-| :--- | :--- |
-| **CoinBridge Wallet (Internal)** | A digital entity in our backend that binds the user, their device, and the SDK together. It manages the virtual card metadata. |
-| **Device Wallet (External)** | Third-party wallets like **Apple Pay** or **Google Pay**. These store the secure tokens used for contactless payments at physical POS terminals. |
+* **CoinBridge Wallet (Internal)**: A backend entity that binds the user, device, and SDK. It manages virtual card metadata.
+* **Device Wallet (External)**: Third-party wallets (e.g., **Apple Pay**, **Google Pay**) that store secure tokens for contactless payments at physical terminals.
 
 ## How Tokenization Secures Your Cards
 When a card is transferred to a device wallet, it goes through **Provisioning** using **Tokenization** to protect the real card data.

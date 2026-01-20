@@ -17,7 +17,8 @@ CoinBridge creates the card and pushes it to the internal SDK wallet in the back
 ### Scenario 2: Additional Data Required
 You must include user-specific details (e.g., National ID or SSN) as a payload. The user may need to consent to terms via a dedicated form managed by the SDK 
 
-> **Note:** You must properly onboard users and explain why this data is needed to ensure a high onboarding rate.
+<Note>**Onboarding Tip**: 
+You must properly onboard users and explain why this data is needed to ensure a high onboarding rate.</Note>
 
 ## Technical Implementation
 Call the `issueCard` method from the `CoinBridgeSDK` instance once the user has successfully completed Authentication and Initialization:

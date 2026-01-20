@@ -11,7 +11,8 @@ You might want to check eligibility for the following reasons:
 * **Fraud & Abuse Prevention**: Detects if a user has been blacklisted or flagged for abuse in your system.
 * **Prevent Issuance Errors**: Card issuance is a "point of no return". Checking eligibility first prevents attempting to issue a card to a user who the system will ultimately reject.
 
-> **Note**: While optional, calling this method allows you to proactively disable the CoinBridge feature in your UI for ineligible users to prevent frustration.
+<Note>**UI Management**:
+While optional, calling this method allows you to disable the feature for ineligible users to streamline your user experience.</Note>
 
 ## Implementation
 The `isEligible` method validates the user. The only requirement is that `initialize` must be called first.
