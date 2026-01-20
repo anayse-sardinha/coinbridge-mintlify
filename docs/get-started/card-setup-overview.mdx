@@ -5,34 +5,31 @@ title: "Card Setup Overview"
 Setting up a digital card involves a specific sequence of steps to prepare the SDK and the user's device for **Tap & Go** payments. Unlike day-to-day interactions, this "Happy Path" is a one-time onboarding process for new users.
 
 <Note>
-Important: To ensure success on the setup process, you must wait for the final callback of each method before proceeding to the next.
+Wait for each method's callback before proceeding to the next step.
 </Note>
 
 ### [Prerequisites](docs/get-started/to-start)
-Before calling SDK methods, complete these technical requirements:
-* **Generate RSA Key-Pair**: Create a unique RSA key pair (at least 2048-bit) and provide CoinBridge with the public key.
-* **SDK Import**: Import the CoinBridge SDK into your project using Gradle for Android or Swift Package Manager (SPM) for iOS.
-* **Mandatory Permissions**: Ensure the app has permissions for **Internet, NFC, and Biometrics** (Face ID, Touch ID, or Passcode).
+Before starting, you need to:
+* **Generate RSA Key-Pair**: Create a 2048-bit RSA key pair and share the public key with CoinBridge.
+* **Import SDK**: Add the CoinBridge SDK to your project (Gradle for Android, SPM for iOS).
+* **Set Permissions**: Enable Internet, NFC, and Biometric permissions in your app.
 
 See the required steps for setup below:
 
 ### 1. [Authenticate](docs/sdk/installation/authentication) 
-To begin the integration, you must synchronize the user's unique identifier with the CoinBridge SDK to create a secure binding between the user and the SDK instance. This process should only be triggered if `isAuthenticated()` returns `false`, using a server-side generated **JSON Web Token (JWT)** to sign the request. 
-<Note> 
-Because the SDK persists this state until a manual logout, you only need to authenticate once per session rather than on every app launch.
-</Note> 
+To begin, call `authenticate()` with a server-side generated JWT to sync the user with the SDK. Only call this if `isAuthenticated()` returns `false`.
+<Note>
+The SDK persists authentication until logout, so you only need to authenticate once per session.
+</Note>
 
 ### 2. [Initialize](docs/sdk/installation/initialize)
-Accessing up-to-date card information or eligibility status requires an asynchronous initialization to sync the local SDK with the CoinBridge backend. Unlike authentication, you must call `initialize` every time the application starts to ensure data consistency. This operation returns a `hasCard` boolean, which serves as the primary logic gate to determine if you need to issue a new card or proceed to provisioning.
+Call `initialize()` every app launch to sync with the backend and get a `hasCard` boolean that determines your next step.
 
 ### 3. [Create a Digital Card](docs/sdk/installation/issue-card)
-Issuing a digital card is the necessary next step if the initialization confirms that `hasCard` is `false`. By calling the `issueCard()` method, you initiate the creation of the payment credential; note that depending on local regulations, users may be prompted to provide additional data (such as an SSN or National ID) and consent to issuer terms. 
-<Note> 
-If you need to verify if a user meets registration criteria first, you can optionally use the [`isEligible`](/docs/sdk/installation/user-eligibility) method.
-</Note> 
+If `hasCard` is `false`, call `issueCard()` to create the payment credential. Users may need to provide additional information based on local regulations.
 
 ### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
-Preparing the device for physical point-of-sale payments requires "Provisioning," which pushes the virtual card token into the device's native Apple or Google wallet. You must display a branded "Add to Wallet" button to initiate the `provisionCard` method. Once the `TokenStatus` updates to `ACTIVE`, the provisioning is successful and the device is ready for use.
+Call `provisionCard()` to push the card token to the device's native wallet. Once `TokenStatus` is `ACTIVE`, the device is ready for payments.
 
 The following diagram shows the steps required to set up a card:
 ```mermaid
