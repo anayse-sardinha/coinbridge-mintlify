@@ -4,52 +4,15 @@ title: "Wallet Overview"
 
 In the CoinBridge ecosystem, "wallets" refer to the bridge between our backend systems and the physical act of paying at a terminal. Understanding the distinction between internal and external wallets is key to managing the user journey.
 
-## The Two Wallet Types
-A transaction involves two distinct wallet entities working in tandem:
-
+CoinBridge uses two wallet types that work together:
 | Wallet Type | Description |
 | :--- | :--- |
 | **CoinBridge Wallet (Internal)** | A digital entity in our backend that binds the user, their device, and the SDK together. It manages the virtual card metadata. |
 | **Device Wallet (External)** | Third-party wallets like **Apple Pay** or **Google Pay**. These store the secure tokens used for contactless payments at physical POS terminals. |
 
-## Security via Tokenization
-When a card is moved from the internal system to a device wallet, it undergoes **Provisioning**. This process uses **Tokenization** to ensure the real card data is never exposed.
+## How Tokenization Secures Your Cards
+When a card is transferred to a device wallet, it goes through **Provisioning** using **Tokenization** to protect the real card data.
 
-* **FPAN vs. DPAN**: The real 16-digit card number (**Funding Primary Account Number**) is replaced by a **Device Primary Account Number (DPAN)**.
-* **Visual Identification**: Because the DPAN is a token, the last four digits displayed in Apple/Google Pay will **not match** the last four digits of the original virtual card.
-* **Risk Mitigation**: If a device is lost or a token is compromised, only that specific token (DPAN) is deactivated. The underlying card (FPAN) remains secure and doesn't necessarily need to be replaced.
-
-## Provisioning Logic
-Provisioning is the act of pushing the virtual card into the Device Wallet. This should only be triggered once the SDK confirms the user is eligible.
-
-### Platform Methods
-* **Android**: Call `provisionCard` to push the token into the Google Wallet via the SDK.
-* **iOS**: Call `addToApplePay` to initiate the secure handshake with the Secure Element on the iPhone or Apple Watch.
-
-### UI Requirements
-To ensure a smooth UX, you must keep the **"Add to Wallet"** button visible in your UI until the `tokenStatus` for all available paired devices returns as `ACTIVE`.
-
-## Managing Card & Token Status
-The state of a user's wallet determines the UI flow. Use the `CBPaymentStatus` object to decide whether to show onboarding, the provisioning button, or the payment trigger.
-
-### Status Mapping
-| Component | Status | Required UI Action |
-| :--- | :--- | :--- |
-| **`hasCard`** | `false` | Redirect user to onboarding/subscription process. |
-| | `true` | User has a card; proceed to check activation/token status. |
-| **`CBCardStatus`** | `ACTIVE` | The card is valid and ready. |
-| | `NOT_ACTIVE` | **Card-Level Suspension**: Disable payments and prompt user to contact support. |
-| **`TokenStatus`** | `NONE` | Card is issued but not provisioned; display **"Add to Wallet"**. |
-| | `ACTIVE` | Card is provisioned and ready for Tap & Go; display **"Pay"**. |
-| | `SUSPENDED` | **Token-Level Suspension**: Specific device is blocked. Instruct user to remove the token from their native wallet and re-provision. |
-
-## Technical Implementation: Status Retrieval
-Your app should react to status changes dynamically rather than relying solely on manual checks.
-
-| Trigger | Method / Callback | Purpose |
-| :--- | :--- | :--- |
-| **App Launch** | `onInitComplete` | Determine the initial entry point (Payment screen vs. Onboarding). |
-| **State Change** | `onPaymentMethodStatusChange` | Update the UI (e.g., changing "Add to Wallet" to "Pay") in real-time. |
-| **Manual Check** | `CBPaymentStatus` | Verify device readiness immediately before a "Prepare to Pay" call. |
-
-> **Pro Tip**: If `CBPaymentStatus` returns `null` on startup, the SDK is still synchronizing. Your application must wait for the `onPaymentMethodStatusChange` event from the `CBNotification` service to receive the first valid data set.
+* **FPAN vs. DPAN**: The actual 16-digit card number (**Funding Primary Account Number**) is replaced by a **Device Primary Account Number (DPAN)**.
+* **Visual Identification**: The last four digits shown in Apple/Google Pay will differ from those of the original virtual card.
+* **Risk Mitigation**: If a device is lost or a token is compromised, only the specific token (DPAN) is deactivated, keeping the underlying card (FPAN) secure.

@@ -2,9 +2,9 @@
 title: "Authenticate"
 ---
 
-Authentication (often referred to as **Auth**) connects your application and the CoinBridge platform establishing a secure link between a specific user and their current mobile device. This securely maps every transaction to the correct account and retrieves digital assets accurately.
+Authentication connects your app to CoinBridge, securely linking a user to their mobile device. This ensures transactions are mapped to the correct account.
 
-This process relies on the following back-end to back-end communication flow to ensure data integrity:
+The process uses this backend communication flow:
 * **JWT Generation**: Your backend generates a JSON Web Token (JWT) signed with your private RSA key.
 * **User Verification**: When the SDK passes this JWT to CoinBridge, our backend performs a "Get User Info" call to your platform's verification endpoint.
 * **Validation**: Your system confirms the user is valid and meets your specific eligibility requirements. Once validated, the CoinBridge system records the specific hardware details to authorize all future actions for that device.
@@ -14,18 +14,20 @@ To establish this connection, follow these steps:
 ### Step 1: Check Current Session Status 
 
 Every time the application launches or returns from the background, call the `isAuthenticated` method to determine if a valid session exists on the device.
-
-* **If True**: The user is already securely paired with the device. Skip the authentication sync and proceed directly to **[Initialize](docs/sdk/installation/initialize)**.
-* **If False**: The SDK does not recognize an active session. You must proceed with the full **Authentication** workflow to establish the initial **synchronization**.
+There are two possible answers when you call this method:
+* **If True**: The user is securely paired with the device. Skip authentication and go to **[Initialize](docs/sdk/installation/initialize)**.
+* **If False**: No active session is found. Proceed with the full **Authentication** workflow.
 
 ### Step 2: Generate a JWT (Backend Only)
 
 To secure the synchronization, your backend must generate a JSON Web Token (JWT) to identify the user.
 
-> **Security Note:** Never generate or store private RSA keys within the mobile application. JWT generation must occur strictly on the server side to prevent sensitive data leaks.
+<Note> 
+**Security Note:** Never generate or store private RSA keys within the mobile application. Ensure that JWT generation is performed on the server side to maintain security.
+</Note>
 
 <Accordion title="JWT Payload Requirements">
-  The JWT payload must contain the following entries to ensure the CoinBridge SDK can correctly identify the user and validate the security token:
+The JWT payload must include these required claims:
 
 | Claim | Description    | Required Value                                                       |
 | :---- | :------------- | :------------------------------------------------------------------- |
@@ -41,8 +43,7 @@ To secure the synchronization, your backend must generate a JSON Web Token (JWT)
 </Accordion>
 
 ### Step 3: Call the Authenticate Method
-
-Once your application receives the signed JWT from your backend, pass it to the SDK to finalize the synchronization. During this call, the SDK automatically packages essential metadata to establish the session:
+Once your backend generates the JWT, pass it to the SDK to establish the session:
 
 <Tabs>
   <Tab title="Android">
@@ -64,7 +65,7 @@ Once your application receives the signed JWT from your backend, pass it to the 
     ```
   </Tab>
   <Tab title="iOS">
-    Use the `authenticate` method within the `CoinBridge` singleton class.
+    Use the `authenticate` method within the `CoinBridge` singleton class:
 
     ```swift
     CoinBridge.sharedInstance.authenticate(jwt: "YOUR_JWT_VALUE") { onAuthenticationCompletion in

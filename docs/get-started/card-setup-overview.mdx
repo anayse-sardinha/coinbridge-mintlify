@@ -28,7 +28,7 @@ Accessing up-to-date card information or eligibility status requires an asynchro
 ### 3. [Create a Digital Card](docs/sdk/installation/issue-card)
 Issuing a digital card is the necessary next step if the initialization confirms that `hasCard` is `false`. By calling the `issueCard()` method, you initiate the creation of the payment credential; note that depending on local regulations, users may be prompted to provide additional data (such as an SSN or National ID) and consent to issuer terms. 
 <Note> 
-If you need to verify if a user meets registration criteria first, you can optionally use the `isEligible` method.
+If you need to verify if a user meets registration criteria first, you can optionally use the [`isEligible`](/docs/sdk/installation/user-eligibility) method.
 </Note> 
 
 ### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
@@ -77,7 +77,7 @@ graph TD
     class Ready highlight;
     class Start terminal;
 
-    %% Interactive Link Placeholders
+    %% Interactive Links
     click Auth "/docs/sdk/installation/authentication" "View Authentication Guide"
     click Init "/docs/sdk/installation/initialize" "View Initialization Guide"
     click Issue "/docs/sdk/installation/issue-card" "View Issuing Guide"

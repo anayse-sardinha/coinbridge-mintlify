@@ -2,18 +2,20 @@
 title: "Add Card to Wallet (Provisioning)"
 ---
 
-Provisioning is the mandatory final step of the onboarding journey. It moves your user's virtual card from the CoinBridge backend into a native device wallet to enable contactless Tap & Go payments.
+Provisioning adds your user's virtual card to their device wallet for contactless payments. Choose the appropriate tab for the operating system where you want to add the card.
 
 <Tabs>
   <Tab title="Android Implementation: Google Wallet ">
-  On Android, the SDK handles card provisioning to the internal wallet. Your primary responsibility is ensuring the device's NFC and security settings are correctly configured for payments.
+  On Android, the SDK manages card provisioning. Your main task is to ensure the device's NFC and security settings are properly set for payments.
 
    ### Prerequisites
+  To add a card to Google Wallet, you need:
     * **OS Version**: Android 8.0 Oreo (API level 26) or higher.
     * **Hardware**: The device must be NFC-equipped and not rooted.
-    * **Security**: Users must have a passcode, pattern, or fingerprint lock enabled for payment features.
+    * **Security**: Device must have a passcode, pattern, or fingerprint lock enabled.
 
     ### Provisioning & NFC Configuration
+    To add a card to Google Wallet and enable NFC, follow these steps:
     <Steps>
     1. **Provisioning Method**: Call the `provisionCard` method to push the virtual card token into the SDK wallet.
     2. **Verify Settings**: Before allowing a payment attempt, your app should call these `CBHelper` methods to ensure hardware readiness:
@@ -22,6 +24,7 @@ Provisioning is the mandatory final step of the onboarding journey. It moves you
     3. **System Redirects**: If these settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the correct Android system menu.
     </Steps>
     ### UI & Logic Guidelines
+    Here are some important UI and logic considerations:
     * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
     * **Ready to Pay**: Only display the **"Pay"** button once the wallet status returns as `ACTIVE`.
   </Tab>
@@ -30,26 +33,28 @@ Provisioning is the mandatory final step of the onboarding journey. It moves you
    On iOS, users must add the virtual card to the iPhone or Apple Watch. This process uses Apple's native provisioning forms and does not require two-factor authentication.
 
     ### Prerequisites
+    To add a card to Apple Wallet, you need:
     * **OS/Hardware**: iOS 13.4+ and iPhone 7 or newer.
     * **Security**: Users must have Face ID, Touch ID, or a device passcode configured.
     * **Card State**: The card must be `active` and the `tokenStatus` for the device must be `none`.
 
     ### Provisioning Flow
+     To add a card to Apple Wallet, follow these steps:
     <Steps>
     1. **Check Compatibility**: Use `cardCanAddToApplePay` to verify if the device or paired watch can receive the card.
     2. **Initiate Request**: Call the `addToApplePay` method to open the native Apple Wallet overlay.
     3. **Confirm Activation**: Wait for the `onPaymentMethodStatusChange` notification via the `CBNotification` service to confirm the `tokenStatus` has transitioned to `active`.
     </Steps>
     ### UI & Logic Guidelines
+    Here are some important UI and logic considerations:
     * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).
-    * **Apple Watch**: If a user has a linked watch, you must provide a dedicated hub or screen to allow watch-specific provisioning.
-    * **Existing Users**: If an existing user logs in on a new device, do not re-issue a card; initialization will return `hasCard = true`, and you should proceed directly to this provisioning step.
+    * **Apple Watch**: Provide a dedicated screen for watch provisioning if available.
 </Tab>
 </Tabs>
 
 ## Mandatory Communication Requirements
-
-To comply with financial regulations and Apple's terms, you must establish an automated process to send notifications via a "tenured channel" (Email or SMS).
+You must send notifications via Email or SMS to comply with regulations. 
+The following table outlines when to send notifications and what's required:
 
 | Scenario | Trigger | Mandatory Requirement |
 | :--- | :--- | :--- |
@@ -58,4 +63,9 @@ To comply with financial regulations and Apple's terms, you must establish an au
 | **Inactive Users** | Provisioned but unused. | If no transaction occurs within 7 days, send an email highlighting Apple Pay benefits. |
 | **User Incentives** | (iOS specific) Incomplete flow. | A minimum **20 ILS** incentive must be offered if provisioning is not completed within 7 days or first use within 14 days. |
 
-
+<Info>
+### Mandatory Logout
+When a user logs out of your application, you **must** call the `logout` method.
+This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
+Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
+</Info>

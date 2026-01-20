@@ -24,6 +24,7 @@ title: "Initialization"
       4. **Issue Card**: Call `issueCard` to create the digital payment method.
       5. **Add Card to Wallet**: Push the new virtual card to the device's native wallet.
     </Steps>
+    <Note> These are the required steps for a new user's first login. If this process is interrupted, resume from the last checkpoint. </Note>
   </Tab>
 
   <Tab title="The Re-login">
@@ -42,9 +43,8 @@ title: "Initialization"
     **Trigger**: Standard application startup or foreground launch.
 
     <Steps>
-      1. **Authenticate**: Verify the existing session is still valid.
-      2. **Initialize**: Request a status refresh. The SDK performs a "fast handshake" to get the latest parameters without re-creating the wallet.
-      3. **Sync UI**: Update your interface using the `CBPaymentStatus` object to reflect changes in eligibility, fraud locks, or card state.
+      1. **Initialize**: Request a status refresh. The SDK performs a "fast handshake" to get the latest parameters without re-creating the wallet.
+      2. **Sync UI**: Update your interface using the `CBPaymentStatus` object to reflect changes in eligibility, fraud locks, or card state.
     </Steps>
 
   </Tab>
@@ -63,7 +63,7 @@ The `CBPaymentStatus` object provides the definitive state of the user's payment
 
 
 ## Platform Implementation
-Use the initialization method from the CoinBridge singleton to synchronize the local environment with the backend.
+Call the initialization method to synchronize with the backend:
 
 <CodeGroup>
 ```java Android
@@ -92,10 +92,3 @@ CoinBridge.sharedInstance.initialize { cbInitCompletion in
 }
 ```
 </CodeGroup>
-
-<Info>
-### Mandatory Logout
-When a user logs out of your application, you **must** call the `logout` method.
-This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
-Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
-</Info>

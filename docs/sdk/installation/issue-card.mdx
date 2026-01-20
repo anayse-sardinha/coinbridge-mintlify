@@ -40,7 +40,9 @@ CoinBridgeSDK.getInstance().issueCard(activity, new OnIssueCardCallback() {
     @Override public void onAbandon() { } 
 });
 ```
+
 ## UX Guidelines
-* **Loader Animation**: Card issuance and provisioning usually takes up to 10 seconds. You must show a loader with appropriate text during this time.
-* **Retention**: Users must not leave the application before the process is finalized.
-* **Automatic Restart**: If the process is aborted (e.g., the user leaves the app), it will automatically restart upon re-entry once the SDK re-initializes.
+Follow these UX best practices:
+* **Loader**: Display a loader with text during the up to 10 seconds card issuance.
+* **Retention**: Ensure users stay in the app until the process is complete.
+* **Auto Restart**: The process restarts automatically if the user leaves and re-enters the app after SDK re-initialization.
