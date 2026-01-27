@@ -1,0 +1,49 @@
+---
+title: "Corrections"
+---
+
+A transaction correction is an update to a purchase that has already been approved. These updates happen during the "Settlement" phase—the time between the initial tap and when the merchant actually collects the money. You must handle these events to ensure the user's balance and history remain accurate.
+
+---
+
+## 1. How Corrections Work
+
+Corrections are sent through the **Correction Report Endpoint**. Every correction includes a **Correction Reason**, which tells you exactly how to adjust the user's account.
+
+* **Positive Correction Amount**: You must **refund** the user.
+* **Negative Correction Amount**: You must **charge** the user.
+
+---
+
+## 2. Common Correction Scenarios
+
+Your system must be configured to detect and act on the following reasons:
+
+### Transaction Cancellation
+This happens when a transaction was initially reported as approved but was actually declined by the network (often due to a timeout).
+* **Action**: Refund the full amount that was originally charged.
+* **User Message**: "Your transaction was cancelled and the funds have been returned."
+
+### Settlement Difference (Settlements Diff)
+This occurs when the final amount charged by the merchant is different from the original authorization. For example, a restaurant may authorize a bill for $50 but settle for $60 after a tip is added.
+* **If the final amount is higher**: Charge the user for the difference.
+* **If the final amount is lower**: Refund the user for the difference.
+
+### Transaction Expired
+If a merchant does not complete (settle) a transaction within a set number of days, the authorization expires.
+* **Action**: Refund the original amount to the user's balance.
+* **User Message**: "The transaction has expired and the funds have been returned."
+
+### Settlement Post-Expiration
+Occasionally, a merchant may settle a transaction *after* it has already expired and been refunded to the user.
+* **Action**: You must charge the user again for the amount that was previously refunded.
+
+---
+
+## 3. UI/UX Suggestions
+
+To prevent confusion when a user's balance changes unexpectedly, we recommend the following:
+
+* **Specific Notifications**: Inform the user clearly why their balance was adjusted (e.g., "Adjustment for Bill at [Merchant Name]").
+* **History Link**: Always show the **Original Transaction ID** next to the correction so the user can see which purchase was updated.
+* **Detailed History**: Update the transaction history to show the original amount, the settled amount, and the final adjustment with timestamps.

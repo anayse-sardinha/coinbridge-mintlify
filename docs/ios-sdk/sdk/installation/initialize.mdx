@@ -1,0 +1,95 @@
+---
+title: "Initialization"
+---
+
+<Info>
+  **Implementation Rules**
+  * **Wait for Auth**: You must wait for the successful `onAuthenticated` callback before calling `initialize`.
+  * **Manual Logout**: You **must** call `logout` to destroy the digital wallet on user exit.
+</Info>
+
+**Initialization** is a required state-management step that synchronizes the CoinBridge SDK with the backend. You must call it on every app launch to verify payment readiness and retrieve real-time card statuses.
+
+<Note>Call initialization within the Android `onCreate()` method or the primary iOS View Controller of your payment flow.</Note>
+
+<Tabs>
+  <Tab title="First-Time Setup">
+    For new users who have no existing digital card.
+
+    <Steps>
+      1. **Authenticate**: Correlate the user's unique identifier with the SDK and backend.
+      2. **Initialize**: Start the backend synchronization. You must wait for the `onInitComplete` callback before proceeding.
+      3. **Check Eligibility (Optional)**: If configured, verify the user is eligible for a card before starting the issuing flow.
+      4. **Issue Card**: Call `issueCard` to create the digital payment method.
+      5. **Add Card to Wallet**: Push the new virtual card to the device's native wallet.
+    </Steps>
+    <Note> These are the required steps for a new user's first login. If this process is interrupted, resume from the last checkpoint. </Note>
+  </Tab>
+
+  <Tab title="The Re-login">
+    For users who log back in or reinstall the app but already have a card associated with their ID. Use this flow when `hasCard` returns true during authentication.
+
+    <Steps>
+      1. **Authenticate**: Re-establish the user session with the backend.
+      2. **Initialize**: Fetch existing card details and token states. The backend will identify that a card already exists.
+      3. **Add Card to Wallet**: Do **not** call `issueCard`. Simply add the existing card to the native wallet on the new device.
+    </Steps>
+
+    <Note> When a user logs out of your application, you **must** call the `logout` method.
+    This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
+    Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload. </Note> 
+  </Tab>
+
+  <Tab title="Standard App Launch">
+    Day-to-day use to ensure the SDK has the most up-to-date security and balance information.
+
+    <Steps>
+      1. **Initialize**: Request a status refresh. The SDK performs a "fast handshake" to get the latest parameters without re-creating the wallet.
+      2. **Sync UI**: Update your interface using the `CBPaymentStatus` object to reflect changes in eligibility, fraud locks, or card state.
+    </Steps>
+
+  </Tab>
+</Tabs>
+
+## UI Logic with CBPaymentStatus
+The `CBPaymentStatus` object provides the definitive state of the user's payment method. Use these parameters to drive your UI logic:
+
+| Component | Response | Required UI Action |
+| :--- | :--- | :--- |
+| **`CBCardStatus`** | `ACTIVE` | Display card art and allow payment flow. |
+| | `NOT_ACTIVE` | Disable payments; prompt user to contact support. |
+| **`hasCard`** | `false` | Redirect user to onboarding/subscription process. |
+| **`TokenStatus`** | `NONE` | Display the **"Add to Wallet"** button. |
+| | `ACTIVE` | Display **"Pay"** button and hide provisioning options. |
+
+
+## Platform Implementation
+Call the initialization method to synchronize with the backend:
+
+<CodeGroup>
+```java Android
+CoinBridgeSDK.getInstance().init(activity, new OnInitCallback() {
+    @Override
+    public void onInitComplete(boolean hasCard, CBPaymentStatus status) {
+        // Handle successful initialization
+        // hasCard: indicates if a card is already issued
+        // status: contains details like card status and provisioning state
+    }
+
+    @Override
+    public void onError(CBError<InitError> error) {
+        // Handle initialization failure
+    }
+});
+CoinBridge.sharedInstance.initialize { cbInitCompletion in
+    switch cbInitCompletion {
+    case .initCompleted(let hasCard, let status):
+        // Handle successful initialization 
+        // hasCard: indicates if a card is already issued
+        // status: contains details like card status and provisioning state
+    case .onError(let error):
+        // Handle initialization failure
+    }
+}
+```
+</CodeGroup>

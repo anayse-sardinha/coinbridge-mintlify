@@ -1,0 +1,49 @@
+---
+title: "Manage Transactions"
+---
+
+# Manage Transactions
+
+Once a transaction attempt is finished, the CoinBridge platform provides the data needed to manage the user's payment history, handle refunds, and process technical corrections. All transaction results are communicated through the **Back-End Integration** to your loyalty or CRM platform.
+
+---
+
+## Post-Transaction Communication
+
+After a user taps their device at a terminal, the outcome is determined by the CoinBridge platform in real-time.
+
+* **Transaction Resolution**: The system compares the purchase request against the user's available balance and your specific spending policies.
+* **Real-time Updates**: The final decision (Approved or Declined) is transmitted immediately to your back-end for processing.
+* **Wallet Notifications**: Users receive instant alerts on their device lock screens, including the merchant name and amount.
+
+---
+
+## Viewing Transaction History
+
+It is important for users to track their spending. We recommend a dedicated screen within your app to display payment actions.
+
+* **Clear Indicators**: Users must be able to easily tell the difference between approved and declined transactions.
+* **Detailed Data**: For each entry, show the transaction amount, merchant name, and timestamp.
+* **Decline Explanations**: If a transaction is declined, you must show the reason so the user understands why (e.g., "Amount exceeds maximum allowed").
+* **Compliance**: For iOS, transactions made through Apple Wallet must include an indication that they were performed using Apple Pay.
+
+---
+
+## Handling Refunds and Corrections
+
+Transaction states may change after the initial purchase due to merchant actions or system updates.
+
+### Refunds
+* **Process**: A refund occurs when a merchant returns funds to the user. It appears as an independent transaction with its own unique ID.
+* **User Balance**: Upon receiving a refund report, you must top-up the user’s balance by the positive refund amount.
+
+### Technical Corrections
+A correction is an update to an already approved transaction. These can include:
+* **Cancellations**: A transaction initially reported as approved that was actually declined by the network due to timeouts.
+* **Settlement Differences**: Occurs when the final amount charged by the merchant is different from the original authorization (e.g., adding a tip at a restaurant).
+* **Expirations**: If a merchant does not "settle" the transaction within a specific timeframe, the funds must be returned to the user's balance.
+
+---
+
+## 4. User Logout
+When a user logs out of your app, you must notify the SDK immediately. This triggers the systematic clearance of user-specific payment data from the device to prevent identification errors for the next user.

@@ -1,0 +1,87 @@
+---
+title: "Card Setup Overview"
+---
+
+Setting up a digital card involves a specific sequence of steps to prepare the SDK and the user's device for **Tap & Go** payments. Unlike day-to-day interactions, this "Happy Path" is a one-time onboarding process for new users.
+
+<Note>
+Wait for each method's callback before proceeding to the next step.
+</Note>
+
+### [Prerequisites](docs/get-started/to-start)
+Before starting, you need to:
+* **Generate RSA Key-Pair**: Create a 2048-bit RSA key pair and share the public key with CoinBridge.
+* **Import SDK**: Add the CoinBridge SDK to your project (Gradle for Android, SPM for iOS).
+* **Set Permissions**: Enable Internet, NFC, and Biometric permissions in your app.
+
+See the required steps for setup below:
+
+### 1. [Authenticate](docs/sdk/installation/authentication) 
+To begin, call `authenticate()` with a server-side generated JWT to sync the user with the SDK. Only call this if `isAuthenticated()` returns `false`.
+<Note>
+The SDK persists authentication until logout, so you only need to authenticate once per session.
+</Note>
+
+### 2. [Initialize](docs/sdk/installation/initialize)
+Call `initialize()` every app launch to sync with the backend and get a `hasCard` boolean that determines your next step.
+
+### 3. [Create a Digital Card](docs/sdk/installation/issue-card)
+If `hasCard` is `false`, call `issueCard()` to create the payment credential. Users may need to provide additional information based on local regulations.
+
+### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
+Call `provisionCard()` to push the card token to the device's native wallet. Once `TokenStatus` is `ACTIVE`, the device is ready for payments.
+
+### 5. Logout 
+When a user logs out of your application, you must call the `logout` method.
+
+The following diagram shows the steps required to set up a card:
+```mermaid
+graph TD
+    %% Node Definitions
+    Start((App Launch))
+    AuthCheck{Is Authenticated?}
+    Auth[Authenticate]
+    Init[Initialize SDK]
+    CardCheck{Has Card?}
+    Issue[Issue Digital Card]
+    ProvCheck{Is Provisioned?}
+    Add[Add to Wallet]
+    Ready((Ready to Pay))
+
+    %% Flow Logic
+    Start --> AuthCheck
+    AuthCheck -- No --> Auth
+    AuthCheck -- Yes --> Init
+    
+    Auth -->|Wait for Callback| Init
+    Init -->|onInitComplete| CardCheck
+    
+    CardCheck -- No --> Issue
+    CardCheck -- Yes --> ProvCheck
+    
+    Issue -->|Wait for Success| ProvCheck
+    
+    ProvCheck -- No --> Add
+    ProvCheck -- Yes --> Ready
+    
+    Add -->|Token ACTIVE| Ready
+
+    %% Styling (CoinBridge Yellow/Gold Tones)
+    classDef yellowNode fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,color:#5D4037;
+    classDef goldNode fill:#FFECB3,stroke:#FFA000,stroke-width:2px,color:#5D4037;
+    classDef highlight fill:#FFD54F,stroke:#FF8F00,stroke-width:3px,color:#000,font-weight:bold;
+    classDef terminal fill:#FFFDE7,stroke:#FFEE58,stroke-width:1px,dasharray: 5 5;
+
+    class Auth,Init goldNode;
+    class Issue,Add yellowNode;
+    class Ready highlight;
+    class Start terminal;
+
+    %% Interactive Links
+    click Auth "/docs/sdk/installation/authentication" "View Authentication Guide"
+    click Init "/docs/sdk/installation/initialize" "View Initialization Guide"
+    click Issue "/docs/sdk/installation/issue-card" "View Issuing Guide"
+    click Add "/docs/sdk/installation/add-to-wallet" "View Wallet Guide"
+    ```
+
+

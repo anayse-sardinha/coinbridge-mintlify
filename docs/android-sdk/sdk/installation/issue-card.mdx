@@ -1,0 +1,49 @@
+---
+title: "Issue Digital Card"
+---
+
+The `issueCard` method is the core SDK function that generates the virtual payment card. 
+
+<Info>
+Issuing a card is a permanent action intended to happen only once in a user's lifespan. Even if a user reinstalls your app or logs in on a different device, they should never have to issue a new card. In re-login scenarios, use Initialization to retrieve the existing card instead.
+</Info>
+
+## Implementation Scenarios
+Depending on your country's regulations, this process may occur automatically or require additional user data.
+
+### Scenario 1: No Additional Data Required
+CoinBridge creates the card and pushes it to the internal SDK wallet in the background with no further user action.
+
+### Scenario 2: Additional Data Required
+You must include user-specific details (e.g., National ID or SSN) as a payload. The user may need to consent to terms via a dedicated form managed by the SDK 
+
+<Note>**Onboarding Tip**: 
+You must properly onboard users and explain why this data is needed to ensure a high onboarding rate.</Note>
+
+## Technical Implementation
+Call the `issueCard` method from the `CoinBridgeSDK` instance once the user has successfully completed Authentication and Initialization:
+
+```java
+CoinBridgeSDK.getInstance().issueCard(activity, new OnIssueCardCallback() {
+    @Override
+    public void onSuccess() {
+        // Success: Virtual card issuing flow finalized[cite: 921].
+        // Notify the user and redirect to the payment home screen[cite: 1058, 2269].
+    }
+
+    @Override
+    public void onError(CBError<IssueCardError> error) {
+        // Handle failure (e.g., INVALID_REQUEST_DATA or USER_NOT_ELIGIBLE)[cite: 923, 2272]. 
+    }
+
+    // Optional UI callbacks if CoinBridge presents a form:
+    @Override public void onShown() { } 
+    @Override public void onAbandon() { } 
+});
+```
+
+## UX Guidelines
+Follow these UX best practices:
+* **Loader**: Display a loader with text during the up to 10 seconds card issuance.
+* **Retention**: Ensure users stay in the app until the process is complete.
+* **Auto Restart**: The process restarts automatically if the user leaves and re-enters the app after SDK re-initialization.
