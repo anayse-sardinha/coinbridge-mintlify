@@ -1,0 +1,47 @@
+---
+title: "Transaction Corrections"
+---
+
+### Transaction Correction Types
+Corrections handle edge cases where the final settlement amount differs from the initial tap.
+
+The following table has a summary of the correction cases, these will be discussed further in this page.
+| Correction Type | Description | Required Action |
+| :--- | :--- | :--- |
+| **Transaction Cancellation** | A transaction reported as approved was actually declined by the scheme due to a timeout. | **Refund** the user the originally charged amount. |
+| **Settlement Diff** | The final amount differs from the initial authorization (e.g., foreign exchange or vending pre-auth). | **Adjust** the balance (Add if lower, Charge if higher). |
+| **Expired** | No settlement arrived within 30 days (common for car rentals or abandoned sessions). | **Refund** the held funds back to the user's balance. |
+| **Post-Expiration** | Settlement arrived *after* the 30-day expiration period. | **Charge** the user again for the final settlement amount. |
+
+
+## Correction Scenarios Breakdown
+
+When your backend receives a notification via the **Correction Report Endpoint**, you must act based on the `correctionReason` and the sign of the `correctionAmount`.
+
+* **Negative (-) Amount**: Charge your end-user with this amount.
+* **Positive (+) Amount**: Refund your end-user with this amount.
+
+These are the possible correction reasons: 
+
+### Transaction Cancellation
+A transaction was initially reported as approved but was actually declined by the card scheme due to a technical error or POS timeout.
+**Action**: Refund the amount that was originally charged from the end-user.
+
+### Settlements Difference (`SETTLEMENT_DIFF`)
+This happens when the actual settlement amount differs from the original authorization amount.
+* **Lower Settlement**: The correction amount is positive. **Refund** the difference to the end-user.
+* **Higher Settlement**: The correction amount is negative. **Charge** the additional difference from the end-user.
+
+### Transaction Expired
+Settlement has not arrived by the expiration date of the transaction (typically when a pre-authorization is never finalized).
+**Action**: Refund the amount previously charged from the end-user.
+
+### Settlement Post-Expiration
+In rare cases, a settlement arrives after the transaction has already expired and been refunded.
+**Action**: Deduct the final settled amount from the end-user's balance again.
+
+## Implementation Action
+When receiving a correction, the `correctionAmount` sign indicates the action:
+* **Negative (-)**: Charge your end-user.
+* **Positive (+)**: Refund your end-user.
+

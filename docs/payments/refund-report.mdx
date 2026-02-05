@@ -1,0 +1,16 @@
+---
+title: "Refund Report"
+---
+
+A refund refers to a case where the user has been refunded by the merchant (e.g., returning a product). When a refund occurs, CoinBridge transmits feedback to your platform via the `Refund Report Endpoint`.
+
+These are the characteristics of a refund report:
+* **Independent Status**: The refund appears as an independent transaction with a unique transaction ID.
+* **Status**: The status for a refund transaction is always "Approved".
+* **Amount**: The refund amount will always be a non-negative (positive) value.
+
+### Action Required
+1.  **Credit Account**: Top-up the end-user's account balance by the positive refund amount.
+2.  **Correlate (Optional)**: If historical transaction data is available, CoinBridge will provide the `originalTransactionId` to help you link the refund to the original purchase.
+3.  **History**: Update the transaction history to show the refund and the original transaction ID if available.
+

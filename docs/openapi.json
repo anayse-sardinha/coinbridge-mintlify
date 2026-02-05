@@ -1,0 +1,446 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CoinBridge Backend Connector API",
+    "description": "Facilitates data exchange between the CoinBridge backend and customer loyalty/CRM platforms.  It includes data-fetching endpoints for real-time authorizations and reporting endpoints for  transaction feedback, refunds, and corrections.\n",
+    "version": "2.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{customer-backend-url}",
+      "description": "Customer Backend Environment"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "RSA-256 signed JWT. The public key is provided by CoinBridge."
+      }
+    },
+    "schemas": {
+      "EndUserDetailsDTO": {
+        "type": "object",
+        "required": [
+          "valid"
+        ],
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Indicates if the given userId is a valid user in the system."
+          },
+          "personalId": {
+            "type": "string",
+            "description": "Personal identification number for the given userId."
+          },
+          "countryOfResidence": {
+            "type": "string",
+            "description": "ISO-31661 3-letter country code representing the country of residence."
+          }
+        }
+      },
+      "EndUserBalanceDTO": {
+        "type": "object",
+        "required": [
+          "amount",
+          "currencyCode"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "The current available spending balance of a specific user at the time of transaction."
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The 3-letter ISO-4217 currency code of the user balance."
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 timestamp in UTC. Incoming transactions after this point will be rejected without a new preparation process."
+          }
+        }
+      },
+      "TransactionDetailsDTO": {
+        "type": "object",
+        "required": [
+          "id",
+          "timestamp",
+          "billingAmount",
+          "billingCurrencyCode",
+          "countryCode",
+          "transactionAmount",
+          "transactionCurrencyCode",
+          "authCode",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "CoinBridge unique ID of the transaction."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 timestamp in UTC of the transaction occurance."
+          },
+          "billingAmount": {
+            "type": "number",
+            "format": "float",
+            "description": "Transaction amount in card currency (always positive)."
+          },
+          "billingCurrencyCode": {
+            "type": "string",
+            "description": "The 3-letter ISO-4217 currency code of the card."
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "The 3-letter ISO-3166 country code of the transaction."
+          },
+          "transactionAmount": {
+            "type": "number",
+            "format": "float",
+            "description": "Transaction amount in original transaction currency (always positive)."
+          },
+          "transactionCurrencyCode": {
+            "type": "string",
+            "description": "The 3-letter ISO-4217 currency code of the original transaction."
+          },
+          "authCode": {
+            "type": "string",
+            "description": "Authorization code of the transaction."
+          },
+          "mccCode": {
+            "type": "string",
+            "description": "The merchant category code (MCC) of the transaction."
+          },
+          "rrn": {
+            "type": "string",
+            "description": "Retrieval reference number."
+          },
+          "source": {
+            "type": "string",
+            "description": "The source the transaction originated from.",
+            "enum": [
+              "E_COMMERCE",
+              "E_COMMERCE_WALLET",
+              "WALLET",
+              "PHYSICAL_CARD",
+              "MANUAL_PAN",
+              "OTHER",
+              "UNKNOWN"
+            ]
+          },
+          "wallet": {
+            "type": "string",
+            "description": "Name of the wallet used in this transaction (e.g., APPLE)."
+          },
+          "merchant": {
+            "$ref": "#/components/schemas/MerchantDTO"
+          }
+        }
+      },
+      "MerchantDTO": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Merchant Id of the merchant."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the merchant."
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "3-letter ISO-3166 country code of the merchant."
+          },
+          "city": {
+            "type": "string",
+            "description": "City of the merchant."
+          },
+          "tel": {
+            "type": "string",
+            "description": "Telephone number of the merchant."
+          }
+        }
+      },
+      "ReportResDTO": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "Id of this event on application back-end system for future tracking."
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/coinbridge/api/v1/user/{userId}/details": {
+      "get": {
+        "summary": "End-User Details Fetch",
+        "description": "Validate a user and retrieve their specific identity details during the onboarding process.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique ID of the user to fetch details for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User validation details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndUserDetailsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coinbridge/api/v1/user/{userId}/balance": {
+      "get": {
+        "summary": "End-User Balance Fetch",
+        "description": "Retrieve the current available spending balance for a specific user in real-time.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique identifier of the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current user balance.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndUserBalanceDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coinbridge/api/v2/transaction": {
+      "post": {
+        "summary": "Transaction Report",
+        "description": "Inform your platform of transaction results and details for both approved and declined payments.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reportId",
+                  "userId",
+                  "eventTimestamp",
+                  "transaction"
+                ],
+                "properties": {
+                  "reportId": {
+                    "type": "string",
+                    "description": "Id of this report, for future tracking."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "Id of the user that performed the transaction."
+                  },
+                  "eventTimestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "ISO-8601 timestamp in UTC of the actual transaction occurrence."
+                  },
+                  "transaction": {
+                    "type": "object",
+                    "description": "Details regarding the transaction resolution.",
+                    "properties": {
+                      "approved": {
+                        "type": "boolean",
+                        "description": "Was this transaction approved or declined."
+                      },
+                      "declineReason": {
+                        "type": "string",
+                        "description": "If declined, the decline reason code (e.g., MCC_NOT_ALLOWED)."
+                      },
+                      "details": {
+                        "$ref": "#/components/schemas/TransactionDetailsDTO"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Report acknowledgment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coinbridge/api/v2/refund": {
+      "post": {
+        "summary": "Refund Report",
+        "description": "Receive and process information regarding refund transactions to credit end-user balances.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reportId",
+                  "userId",
+                  "eventTimestamp",
+                  "refundDetails"
+                ],
+                "properties": {
+                  "reportId": {
+                    "type": "string",
+                    "description": "Id of this report, for future tracking."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "Id of the user that performed the transaction."
+                  },
+                  "eventTimestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "ISO-8601 timestamp in UTC of the actual refund occurrence."
+                  },
+                  "originalTransactionId": {
+                    "type": "string",
+                    "description": "Id of the related original transaction details, if exists."
+                  },
+                  "refundDetails": {
+                    "$ref": "#/components/schemas/TransactionDetailsDTO"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Refund acknowledgment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coinbridge/api/v2/correction": {
+      "post": {
+        "summary": "Transaction Correction Report",
+        "description": "Process adjustments to previously reported transactions due to technical errors, settlement differences, or expirations.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reportId",
+                  "userId",
+                  "eventTimestamp",
+                  "originalTransactionId",
+                  "correctionReason",
+                  "correctionAmount",
+                  "correctionCurrency"
+                ],
+                "properties": {
+                  "reportId": {
+                    "type": "string",
+                    "description": "Id of this report, for future tracking."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "Id of the user that performed the transaction."
+                  },
+                  "eventTimestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "ISO-8601 timestamp in UTC of the correction event."
+                  },
+                  "originalTransactionId": {
+                    "type": "string",
+                    "description": "Id of the related original transaction details."
+                  },
+                  "correctionReason": {
+                    "type": "string",
+                    "description": "Technical reason for the correction.",
+                    "enum": [
+                      "TRANSACTION_CANCELLED",
+                      "SETTLEMENT_DIFF",
+                      "TRANSACTION_EXPIRED",
+                      "SETTLEMENT_POST_TRANSACTION_EXPIRATION"
+                    ]
+                  },
+                  "correctionAmount": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Amount to be corrected. Negative requires a user charge; Positive requires a user refund."
+                  },
+                  "correctionCurrency": {
+                    "type": "string",
+                    "description": "3-letter ISO-4217 currency code of the correction."
+                  },
+                  "originalTransactionDetails": {
+                    "$ref": "#/components/schemas/TransactionDetailsDTO"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Correction acknowledgment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

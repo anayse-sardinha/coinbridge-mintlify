@@ -1,0 +1,91 @@
+---
+title: "Transaction Report"
+---
+
+Receive real-time feedback on transaction results to update user balances and transaction history.
+
+The Transaction Report endpoint is a mandatory webhook used by the CoinBridge backend to notify your platform of a transaction's final resolution. Because CoinBridge operates as a debit service, we deduct funds from the application’s global balance immediately upon approval. You must use this report to synchronize your internal user records with the actual transaction outcome.
+
+## Handle Transaction Feedback
+
+When a user taps their device at a Point of Sale (POS), the merchant's terminal communicates with the Mastercard or Visa network. CoinBridge receives this request, evaluates it against the user’s balance and spending policies, and returns a resolution. 
+
+Immediately after this decision, CoinBridge sends a `POST` request to your Transaction Report endpoint.
+
+### Implementation Steps
+
+1. **Receive the report**: Listen for the incoming `TransactionReportDTO` at your endpoint.
+2. **Verify the result**: Check the `approved` status within the `transaction` object.
+3. **Process the balance**:
+    * **Approved Transaction**: Charge the transaction amount from the end-user’s account balance. 
+    * **Declined Transaction**: Do not charge the user. Capture the `declineReason` to explain the failure.
+4. **Update History**: Reflect the transaction status, merchant name, and amount in the user's transaction history.
+
+## Reference
+
+### Endpoint Details
+
+| Method | Path | Description | Response Time |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/coinbridge/api/v2/transaction` | Reports an occurred transaction (approved/declined). | Up to 60s. |
+
+### Request Body (TransactionReportDTO)
+
+| Property | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `reportId` | `string` | Yes | Unique ID for this report, used for tracking and to prevent duplicate processing. |
+| `userId` | `string` | Yes | The identifier of the user who performed the transaction. |
+| `eventTimestamp` | `string` | Yes | ISO-8601 UTC timestamp of the actual transaction occurrence. |
+| `transaction` | `object` | Yes | Contains the `approved` status, `declineReason`, and full `details`. |
+
+### Example Request
+
+```json title="POST /coinbridge/api/v2/transaction"
+{
+  "reportId": "da32fb9c-8cfa-459e-86c4-9d30037931e6",
+  "userId": "user-12345",
+  "eventTimestamp": "2026-01-30T15:49:37.041Z",
+  "transaction": {
+    "approved": true,
+    "details": {
+      "id": "0ee8c4cb-a962-4b5f-8971-50c8bf1bec82",
+      "billingAmount": 84.53,
+      "billingCurrencyCode": "USD",
+      "merchant": {
+        "name": "Speed Cars Ltd",
+        "city": "Springfield"
+      }
+    }
+  }
+}
+```
+
+
+# Transaction Report Endpoint Workflow
+This sequence diagram illustrates the lifecycle of a transaction and the specific role of the **Transaction Report Endpoint**. It defines how financial data moves from an external credit card network through the **CoinBridge** platform and ultimately updates the **Customer's** application.
+
+## System Actors
+| Actor | Role |
+| :--- | :--- |
+| **Customer Application** | The user-facing app (mobile or web). |
+| **Customer Backend** | The server-side infrastructure managed by the client. |
+| **CoinBridge SDK** | The client-side library (idle in this specific backend flow). |
+| **CoinBridge Backend** | The intermediary platform processing the transaction logic. |
+| **Credit Card Scheme** | The external payment network (e.g., Visa, Mastercard). |
+
+## Step-by-Step Sequence
+
+### 1. External Transaction Authorization
+The transaction lifecycle starts at the **Credit Card Scheme** level:
+* **Incoming Transaction:** The Scheme initiates an authorization request to the CoinBridge Backend.
+* **Approve/Decline:** CoinBridge evaluates the transaction against predefined business logic and risk parameters, returning an **Approve/Decline** signal to the Scheme to finalize the status.
+
+### 2. The Report Endpoint (Integration Point)
+CoinBridge utilizes a push-model integration to ensure immediate data synchronization:
+* **Trigger:** Immediately following the authorization decision, the **CoinBridge Backend** executes a server-to-server callback (webhook) to the **Customer Backend**.
+* **Mechanism:** This **Transaction Report** (indicated by the red arrow) ensures the customer’s system of record receives the latest transaction metadata in near real-time without the overhead of polling.
+
+### 3. UI Synchronization & Propagation
+Once the Customer Backend consumes the report, the data is propagated to the end-user:
+* **Processing:** The backend parses and persists the **Transaction Details** to the internal database.
+* **State Update:** These details are pushed to the **Customer Application**, triggering an immediate UI update to reflect the transaction state for the user.

@@ -26,12 +26,20 @@ Once the card is set up, users can pay by tapping their phone on a store's reade
 ![Payment processing flow diagram showing the complete payment transaction sequence with status indicators and confirmation steps](/images/payment.png)
 The steps in this process are as follows:
 
-1. **Verify User Biometrics**: For security, the app asks the user to unlock the payment with a fingerprint, face scan, or passcode. This must happen before the phone is allowed to send any payment signals.
-2. **Start SDK**: Once the user is verified, the app "wakes up" the payment system. It quickly checks the user's current balance and any spending rules (like daily limits) to make sure the purchase will be allowed.
-3. **Establish NFC Connection**: The app tells the user to "Hold Near Reader." When the phone touches the store's terminal, they exchange a secure, encrypted "digital handshake."
-4. **Handle Payment Result**: The store’s terminal talks to the bank networks, which then ask the CoinBridge server for a final "Yes" or "No."
-    * **Approval**: If the balance is good and the rules are followed, the transaction is approved. The app shows a "Success" screen with the receipt details.
-    * **Decline**: If there isn't enough money or if the store is restricted (like a card being blocked for certain types of purchases), the app will explain why the payment didn't go through.
+## Authorization Scenarios
+CoinBridge supports two configurations for authorizing a transaction. Your specific setup is determined during onboarding.
+
+### CoinBridge Approves the Transaction
+In this configuration, CoinBridge evaluates the transaction against your user's data in real-time.
+* **Fetch Balance**: CoinBridge calls your `/user/{userId}/balance` endpoint to retrieve the user's current funds.
+* **Evaluate Spending Policy**: CoinBridge checks rules such as restricted countries, Merchant IDs (MID), or Merchant Category Codes (MCC).
+* **Corporate Balance Check**: CoinBridge verifies that your application account has sufficient funds to cover the purchase.
+
+### Customer Approves the Transaction
+This synchronous flow allows your backend to make the final decision.
+* **Receive Details**: CoinBridge forwards full transaction metadata to your `/authorize` endpoint.
+* **Respond with Decision**: Your backend must return an `approved` or `declined` status within the card scheme's strict time limits.
+* **Provide Decline Reason**: If you decline, you must provide a reason code (e.g., `INSUFFICIENT_FUNDS`) to inform the user.
 
 See more about our process:
 
@@ -48,3 +56,4 @@ See more about our process:
     Stay in sync with real-time status updates by connecting your backend to our event system.
   </Card>
 </CardGroup>
+

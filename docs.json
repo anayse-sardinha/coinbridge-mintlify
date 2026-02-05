@@ -67,20 +67,10 @@
                   {
                     "group": "Payment",
                     "pages": [
-                      "docs/android-sdk/sdk/payment/index",
-                      "docs/android-sdk/sdk/payment/transaction-scenarios",
-                      "docs/android-sdk/sdk/payment/manage-transactions",
-                      "docs/android-sdk/sdk/payment/transaction-results-history",
-                      "docs/android-sdk/sdk/payment/refunds",
-                      "docs/android-sdk/sdk/payment/corrections",
-                      "docs/android-sdk/sdk/payment/user-logout",
-                      "docs/android-sdk/sdk/payment/error-codes"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/android-sdk/sdk-reference/methods-classes"
+                      "docs/payments/payments",
+                      "docs/payments/transaction-report",
+                      "docs/payments/refund-report",
+                      "docs/payments/transaction-corrections"
                     ]
                   }
                 ]
@@ -130,20 +120,10 @@
                   {
                     "group": "Payment",
                     "pages": [
-                      "docs/ios-sdk/sdk/payment/index",
-                      "docs/ios-sdk/sdk/payment/transaction-scenarios",
-                      "docs/ios-sdk/sdk/payment/manage-transactions",
-                      "docs/ios-sdk/sdk/payment/transaction-results-history",
-                      "docs/ios-sdk/sdk/payment/refunds",
-                      "docs/ios-sdk/sdk/payment/corrections",
-                      "docs/ios-sdk/sdk/payment/user-logout",
-                      "docs/ios-sdk/sdk/payment/error-codes"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/ios-sdk/sdk/sdk-reference/methods-classes"
+                      "docs/payments/payments",
+                      "docs/payments/transaction-report",
+                      "docs/payments/refund-report",
+                      "docs/payments/transaction-corrections"
                     ]
                   }
                 ]
@@ -154,252 +134,8 @@
             "tab": "Webhooks",
             "pages": [
               {
-                "group": "Configuration",
-                "pages": [
-                  "docs/webhooks/index",
-                  "docs/webhooks/authentication",
-                  "docs/webhooks/environments"
-                ]
-              },
-              {
-                "group": "Endpoints",
-                "expanded": false,
-                "pages": [
-                  {
-                    "group": "User Data",
-                    "pages": [
-                      "docs/webhooks/endpoints/get-user-details",
-                      "docs/webhooks/endpoints/get-user-balance",
-                      "docs/webhooks/endpoints/get-spending-policies"
-                    ]
-                  },
-                  {
-                    "group": "Transaction Management",
-                    "pages": [
-                      "docs/webhooks/endpoints/authorize-transaction",
-                      "docs/webhooks/endpoints/report-transaction",
-                      "docs/webhooks/endpoints/report-refund",
-                      "docs/webhooks/endpoints/report-correction"
-                    ]
-                  },
-                  {
-                    "group": "Events & Notifications",
-                    "pages": [
-                      "docs/webhooks/endpoints/notify-user-event",
-                      "docs/webhooks/endpoints/apple-compliance-events",
-                      "docs/webhooks/endpoints/user-status-events"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/webhooks/endpoints/data-transfer-objects"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "API",
-            "groups": [
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/coinbridge-api/coinbridge-api"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "version": "1.36",
-        "tabs": [
-          {
-            "tab": "Home",
-            "pages": [
-              "index"
-            ]
-          },
-          {
-            "tab": "Guides",
-            "anchors": [
-              {
-                "anchor": "Android",
-                "icon": "android",
-                "groups": [
-                  {
-                    "group": "How CoinBridge Works",
-                    "pages": [
-                      "docs/get-started/what-is-coinbridge",
-                      "docs/get-started/how-the-coinbridge-payment-process-works"
-                    ]
-                  },
-                  {
-                    "group": "Get Started",
-                    "pages": [
-                      "docs/sdk/index",
-                      "docs/get-started/to-start",
-                      "docs/get-started/card-setup-overview"
-                    ]
-                  },
-                  {
-                    "group": "Requirements",
-                    "pages": [
-                      "docs/sdk/requirements/coinbridge",
-                      "docs/sdk/requirements/customer-technology"
-                    ]
-                  },
-                  {
-                    "group": "Set Up Your Card",
-                    "pages": [
-                      "docs/sdk/installation/authentication",
-                      {
-                        "group": "Initialize",
-                        "pages": [
-                          "docs/sdk/installation/initialize",
-                          "docs/sdk/installation/user-eligibility"
-                        ]
-                      },
-                      "docs/sdk/installation/issue-card",
-                      "docs/sdk/installation/wallets",
-                      "docs/sdk/installation/add-to-wallet"
-                    ]
-                  },
-                  {
-                    "group": "Payment",
-                    "pages": [
-                      "docs/sdk/payment/index",
-                      "docs/sdk/payment/transaction-scenarios",
-                      "docs/sdk/payment/manage-transactions",
-                      "docs/sdk/payment/transaction-results-history",
-                      "docs/sdk/payment/refunds",
-                      "docs/sdk/payment/corrections",
-                      "docs/sdk/payment/user-logout",
-                      "docs/sdk/payment/error-codes"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/sdk/sdk-reference/methods-classes"
-                    ]
-                  }
-                ]
-              },
-              {
-                "anchor": "iOS",
-                "icon": "apple",
-                "groups": [
-                  {
-                    "group": "How CoinBridge Works",
-                    "pages": [
-                      "docs/get-started/what-is-coinbridge",
-                      "docs/get-started/how-the-coinbridge-payment-process-works"
-                    ]
-                  },
-                  {
-                    "group": "Get Started",
-                    "pages": [
-                      "docs/sdk/index",
-                      "docs/get-started/to-start",
-                      "docs/get-started/card-setup-overview"
-                    ]
-                  },
-                  {
-                    "group": "Requirements",
-                    "pages": [
-                      "docs/sdk/requirements/coinbridge",
-                      "docs/sdk/requirements/customer-technology"
-                    ]
-                  },
-                  {
-                    "group": "Set Up Your Card",
-                    "pages": [
-                      "docs/sdk/installation/authentication",
-                      {
-                        "group": "Initialize",
-                        "pages": [
-                          "docs/sdk/installation/initialize",
-                          "docs/sdk/installation/user-eligibility"
-                        ]
-                      },
-                      "docs/sdk/installation/issue-card",
-                      "docs/sdk/installation/wallets",
-                      "docs/sdk/installation/add-to-wallet"
-                    ]
-                  },
-                  {
-                    "group": "Payment",
-                    "pages": [
-                      "docs/sdk/payment/index",
-                      "docs/sdk/payment/transaction-scenarios",
-                      "docs/sdk/payment/manage-transactions",
-                      "docs/sdk/payment/transaction-results-history",
-                      "docs/sdk/payment/refunds",
-                      "docs/sdk/payment/corrections",
-                      "docs/sdk/payment/user-logout",
-                      "docs/sdk/payment/error-codes"
-                    ]
-                  },
-                  {
-                    "group": "Reference",
-                    "pages": [
-                      "docs/sdk/sdk-reference/methods-classes"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Webhooks",
-            "pages": [
-              {
-                "group": "Configuration",
-                "pages": [
-                  "docs/webhooks/index",
-                  "docs/webhooks/authentication",
-                  "docs/webhooks/environments"
-                ]
-              },
-              {
-                "group": "Endpoints",
-                "expanded": false,
-                "pages": [
-                  {
-                    "group": "User Data",
-                    "pages": [
-                      "docs/webhooks/endpoints/get-user-details",
-                      "docs/webhooks/endpoints/get-user-balance",
-                      "docs/webhooks/endpoints/get-spending-policies"
-                    ]
-                  },
-                  {
-                    "group": "Transaction Management",
-                    "pages": [
-                      "docs/webhooks/endpoints/authorize-transaction",
-                      "docs/webhooks/endpoints/report-transaction",
-                      "docs/webhooks/endpoints/report-refund",
-                      "docs/webhooks/endpoints/report-correction"
-                    ]
-                  },
-                  {
-                    "group": "Events & Notifications",
-                    "pages": [
-                      "docs/webhooks/endpoints/notify-user-event",
-                      "docs/webhooks/endpoints/apple-compliance-events",
-                      "docs/webhooks/endpoints/user-status-events"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/webhooks/endpoints/data-transfer-objects"
-                ]
+                "group": "Webhooks",
+                "openapi": "docs/openapi.json"
               }
             ]
           },

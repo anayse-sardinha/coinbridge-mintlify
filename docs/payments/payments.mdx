@@ -1,0 +1,68 @@
+---
+title: "Payment Process Overview"
+---
+
+Once you complete the [Card Setup](docs/android-sdk/get-started/card-setup-overview.mdx), the primary role of the SDK is complete. From this point, payments are managed through real-time communication between the CoinBridge webhooks and your own servers.
+
+## Authorization Models
+CoinBridge operates similarly to a debit card issuer. When a user taps their device, the system authorizes the transaction using one of two models:
+
+| Model | Mechanics |
+| :--- | :--- |
+| **CoinBridge Approves** (Default) | CoinBridge makes the final decision after fetching the user's balance and spending policies from your backend. |
+| **Customer Approves** (Advanced) | CoinBridge forwards the full transaction data to your backend, and your system returns the final approve/decline decision. |
+
+## The Payment Lifecycle
+Every transaction follows this four-step sequence to verify funds and permissions.
+
+1. **The Tap**: The user taps their phone or watch at an EMV terminal. This action triggers the `prepareToPay` method via the **CoinBridge SDK**.
+2. **Scheme Notify**: Mastercard or Visa recognizes the card and requests transaction approval from CoinBridge.
+3. **Resolution**: The **CoinBridge Backend** fetches data from your **Customer Backend** to authorize the tap:
+    * **Check Balance (Required)**: Your system returns the user’s available funds and currency.
+    * **Verify Policy (Optional)**: Your system enforces rules like Merchant Category Code (MCC) restrictions or Country Code blocking.
+4. **Notification**: 
+    * **SDK Side**: CoinBridge sends a `Prepare Result` to your app. A success response enables the device's NFC component to complete the transaction.
+    * **User Side**: The user receives an immediate notification from their mobile wallet and your application.
+
+## Required Backend Integration
+Your backend must implement these endpoints to sync with the payment lifecycle and manage post-authorization events:
+
+* **[Transaction Report](/docs/backend/transaction-report)**: This confirms if the system successfully charged the user or declined the transaction.
+* **[Refund Report](/docs/backend/refund-report)**: This triggers when a merchant initiates a refund at the terminal. The card scheme approves these automatically.
+* **[Corrections](/docs/backend/corrections)**: These update previously approved transactions during the "Settlement" phase, handling issues like currency fluctuations or transaction expirations.
+
+```mermaid
+graph TD
+    %% Node Definitions
+    Start((User Tap))
+    Scheme{Mastercard/Visa}
+    CB[CoinBridge Backend]
+    Auth{Auth Model?}
+    CBApprove[CB Logic + Balance Fetch]
+    CustApprove[Customer API Approval]
+    Resolve[Approved/Declined Result]
+    Notify((Push Notification))
+    Settlement[Settlement Phase]
+    Correct[Correction Webhook]
+
+    %% Flow Logic
+    Start --> Scheme
+    Scheme --> CB
+    CB --> Auth
+    Auth -- Default --> CBApprove
+    Auth -- Optional --> CustApprove
+    CBApprove --> Resolve
+    CustApprove --> Resolve
+    Resolve --> Notify
+    Resolve -.-> Settlement
+    Settlement -.->Diff/Expiry Correct
+
+    %% Styling
+    classDef yellowNode fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,color:#5D4037;
+    classDef goldNode fill:#FFECB3,stroke:#FFA000,stroke-width:2px,color:#5D4037;
+    classDef highlight fill:#FFD54F,stroke:#FF8F00,stroke-width:3px,color:#000,font-weight:bold;
+    
+    class Start,Notify highlight;
+    class CB,CBApprove,CustApprove goldNode;
+    class Correct yellowNode;
+    ```
