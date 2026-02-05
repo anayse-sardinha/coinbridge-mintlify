@@ -46,9 +46,7 @@ The JWT payload must include these required claims:
 ### Step 3: Call the Authenticate Method
 Once your backend generates the JWT, pass it to the SDK to establish the session:
 
-<Tabs>
-  <Tab title="Android">
-    Use the `authenticate` method from the `CoinBridgeSDK` singleton class:
+  Use the `authenticate` method from the `CoinBridgeSDK` singleton class:
 
     ```java
     CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallback() {
@@ -64,20 +62,3 @@ Once your backend generates the JWT, pass it to the SDK to establish the session
         }
     });
     ```
-  </Tab>
-  <Tab title="iOS">
-    Use the `authenticate` method within the `CoinBridge` singleton class:
-
-    ```swift
-    CoinBridge.sharedInstance.authenticate(jwt: "YOUR_JWT_VALUE") { onAuthenticationCompletion in
-        switch onAuthenticationCompletion {
-        case .onAuthenticated:
-            // Success: The SDK is now associated with the logged-in user.
-            // Proceed to call the initialization method.
-        case .onError(let authenticateError):
-            // Handle authentication failure (e.g., .invalidAuthentication).
-        }
-    }
-    ```
-  </Tab>
-</Tabs>

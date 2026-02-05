@@ -8,7 +8,7 @@ Setting up a digital card involves a specific sequence of steps to prepare the S
 Wait for each method's callback before proceeding to the next step.
 </Note>
 
-### [Prerequisites](docs/get-started/to-start)
+### [Prerequisites](docs/android-sdk/get-started/to-start)
 Before starting, you need to:
 * **Generate RSA Key-Pair**: Create a 2048-bit RSA key pair and share the public key with CoinBridge.
 * **Import SDK**: Add the CoinBridge SDK to your project (Gradle for Android, SPM for iOS).
@@ -16,19 +16,19 @@ Before starting, you need to:
 
 See the required steps for setup below:
 
-### 1. [Authenticate](docs/sdk/installation/authentication) 
+### 1. [Authenticate](docs/android-sdk/sdk/installation/authentication) 
 To begin, call `authenticate()` with a server-side generated JWT to sync the user with the SDK. Only call this if `isAuthenticated()` returns `false`.
 <Note>
 The SDK persists authentication until logout, so you only need to authenticate once per session.
 </Note>
 
-### 2. [Initialize](docs/sdk/installation/initialize)
+### 2. [Initialize](docs/android-sdk/sdk/installation/initialize)
 Call `initialize()` every app launch to sync with the backend and get a `hasCard` boolean that determines your next step.
 
-### 3. [Create a Digital Card](docs/sdk/installation/issue-card)
+### 3. [Create a Digital Card](docs/android-sdk/sdk/installation/issue-card)
 If `hasCard` is `false`, call `issueCard()` to create the payment credential. Users may need to provide additional information based on local regulations.
 
-### 4. [Add to Wallet (Provisioning)](docs/sdk/installation/add-to-wallet)
+### 4. [Add to Wallet (Provisioning)](docs/android-sdk/sdk/installation/add-to-wallet)
 Call `provisionCard()` to push the card token to the device's native wallet. Once `TokenStatus` is `ACTIVE`, the device is ready for payments.
 
 ### 5. Logout 
@@ -78,10 +78,10 @@ graph TD
     class Start terminal;
 
     %% Interactive Links
-    click Auth "/docs/sdk/installation/authentication" "View Authentication Guide"
-    click Init "/docs/sdk/installation/initialize" "View Initialization Guide"
-    click Issue "/docs/sdk/installation/issue-card" "View Issuing Guide"
-    click Add "/docs/sdk/installation/add-to-wallet" "View Wallet Guide"
+    click Auth "/docs/android-sdk/sdk/installation/authentication" "View Authentication Guide"
+    click Init "/docs/android-sdk/sdk/installation/initialize" "View Initialization Guide"
+    click Issue "/docs/android-sdk/sdk/installation/issue-card" "View Issuing Card Guide"
+    click Add "/docs/android-sdk/sdk/installation/add-to-wallet" "View Wallet Guide"
     ```
 
 

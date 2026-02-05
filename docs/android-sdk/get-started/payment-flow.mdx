@@ -15,9 +15,7 @@ The steps in this process are as follows:
 2. **Initialize**: Behind the scenes, the app and the server do a quick "handshake" to make sure the user’s wallet is ready. It double-checks that everything is synced up before the user tries to buy anything.
 3. **Create Card**: If the user doesn’t have a digital card yet, the app starts the setup. Depending on local rules, the user might need to enter some ID info (like an SSN) and agree to the terms.
 4. **Create Card Token**: Instead of using a real card number that could be stolen, the system creates a "Token." This is a digital stand-in for the card. It’s what actually talks to the store’s payment terminal, keeping the real card data safe and hidden.
-5. **Add Card to Wallet**: This is the final step, often called **Provisioning**.
-    * **Android**: The digital card is saved directly inside the app’s secure storage.
-    * **iOS**: The card is added to the Apple Wallet so it can be used with an iPhone or Apple Watch.
+5. **Add Card to Wallet**: This is the final step, often called **Provisioning**. **For Android**: The digital card is saved directly inside the app’s secure storage.
 
 ## 2. Payment Flow (Transaction)
 

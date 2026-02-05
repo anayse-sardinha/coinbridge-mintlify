@@ -2,35 +2,6 @@
 title: "CoinBridge Requirements"
 ---
 
-To follow financial rules and keep the payment process safe, your app must meet several mandatory security requirements.
+import Coinbridge from '/snippets/coinbridge.mdx'
 
-## Multi-Factor Authentication (MFA)
-
-CoinBridge requires MFA for user login to protect sensitive account data. Your login process must include two separate steps:
-
-* **First Factor**: A username and password that meet specific complexity rules.
-* **Second Factor**: A one-time passcode (OTP) sent to the user through SMS or email.
-
-If your app uses a different login method, please talk to the CoinBridge team to make sure it is supported.
-
-## Account Lockout Policy
-
-To prevent hackers from trying to guess passwords, your app must have a lockout policy:
-
-* **The Rule**: The app must automatically lock an account after five failed login attempts in a row.
-* **The Goal**: This protects your users from unauthorized access.
-
-## Feature Flags
-
-You must set up a server-side "feature flag" to control CoinBridge features remotely.
-
-* **Remote Control**: This lets you turn the payment features on or off without needing to release a new version of your app.
-* **Flexible Launch**: It allows you to choose exactly when to launch the service after the app is already in the store.
-* **User Messages**: If you turn the feature off, make sure to show a friendly message so users know the service is temporarily unavailable.
-
-## Force Update Feature
-
-A "Force Update" tool is required to make sure everyone uses the most recent version of your app.
-
-* **Security & Reliability**: This ensures that every user has the latest security patches and SDK updates.
-* **Prevention**: It stops users from using old versions of the app that might be slow, buggy, or incompatible with the current payment system.
+<Coinbridge />

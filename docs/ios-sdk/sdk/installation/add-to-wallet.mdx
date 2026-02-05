@@ -4,32 +4,6 @@ title: "Add Card to Wallet (Provisioning)"
 
 Provisioning adds your user's virtual card to their device wallet for contactless payments. Choose the appropriate tab for the operating system where you want to add the card.
 
-<Tabs>
-  <Tab title="Android Implementation: Google Wallet ">
-  On Android, the SDK manages card provisioning. Your main task is to ensure the device's NFC and security settings are properly set for payments.
-
-   ### Prerequisites
-  To add a card to Google Wallet, you need:
-    * **OS Version**: Android 8.0 Oreo (API level 26) or higher.
-    * **Hardware**: The device must be NFC-equipped and not rooted.
-    * **Security**: Device must have a passcode, pattern, or fingerprint lock enabled.
-
-    ### Provisioning & NFC Configuration
-    To add a card to Google Wallet and enable NFC, follow these steps:
-
-    1. **Provisioning Method**: Call the `provisionCard` method to push the virtual card token into the SDK wallet.
-    2. **Verify Settings**: Before allowing a payment attempt, your app should call these `CBHelper` methods to ensure hardware readiness:
-    * `isNFCEnabled`: Confirms NFC is turned on.
-    * `isPayWithCurrentlyOpenAppEnabled`: Verifies the "Pay with open app" flag is enabled.
-    3. **System Redirects**: If these settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the correct Android system menu.
-    
-    ### UI & Logic Guidelines
-    Here are some important UI and logic considerations:
-    * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
-    * **Ready to Pay**: Only display the **"Pay"** button once the wallet status returns as `ACTIVE`.
-  </Tab>
-
-  <Tab title="iOS Implementation: Apple Wallet">
    On iOS, users must add the virtual card to the iPhone or Apple Watch. This process uses Apple's native provisioning forms and does not require two-factor authentication.
 
     ### Prerequisites
@@ -49,8 +23,6 @@ Provisioning adds your user's virtual card to their device wallet for contactles
     Here are some important UI and logic considerations:
     * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).
     * **Apple Watch**: Provide a dedicated screen for watch provisioning if available.
-</Tab>
-</Tabs>
 
 ## Mandatory Communication Requirements
 You must send notifications via Email or SMS to comply with regulations. 

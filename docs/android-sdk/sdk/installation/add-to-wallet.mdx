@@ -4,9 +4,7 @@ title: "Add Card to Wallet (Provisioning)"
 
 Provisioning adds your user's virtual card to their device wallet for contactless payments. Choose the appropriate tab for the operating system where you want to add the card.
 
-<Tabs>
-  <Tab title="Android Implementation: Google Wallet ">
-  On Android, the SDK manages card provisioning. Your main task is to ensure the device's NFC and security settings are properly set for payments.
+On Android, the SDK manages card provisioning. Your main task is to ensure the device's NFC and security settings are properly set for payments.
 
    ### Prerequisites
   To add a card to Google Wallet, you need:
@@ -27,30 +25,7 @@ Provisioning adds your user's virtual card to their device wallet for contactles
     Here are some important UI and logic considerations:
     * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
     * **Ready to Pay**: Only display the **"Pay"** button once the wallet status returns as `ACTIVE`.
-  </Tab>
 
-  <Tab title="iOS Implementation: Apple Wallet">
-   On iOS, users must add the virtual card to the iPhone or Apple Watch. This process uses Apple's native provisioning forms and does not require two-factor authentication.
-
-    ### Prerequisites
-    To add a card to Apple Wallet, you need:
-    * **OS/Hardware**: iOS 13.4+ and iPhone 7 or newer.
-    * **Security**: Users must have Face ID, Touch ID, or a device passcode configured.
-    * **Card State**: The card must be `active` and the `tokenStatus` for the device must be `none`.
-
-    ### Provisioning Flow
-     To add a card to Apple Wallet, follow these steps:
-   
-    1. **Check Compatibility**: Use `cardCanAddToApplePay` to verify if the device or paired watch can receive the card.
-    2. **Initiate Request**: Call the `addToApplePay` method to open the native Apple Wallet overlay.
-    3. **Confirm Activation**: Wait for the `onPaymentMethodStatusChange` notification via the `CBNotification` service to confirm the `tokenStatus` has transitioned to `active`.
-   
-    ### UI & Logic Guidelines
-    Here are some important UI and logic considerations:
-    * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).
-    * **Apple Watch**: Provide a dedicated screen for watch provisioning if available.
-</Tab>
-</Tabs>
 
 ## Mandatory Communication Requirements
 You must send notifications via Email or SMS to comply with regulations. 

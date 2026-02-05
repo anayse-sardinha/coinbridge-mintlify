@@ -17,28 +17,6 @@ While optional, calling this method allows you to disable the feature for inelig
 ## Implementation
 The `isEligible` method validates the user. The only requirement is that `initialize` must be called first.
 
-<Tabs>
-  <Tab title="Android">
-Use the `isEligible` method from the `CoinBridgeSDK` instance:
-
-```java
-CoinBridgeSDK.getInstance().isEligible(context, new OnIsEligibleCallback() {
-    @Override
-    public void onSuccess() {
-        // User is eligible. 
-        // Proceed to redirect the end-user to the onboarding/IssueCard process. 
-    }
-
-    @Override
-    public void onError(CBError<EligibilityError> error) {
-        // User is NOT eligible.
-        // Address the specific reason for ineligibility provided in the error.
-    }
-});
-```
-
- </Tab>
-  <Tab title="iOS">
 #### iOS Implementation
 Use the `isEligible` method within the `CoinBridge` singleton class: 
 
@@ -54,5 +32,3 @@ CoinBridge.sharedInstance.isEligible { result in
     }
 }
 ```
- </Tab>
-</Tabs>
