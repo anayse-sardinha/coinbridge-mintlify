@@ -36,7 +36,7 @@
                   {
                     "group": "Get Started",
                     "pages": [
-                      "docs/android-sdk/sdk/implementation-roadmap-android",
+                      "docs/android-sdk/implementation-roadmap-android",
                       "docs/android-sdk/get-started/to-start",
                       "docs/android-sdk/get-started/card-setup-overview"
                     ]
@@ -65,10 +65,15 @@
                     ]
                   },
                   {
-                    "group": "Payment",
+                    "group": "Payment Operations",
                     "pages": [
                       "docs/payments/payments",
-                      "docs/payments/transaction-report",
+                      "docs/payments/transaction-report"
+                    ]
+                  },
+                  {
+                    "group": "Refunds & Corrections",
+                    "pages": [
                       "docs/payments/refund-report",
                       "docs/payments/transaction-corrections"
                     ]
@@ -119,10 +124,15 @@
                     ]
                   },
                   {
-                    "group": "Payment",
+                    "group": "Payment Operations",
                     "pages": [
                       "docs/payments/payments",
-                      "docs/payments/transaction-report",
+                      "docs/payments/transaction-report"
+                    ]
+                  },
+                  {
+                    "group": "Refunds & Corrections",
+                    "pages": [
                       "docs/payments/refund-report",
                       "docs/payments/transaction-corrections"
                     ]

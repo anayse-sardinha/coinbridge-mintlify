@@ -25,23 +25,22 @@ These are the possible correction reasons:
 
 ### Transaction Cancellation
 A transaction was initially reported as approved but was actually declined by the card scheme due to a technical error or POS timeout.
-**Action**: Refund the amount that was originally charged from the end-user.
 
-### Settlements Difference (`SETTLEMENT_DIFF`)
+> **Action**: Refund the amount that was originally charged from the end-user.
+
+### Settlements Difference 
 This happens when the actual settlement amount differs from the original authorization amount.
 * **Lower Settlement**: The correction amount is positive. **Refund** the difference to the end-user.
 * **Higher Settlement**: The correction amount is negative. **Charge** the additional difference from the end-user.
 
 ### Transaction Expired
 Settlement has not arrived by the expiration date of the transaction (typically when a pre-authorization is never finalized).
-**Action**: Refund the amount previously charged from the end-user.
+
+> **Action**: Refund the amount previously charged from the end-user.
 
 ### Settlement Post-Expiration
 In rare cases, a settlement arrives after the transaction has already expired and been refunded.
-**Action**: Deduct the final settled amount from the end-user's balance again.
 
-## Implementation Action
-When receiving a correction, the `correctionAmount` sign indicates the action:
-* **Negative (-)**: Charge your end-user.
-* **Positive (+)**: Refund your end-user.
+> **Action**: Deduct the final settled amount from the end-user's balance again.
+
 
