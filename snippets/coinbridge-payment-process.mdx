@@ -5,22 +5,22 @@ The CoinBridge solution relies on two primary components working in together:
 ## Phase 1: Card Setup 
 Before a user can make their first payment, you must complete a one-time setup to associate the user with a digital card.
 
-### 1. Authenticate (`Authenticate`)
+### 1. [Authenticate (`Authenticate`)](/docs/android-sdk/sdk/installation/authentication)
 Every session begins by synchronizing the user's unique identifier with the CoinBridge SDK and backend.
 * **Action**: Generate a JSON Web Token (JWT) on your backend and pass it to the SDK.
 * **Outcome**: This "binds" the user to the device and creates a digital wallet entity in the CoinBridge system.
 
-### 2. Initialize (`Initialize`)
+### 2. [Initialize (`Initialize`)](/docs/android-sdk/sdk/installation/initialize)
 After authentication, you must call the initialization method to sync the device with the backend and retrieve the user's current state.
 * **Purpose**: It tells you if the user already has a card (`hasCard: true`) or needs one issued.
 * **Requirement**: You must call `Initialize` every time the app launches to ensure you have the most up-to-date eligibility and card status.
 
-### 3. Create a Digital Card (`IssueCard`)
+### 3. [Issue a Digital Card (`IssueCard`)](/docs/android-sdk/sdk/installation/issue-card)
 Finalize the setup by creating the user's digital card.
 * **Automatic Flow**: If no additional data is required, CoinBridge creates the card in the background.
 * **Manual Flow**: If required by local regulations, the user may need to provide details like a National ID or SSN during this step.
 
-### 4. Add Card to Wallet (`Add to Wallet`)
+### 4. [Add Card to Wallet (`Add to Wallet`)](/docs/android-sdk/sdk/installation/add-to-wallet)
 To enable "Tap & Go," the card must be provisioned (tokenized) to a wallet.
 * **iOS**: Users must use the "Add to Apple Wallet" flow to push the token to their iPhone or Apple Watch.
 * **Android**: The SDK pushes the token to the internal application wallet or Google Wallet.
@@ -28,36 +28,34 @@ To enable "Tap & Go," the card must be provisioned (tokenized) to a wallet.
 ## Phase 2: Payment Journey
 Once setup is complete, the app only need to be initialized and the user will be ready to pay. 
 
-### 1. Start the Payment Process
+### 1. [Start the Payment Process](/docs/payments/payments)
 When a user taps "Pay" in your app:
 1. **Biometric Prompt**: The app must request Face ID, fingerprint, or passcode authentication.
 2. **Prepare to Pay**: The app calls `PrepareToPay`, which notifies the backend that a transaction is imminent.
-
-### 2. Tap the Device
-The user holds their device near the merchant's EMV terminal.
+3. The user holds their device near the merchant's EMV terminal.
 * **NFC Communication**: The terminal and device exchange encrypted information via the card scheme (Visa/Mastercard).
 * **Confirmation**: A "check" or "V" on the device indicates successful *communication* with the terminal, not necessarily transaction *approval*.
 
 ## Phase 3: Authorization and Reporting
 CoinBridge handles the complex financial heavy lifting between the card scheme and the backend through webhooks.
 
-### 1. Authorization Flow
+### 1. [Authorization Flow](/docs/payments/transaction-report)
 CoinBridge evaluates the transaction against:
 * **User Balance**: Fetched in real-time from your platform.
 * **Spending Policies**: Rules you define, such as restricted countries, Merchant Category Codes (MCC), or transaction thresholds.
 
-### 2. Transaction Reports
+### 2. [Transaction Reports](/docs/payments/transaction-report)
 Once approved or declined, CoinBridge sends a **Transaction Report** to your backend via the Connector.
 * **Approved**: You should charge the transaction amount from the end user's account.
 * **Declined**: You must display the decline reason (e.g., "Insufficient Funds") to the user.
 
-### 3. Transaction Corrections
+### 3. [Transaction Corrections](/docs/payments/transaction-corrections)
 Corrections are updates to previously approved transactions that may require balance adjustments.
 * **Cancellation**: A transaction was approved but timed out before the terminal could finalize it. You must refund the user.
 * **Settlement Difference**: The final price (e.g., at a gas station or due to exchange rates) differed from the initial authorization. Adjust the user's balance for the difference.
 * **Expired**: If a merchant never "settles" the funds (typically within 30 days), CoinBridge automatically triggers a refund to the user.
 
-## Phase 4: User Logout (`Logout`)
+#### User Logout (`Logout`)
 When a user logs out of your application, you **must** notify the CoinBridge SDK.
 * **Technical Requirement**: This triggers an "unbind" request that clears user-specific payment data and destroys the digital wallet instance in the CoinBridge system.
 * **Warning**: Failing to call logout can cause mismatched user identification and system performance issues from multiple orphaned active wallets.

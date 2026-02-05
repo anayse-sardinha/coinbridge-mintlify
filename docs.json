@@ -36,7 +36,7 @@
                   {
                     "group": "Get Started",
                     "pages": [
-                      "docs/android-sdk/index",
+                      "docs/android-sdk/sdk/implementation-roadmap-android",
                       "docs/android-sdk/get-started/to-start",
                       "docs/android-sdk/get-started/card-setup-overview"
                     ]
@@ -89,7 +89,7 @@
                   {
                     "group": "Get Started",
                     "pages": [
-                      "docs/ios-sdk/index",
+                      "docs/ios-sdk/sdk/implementation-roadmap-ios",
                       "docs/ios-sdk/get-started/to-start",
                       "docs/ios-sdk/get-started/card-setup-overview"
                     ]
@@ -97,6 +97,7 @@
                   {
                     "group": "Requirements",
                     "pages": [
+                      "docs/ios-sdk/sdk/requirements/apple",
                       "docs/ios-sdk/sdk/requirements/coinbridge",
                       "docs/ios-sdk/sdk/requirements/customer-technology"
                     ]
