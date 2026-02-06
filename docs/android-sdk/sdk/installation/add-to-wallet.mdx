@@ -2,45 +2,56 @@
 title: "Add Card to Wallet (Provisioning)"
 ---
 
-Provisioning adds your user's virtual card to their device wallet for contactless payments. Choose the appropriate tab for the operating system where you want to add the card.
+Provisioning is the process of pushing the digital card issued by CoinBridge into the SDK’s internal wallet. Once this is done, the card becomes **ACTIVE**, allowing the user to perform "Tap & Go" payments.
 
-On Android, the SDK manages card provisioning. Your main task is to ensure the device's NFC and security settings are properly set for payments.
+### 1. Prerequisites
+Before you try to provision a card, ensure the user is in the correct state. You can check these by looking at the `userState` returned during [Initialization](/docs/android-sdk/sdk/installation/initialize):
+* **Has Card**: Must be `TRUE`.
+* **Card Status**: Must be `Active`.
+* **Token Status**: Should be `NONE` (meaning it’s not on this device yet).
 
-   ### Prerequisites
-  To add a card to Google Wallet, you need:
-    * **OS Version**: Android 8.0 Oreo (API level 26) or higher.
-    * **Hardware**: The device must be NFC-equipped and not rooted.
-    * **Security**: Device must have a passcode, pattern, or fingerprint lock enabled.
+### 2. Implementation
+Call the `provisionCard` method from your payment or wallet activity. This starts the secure handshake with the card schemes (Mastercard/Visa).
 
-    ### Provisioning & NFC Configuration
-    To add a card to Google Wallet and enable NFC, follow these steps:
+```java title="Provisioning Example"
+CoinBridgeSDK.getInstance().provisionCard(activity, new OnCardProvisioningCallback() {
+           @Override
+           public void onRequestSuccess() {
 
-    1. **Provisioning Method**: Call the `provisionCard` method to push the virtual card token into the SDK wallet.
-    2. **Verify Settings**: Before allowing a payment attempt, your app should call these `CBHelper` methods to ensure hardware readiness:
-    * `isNFCEnabled`: Confirms NFC is turned on.
-    * `isPayWithCurrentlyOpenAppEnabled`: Verifies the "Pay with open app" flag is enabled.
-    3. **System Redirects**: If these settings are disabled, use `launchNfcSettings` or `launchContactlessPaymentsSettings` to guide the user to the correct Android system menu.
-    
-    ### UI & Logic Guidelines
-    Here are some important UI and logic considerations:
-    * **Check Status**: Call the `init` method in the `onCreate()` of your payment activity to check current readiness.
-    * **Ready to Pay**: Only display the **"Pay"** button once the wallet status returns as `ACTIVE`.
+           }
 
+           @Override
+           public void onError(CBError<CardProvisioningError> error) {
 
-## Mandatory Communication Requirements
-You must send notifications via Email or SMS to comply with regulations. 
-The following table outlines when to send notifications and what's required:
+           }
+       });
+```
 
-| Scenario | Trigger | Mandatory Requirement |
+### 3. Handling Status Changes
+Because tokenization happens in the background, `onRequestSuccess` only means the process started. You must listen for the `onPaymentMethodStatusChange` event via the **CBNotificationService** to know when the card is actually ready.
+
+<Tip>
+  Only show the **"Pay"** button or "Ready to Tap" UI once the provisioning status officially changes to **ACTIVE**.
+</Tip>
+
+## Hardware Readiness
+Before a user taps their phone, use these `CBHelper` methods to make sure the phone's settings won't block the payment:
+
+* **NFC Status**: Use `isNFCEnabled()` to check if NFC is on.
+* **Payment Settings**: Use `isPayWithCurrentlyOpenAppEnabled()` to verify Android is set to pay with the app that is currently on the screen.
+
+If these are off, you can use `launchNfcSettings()` to send the user directly to the Android settings menu to fix it.
+
+## Mandatory Communications
+To stay compliant with financial regulations, you must notify users about their card status via Email or SMS:
+
+| Scenario | Trigger | Requirement |
 | :--- | :--- | :--- |
-| **Provisioning Success** | Successful activation. | Send confirmation within 1 hour of activation. |
-| **Abandoned Flow** | User started but did not finish. | Notify the user within 24 hours explaining how to complete activation. |
-| **Inactive Users** | Provisioned but unused. | If no transaction occurs within 7 days, send an email highlighting Apple Pay benefits. |
-| **User Incentives** | (iOS specific) Incomplete flow. | A minimum **20 ILS** incentive must be offered if provisioning is not completed within 7 days or first use within 14 days. |
+| **Success** | Card is activated. | Send confirmation within 1 hour. |
+| **Abandoned** | Flow started but not finished. | Follow up within 24 hours. |
+| **Inactive** | Provisioned but not used. | If unused for 7 days, send a "Benefits" reminder. |
 
-<Info>
+<Warning>
 ### Mandatory Logout
-When a user logs out of your application, you **must** call the `logout` method.
-This clears user-specific payment data and destroys the digital wallet on the CoinBridge system. 
-Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
-</Info>
+When a user logs out of your app, you **must** call `CoinBridgeSDK.getInstance().logout()`. This "unbinds" the user and cleans up their data. If you skip this, it can create "orphan" wallets that slow down the system and cause login errors for the user later.
+</Warning>

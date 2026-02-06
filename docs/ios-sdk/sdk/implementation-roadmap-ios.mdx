@@ -12,12 +12,12 @@ Explore the complete transaction flow and discover how CoinBridge turns digital 
   Access a detailed step-by-step guide of the entire process and links to dedicated technical pages.
 </Card>
 
-## Set Up a Card
+## Setup a Card
 Follow these steps to set up your card:
 
 <Columns cols={2}>
-  <Card title="1. Install" icon="list-check" href="/ios-sdk/get-started/to-start">
-    Import the SDK and configure NFC and Biometrics permissions.
+  <Card title="1. Prerequisite" icon="list-check" href="/ios-sdk/get-started/to-start">
+    Set up your RSA keys and repository credentials before importing the SDK.
   </Card>
 
   <Card title="2. Authenticate" icon="key" href="/ios-sdk/sdk/installation/authentication">
@@ -29,10 +29,26 @@ Follow these steps to set up your card:
   </Card>
 
   <Card title="4. Issue a Digital Card" icon="credit-card" href="/ios-sdk/sdk/installation/issue-card">
-    Use the `IssueCard` method to create a virtual card for the authenticated user.
+    Use the `IssueCard` method to create the user's permanent digital card.
   </Card>
 
   <Card title="5. Add Card to Wallet" icon="wallet" href="/ios-sdk/sdk/installation/add-to-wallet">
-    Push the digital token to Apple or Android Wallet for NFC payments.
+    Push the digital token to Apple Wallet for NFC payments.
+  </Card>
+</Columns>
+
+<Note>
+  Steps 1, 2, 4, and 5 are typically one-time actions performed during a user's initial onboarding. Step 3 (Initialization) is required every time the application launches.
+</Note>
+
+## Payment Operations
+Once the card is set up, manage the daily transaction cycle through the Backend Connector.
+
+<Columns cols={2}>
+  <Card title="Process Payments" icon="mobile-screen-button" href="docs/payments/payments">
+    Manage payments through real-time communication between the CoinBridge webhooks and your own servers.
+  </Card>
+  <Card title="Manage Transactions" icon="file-invoice-dollar" href="docs/payments/refund-report">
+    Handle transaction refunds and corrections.
   </Card>
 </Columns>

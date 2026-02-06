@@ -25,21 +25,26 @@ Call the `issueCard` method from the `CoinBridgeSDK` instance once the user has 
 
 ```java
 CoinBridgeSDK.getInstance().issueCard(activity, new OnIssueCardCallback() {
-    @Override
-    public void onSuccess() {
-        // Success: Virtual card issuing flow finalized[cite: 921].
-        // Notify the user and redirect to the payment home screen[cite: 1058, 2269].
-    }
+          @Override
+          public void onAbandon() {
 
-    @Override
-    public void onError(CBError<IssueCardError> error) {
-        // Handle failure (e.g., INVALID_REQUEST_DATA or USER_NOT_ELIGIBLE)[cite: 923, 2272]. 
-    }
+          }
 
-    // Optional UI callbacks if CoinBridge presents a form:
-    @Override public void onShown() { } 
-    @Override public void onAbandon() { } 
-});
+          @Override
+          public void onShown() {
+
+          }
+
+          @Override
+          public void onSuccess() {
+
+          }
+
+          @Override
+          public void onError(CBError<IssueCardError> error) {
+
+          }
+      });
 ```
 
 ## UX Guidelines

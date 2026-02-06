@@ -70,26 +70,12 @@ Call the initialization method to synchronize with the backend:
 ```java Android
 CoinBridgeSDK.getInstance().init(activity, new OnInitCallback() {
     @Override
-    public void onInitComplete(boolean hasCard, CBPaymentStatus status) {
-        // Handle successful initialization
-        // hasCard: indicates if a card is already issued
-        // status: contains details like card status and provisioning state
+    public void onInitComplete(boolean hasCard, CBPaymentStatus cbPaymentStatus) {
     }
 
     @Override
-    public void onError(CBError<InitError> error) {
-        // Handle initialization failure
+    public void onError(CBError<InitError> cbError) {
     }
 });
-CoinBridge.sharedInstance.initialize { cbInitCompletion in
-    switch cbInitCompletion {
-    case .initCompleted(let hasCard, let status):
-        // Handle successful initialization 
-        // hasCard: indicates if a card is already issued
-        // status: contains details like card status and provisioning state
-    case .onError(let error):
-        // Handle initialization failure
-    }
-}
 ```
 </CodeGroup>

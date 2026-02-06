@@ -2,51 +2,83 @@
 title: "Before You Start"
 ---
 
-To use the CoinBridge bridge infrastructure, you must deploy the SDK into your mobile application. Follow these steps to configure your environment and add the SDK for both Android (Gradle) and iOS (Swift Package Manager).
+To use the CoinBridge bridge infrastructure, you must deploy the SDK into your mobile application. Follow these steps to configure your environment and add the SDK for Android (Gradle).
 
 Before starting the integration, ensure your environment meets the following requirements:
-| Requirement | Android Specifications |
-| :--- | :--- |
-| **OS Version** | Android 8.0 Oreo (API level 26) or higher  |
-| **Development Tool** | Compiled with Android API level 30  |
-| **Credentials** | Repository URL and unique credentials (Username and Password)  |
-| **Hardware** | NFC-equipped and not rooted |
 
-Follow these steps to configure your private Maven repository and dependencies.
-1. Create a `coinbridge.properties` file in your project's root folder and add the credentials provided by the CoinBridge team.
-> **Note**: Do not commit this file to source control.
-2. In your project-level `build.gradle`, add the private Maven repository:
+* **OS Version**: Android 8.0 Oreo (API level 26) or higher.
+* **Tooling**: Use Android API level 30 for compilation.
+* **Device**: Must be NFC-equipped and not rooted.
 
-```gradle
+## 1. Configure Credentials
+Add a `coinbridge.properties` file in the root folder of your project. Add the following lines using the credentials provided by the CoinBridge team:
+
+```
+cbpr.url=https://maven.pkg.github.com/CoinBridgeGit/AndroidSDKRelease
+cbpr.name=GitHubPackages
+cbpr.user=<your-username>
+cbpr.password=<your-password>
+```
+<Note> For the Sandbox environment, change ```AndroidSDKRelease``` to ```AndroidSDKSandbox```. </Note>
+
+<Warning> **Important:** Do not commit this file to source control as it contains private credentials </Warning>
+
+## 2. Add Maven Repositories
+In your project-level `build.gradle file`, add the following repository configuration:
+
+```
 allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-        maven {
-            def cbProperties = new Properties()
-            cbProperties.load(new FileInputStream(rootProject.file("coinbridge.properties")))
-            url = uri(cbProperties['cbpr.url'])
-            credentials {
-                username = cbProperties['cbpr.user']
-                password = cbProperties['cbpr.password']
-            }
-        }
+  repositories {
+    //...
+    maven { url 'https://jitpack.io' }
+    maven {
+      def cbProperties = new Properties()
+      cbProperties.load(new FileInputStream(rootProject.file("coinbridge.properties")))
+
+      name = cbProperties[`cbpr.name`]
+      url = uri(cbProperties[`cbpr.url`])
+      credentials {
+        username = cbProperties[`cbpr.user`]
+        password = cbProperties[`cbpr.password`]
+      }
     }
+  }
 }
 ```
-3. Add the SDK and the mandatory `doNotStrip` option to your module-level `build.gradle` file to protect native library integrity.
-```gradle
+
+## 3. Add Module Dependencies
+In your module's `build.gradle file`, add the SDK declaration and mandatory native library protection.
+
+```
 android {
-    packagingOptions {
-        doNotStrip "*/*/libscm.so"
+  packagingOptions {
+    // Required to prevent integrity check failures for libscm.so
+    doNotStrip "*/*/libscm.so" 
+    
+    // Required if minSdkVersion is 23+ or using Gradle 8+
+    jniLibs {
+      useLegacyPackaging = true 
     }
+  }
 }
+
 dependencies {
-    implementation 'com.coinbridge:cbsdk:x.y.z' // Replace with required version
+  // Replace x.y.z with the required version
+  implementation 'com.coinbridge:cbsdk:x.y.z' 
 }
+```
+
+<Note> For the Sandbox environment, change `cbsdk` to `cbsdk-sb`. </Note>
+
+### 4. App Bundle Configuration
+If you are building your application as an Android App Bundle, you must set the following in your `gradle.properties` file to ensure native library integrity checks pass:
+
+```
+android.bundle.enableUncompressedNativeLibs=false 
 ```
 
 <CardGroup cols={2}>
-  <Card title="What is CoinBridge?" icon="circle-info" href="/docs/get-started/what-is-coinbridge">
+  <Card title="What is CoinBridge?" icon="circle-info" href="docs/android-sdk/get-started/what-is-coinbridge">
     Discover how CoinBridge converts digital assets into usable currency with Tap & Go payments.
   </Card>
 
@@ -54,3 +86,7 @@ dependencies {
     Learn how to issue and provision a digital card.
   </Card>
 </CardGroup>
+
+
+
+

@@ -39,6 +39,18 @@ The JWT payload must include these required claims:
 | `iss` | **Issuer**     | Must be set to the **Application Key** received from CoinBridge.     |
 | `sub` | **Subject**    | A unique identifier of the logged-in user in your application.       |
 
+This is an example of a valid JWT payload:
+  ```
+{
+  "jti": "1010aca5-c3da-4e52-b6d6-ab61a72685ac"
+  "iat": 1654951918,
+  "exp": 1654953118,
+  "aud": "CoinBridge",
+  "iss": "MTAxMGFjYTUtYzNkYS00ZTUyLWI2ZDYtYWI2MWE3MjY4NWFj",
+  "sub": "user-12"
+}
+  ```
+
 > **Warning:** To protect user privacy, do not use PII (real user ID, phone number, or email) as the `sub` value. Use an internal identifier recognized across your backend systems.
 
 </Accordion>
@@ -49,16 +61,13 @@ Once your backend generates the JWT, pass it to the SDK to establish the session
   Use the `authenticate` method from the `CoinBridgeSDK` singleton class:
 
     ```java
-    CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallback() {
-        @Override
-        public void onAuthenticated() {
-            // Success: The SDK is associated with the user.
-            // Proceed to call the Initialization method.
-        }
-    
-        @Override
-        public void onError(CBError<AuthError> error) {
-            // Handle authentication failure.
-        }
-    });
+ CoinBridgeSDK.getInstance().authenticate(context, jwt, new OnAuthenticationCallback() {
+
+  @Override
+  public void onAuthenticated() {}
+
+  @Override
+  public void onError(CBError<AuthError> error) {}
+
+});
     ```

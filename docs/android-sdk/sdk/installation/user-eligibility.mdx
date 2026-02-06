@@ -20,17 +20,5 @@ The `isEligible` method validates the user. The only requirement is that `initia
 For Android, use the `isEligible` method from the `CoinBridgeSDK` instance:
 
 ```java
-CoinBridgeSDK.getInstance().isEligible(context, new OnIsEligibleCallback() {
-    @Override
-    public void onSuccess() {
-        // User is eligible. 
-        // Proceed to redirect the end-user to the onboarding/IssueCard process. 
-    }
-
-    @Override
-    public void onError(CBError<EligibilityError> error) {
-        // User is NOT eligible.
-        // Address the specific reason for ineligibility provided in the error.
-    }
-});
+CoinBridgeSDK.getInstance().isEligible(context, OnIsEligibleCallback onIsEligibleCallback)
 ```

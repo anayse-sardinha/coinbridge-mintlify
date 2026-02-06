@@ -2,6 +2,59 @@
 title: "How the CoinBridge Payment Process Works"
 ---
 
-import CoinBridgePaymentProcess from '/snippets/coinbridge-payment-process.mdx'
+The CoinBridge solution relies on two primary components working in together:
+1. **CoinBridge Mobile SDK**: Embeds an internal e-Wallet into your app to handle user interactions and NFC communication.
+2. **Back-End Connector**: Links your CRM or loyalty platform to CoinBridge to authorize transactions and sync data in real-time.
 
-<CoinBridgePaymentProcess />
+## Phase 1: Card Setup 
+Before a user can make their first payment, you must complete a one-time setup to associate the user with a digital card.
+
+### 1. [Authenticate (`Authenticate`)](/docs/ios-sdk/sdk/installation/authentication)
+Every session begins by synchronizing the user's unique identifier with the CoinBridge SDK and backend.
+* **Action**: Generate a JSON Web Token (JWT) on your backend and pass it to the SDK.
+* **Outcome**: This "binds" the user to the device and creates a digital wallet entity in the CoinBridge system.
+
+### 2. [Initialize (`Initialize`)](/docs/ios-sdk/sdk/installation/initialize)
+After authentication, you must call the initialization method to sync the device with the backend and retrieve the user's current state.
+* **Purpose**: It tells you if the user already has a card (`hasCard: true`) or needs one issued.
+* **Requirement**: You must call `Initialize` every time the app launches to ensure you have the most up-to-date eligibility and card status.
+
+### 3. [Issue a Digital Card (`IssueCard`)](/docs/ios-sdk/sdk/installation/issue-card)
+Finalize the setup by creating the user's digital card.
+* **Automatic Flow**: If no additional data is required, CoinBridge creates the card in the background.
+* **Manual Flow**: If required by local regulations, the user may need to provide details like a National ID or SSN during this step.
+
+### 4. [Add Card to Wallet (`Add to Wallet`)](/docs/ios-sdk/sdk/installation/add-to-wallet)
+To enable "Tap & Go," the card must be provisioned (tokenized) to a wallet. For **iOS**, users must use the "Add to Apple Wallet" flow to push the token to their iPhone or Apple Watch.
+
+## Phase 2: Payment Journey
+Once setup is complete, you no longer need to call onboarding methods. You must only initialize the SDK during every app launch to sync the card status and enable payments.
+
+### 1. [The Payment Flow](/docs/payments/payments)
+When a user initiates a payment:
+1. **Biometric Prompt**: The app requests Face ID, fingerprint, or passcode authentication.
+2. **NFC Communication**: The terminal and device exchange encrypted info via the card scheme (Visa/Mastercard).
+3. **Communication Confirmation**: A "check" or "V" on the device indicates successful *communication* with the terminal, not transaction *approval*.
+
+## Phase 3: Authorization and Reporting
+CoinBridge manages all financial transactions through the Backend Connector using secure webhooks.
+
+### 1. [Authorization Flow](/docs/payments/transaction-report)
+CoinBridge evaluates the transaction against:
+* **User Balance**: Fetched in real-time from your platform.
+* **Spending Policies**: Rules you define, such as restricted countries, Merchant Category Codes (MCC), or transaction thresholds.
+
+### 2. [Transaction Reports](/docs/payments/transaction-report)
+Once approved or declined, CoinBridge sends a **Transaction Report** to your backend via the Connector.
+* **Approved**: You should charge the transaction amount from the end user's account.
+* **Declined**: You must display the decline reason (e.g., "Insufficient Funds") to the user.
+
+### 3. [Transaction Corrections](/docs/payments/transaction-corrections)
+Corrections are updates to previously approved transactions that may require balance adjustments.
+* **Cancellation**: A transaction was approved but timed out before the terminal could finalize it. You must refund the user.
+* **Settlement Difference**: The final price differed from the initial authorization (e.g., due to exchange rates). Adjust the user's balance for the difference.
+* **Expired**: If a merchant never "settles" the funds (typically within 30 days), CoinBridge automatically triggers a refund to the user.
+
+### User Logout
+When a user logs out, you **must** notify the CoinBridge SDK. This triggers an **unbind** request that clears user-specific data and destroys the digital wallet instance in our system. 
+  Failing to call `Logout` can result in a single user having hundreds of orphaned "active" wallets, leading to identification mismatches and system performance issues.
