@@ -1,0 +1,63 @@
+---
+title: "SDK Error Reference"
+description: "A comprehensive reference of error codes for the CoinBridge SDK on Android and iOS."
+---
+
+Errors in the CoinBridge SDK are encapsulated within a `CBError<T>` class. `T` represents the specific error code enum relevant to the method being called. Each error includes a technical description in English to assist with troubleshooting during development.
+
+## Authentication Errors (`AuthError`)
+
+These errors may occur during the `authenticate` method call when synchronizing a user's unique identifier with the CoinBridge backend.
+
+| Error Code | Platform | Description |
+| :--- | :--- | :--- |
+| `invalidAuthentication` | Android / iOS | Authentication failed, typically due to an invalid JWT or User ID. |
+| `alreadyAuthenticated` | Android / iOS | The SDK is already authenticated with a logged-in user. You should proceed to initialization. |
+| `authenticationAlreadyStarted`| Android / iOS | An authentication call is already in progress. Wait for the corresponding callback. |
+| `networkError` | Android / iOS | The SDK could not access the network due to lack of connectivity or permissions. |
+| `generalError` | Android / iOS | An unknown internal error occurred. |
+
+## Initialization Errors (`InitError`)
+
+These errors occur during the asynchronous `init` process while syncing the device with the CoinBridge backend.
+
+| Error Code | Platform | Description |
+| :--- | :--- | :--- |
+| `sdkNotAuthenticated` | Android / iOS | The SDK must be authenticated before calling the initialization method. |
+| `deviceNotEligible` | Android / iOS | The device is ineligible for payment (e.g., lacks NFC hardware or is rooted). |
+| `deviceNotEligibleNoForegroundPaymentSetting` | Android | NFC tap payments are disabled for the currently opened (foreground) app. |
+| `permissionsNotGranted` | Android / iOS | One or more mandatory system permissions were not granted. |
+| `configurationNeeded` | Android | The SDK was not properly configured in the `Application` class `onCreate` method. |
+| `initAlreadyStarted` | Android / iOS | Initialization is already in progress. Wait for the `OnInitCallback`. |
+
+## Eligibility Errors (`EligibilityError`)
+
+These errors occur when using the `isEligible` method to check if a user meets the criteria to onboard or use CoinBridge services.
+
+| Error Code | Platform | Description |
+| :--- | :--- | :--- |
+| `userNotEligible` | Android / iOS | The end-user is not eligible to subscribe to CoinBridge services. |
+| `sdkNotInitialized` | Android / iOS | You must initialize the SDK before checking eligibility. |
+| `invalidRequestData` | Android / iOS | Mandatory data required to calculate eligibility (from the `Get User Info` endpoint) is missing or invalid. |
+| `flowAlreadyInProgress` | Android / iOS | An eligibility check is already being processed. |
+
+## Issuing Errors (`IssueCardError`)
+
+These errors occur when manually calling the `issueCard` method to create a virtual card for a user.
+
+| Error Code | Platform | Description |
+| :--- | :--- | :--- |
+| `paymentAlreadyExists` / `cardAlreadyExists` | Android / iOS | This user already has an assigned virtual card. Check the `hasCard` status in initialization. |
+| `issuingFailure` | Android / iOS | The card issuance process failed due to application-specific configurations. |
+| `invalidRequestData` | Android / iOS | The payload provided in the `issueCard` method is invalid or missing required user info. |
+
+## Provisioning Errors (`CardProvisioningError` / `CBAddToWalletError`)
+
+These errors occur when pushing an issued card to the mobile wallet (Provisioning).
+
+| Error Code | Platform | Description |
+| :--- | :--- | :--- |
+| `cardNotActive` | Android / iOS | The card exists but is suspended and cannot be added to a wallet. |
+| `cardDetailsNotArrived` | Android / iOS | The card exists, but the SDK is still waiting for full payment status details from the backend. |
+| `alreadyProvisioned` | Android / iOS | The virtual card is already provisioned to the requested wallet. |
+| `userCancelled` | iOS | The user dismissed the Apple "Add to Apple Wallet" form. |

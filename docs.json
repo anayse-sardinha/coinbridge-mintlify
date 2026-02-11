@@ -65,6 +65,12 @@
                     ]
                   },
                   {
+                    "group": "Error Codes",
+                    "pages": [
+                      "docs/ios-sdk/error-codes"
+                    ]
+                  },
+                  {
                     "group": "Payment Operations",
                     "pages": [
                       "docs/payments/payments",
@@ -121,6 +127,12 @@
                       "docs/ios-sdk/sdk/installation/issue-card",
                       "docs/ios-sdk/sdk/installation/wallets",
                       "docs/ios-sdk/sdk/installation/add-to-wallet"
+                    ]
+                  },
+                  {
+                    "group": "Error Codes",
+                    "pages": [
+                      "docs/ios-sdk/error-codes"
                     ]
                   },
                   {
