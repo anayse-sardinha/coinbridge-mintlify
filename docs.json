@@ -4,8 +4,8 @@
   "name": "coinbridge-mintlify",
   "colors": {
     "primary": "#FEC70B",
-    "light": "#FEC70B",
-    "dark": "#FEC70B"
+    "light": "#FFE07D",
+    "dark": "#C49A00"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -69,20 +69,6 @@
                     "pages": [
                       "docs/ios-sdk/error-codes"
                     ]
-                  },
-                  {
-                    "group": "Payment Operations",
-                    "pages": [
-                      "docs/payments/payments",
-                      "docs/payments/transaction-report"
-                    ]
-                  },
-                  {
-                    "group": "Refunds & Corrections",
-                    "pages": [
-                      "docs/payments/refund-report",
-                      "docs/payments/transaction-corrections"
-                    ]
                   }
                 ]
               },
@@ -109,7 +95,6 @@
                     "group": "Requirements",
                     "pages": [
                       "docs/ios-sdk/sdk/requirements/apple",
-                      "docs/ios-sdk/sdk/requirements/coinbridge",
                       "docs/ios-sdk/sdk/requirements/customer-technology"
                     ]
                   },
@@ -134,20 +119,6 @@
                     "pages": [
                       "docs/ios-sdk/error-codes"
                     ]
-                  },
-                  {
-                    "group": "Payment Operations",
-                    "pages": [
-                      "docs/payments/payments",
-                      "docs/payments/transaction-report"
-                    ]
-                  },
-                  {
-                    "group": "Refunds & Corrections",
-                    "pages": [
-                      "docs/payments/refund-report",
-                      "docs/payments/transaction-corrections"
-                    ]
                   }
                 ]
               }
@@ -156,26 +127,35 @@
           {
             "tab": "Webhooks",
             "pages": [
+              "docs/payments/payments",
               {
-                "group": "Webhooks",
+                "group": "Reporting",
+                "pages": [
+                  "docs/payments/transaction-report",
+                  "docs/payments/refund-report",
+                  "docs/payments/transaction-corrections"
+                ]
+              },
+              {
+                "group": "Methods",
                 "openapi": "docs/openapi.json"
               }
             ]
           },
           {
             "tab": "API",
-            "groups": [
-              {
-                "group": "Reference",
-                "pages": [
-                  "docs/coinbridge-api/coinbridge-api"
-                ]
-              }
+            "pages": [
+              "docs/coinbridge-api/coinbridge-api"
             ]
           }
         ]
       }
     ]
+  },
+  "api": {
+    "playground": {
+      "display": "interactive"
+    }
   },
   "logo": {
     "light": "/logo/light.svg",

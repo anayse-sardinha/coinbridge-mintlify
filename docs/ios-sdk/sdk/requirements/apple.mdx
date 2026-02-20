@@ -1,25 +1,44 @@
 ---
-title: "Apple Requirements"
+title: "Apple Mandatory Requirements"
 ---
 
-To ensure a successful integration of the CoinBridge SDK on iOS, please verify that you meet the following device and administrative prerequisites.
+To ensure a successful integration of the CoinBridge SDK on iOS, your application must adhere to the following security, technical, and design standards:
 
-## 1. User Device Requirements
-To access the CoinBridge solution, users must have device-level authentication enabled. For this reason, you must set up **Face ID, Touch ID, or a passcode**. This requirement enhances Apple Wallet security within the CoinBridge solution.
 
-Without configured authentication, users will experience limitations when accessing or utilizing Apple Wallet features. 
+Before integration, contact the CoinBridge team to verify your account. 
+Additionally, ensure the following parameters are provided:
 
-## 2. System & Account Setup
-Before beginning the integration of the CoinBridge SDK into your application, you must create an account for the application within the CoinBridge system. 
+* **Application Identity:** App Name, ADAM ID / Apple ID / App ID.
+* **Development Details:** Team ID, Bundle ID, and AppGroups.
+* **Security/APNs:** APNs Key ID and APNs Key File (.p8).
 
-Please contact the CoinBridge team to verify that the account creation is complete before moving forward.
+**User Side:** For the SDK to function securely within Apple Wallet, users must have **Face ID, Touch ID, or a passcode** enabled on their device.
 
-## 3. Mandatory Implementation Parameters
-You must also supply CoinBridge with the following application parameters to complete the setup:
+## Security & Compliance Policies
+Your application must implement these specific security measures to comply with financial regulations:
 
-| Category | Required Information |
+* **Multi-Factor Authentication (MFA):** Requires both a complex password and an OTP (SMS or Email).
+* **Account Lockout:** Accounts must automatically lock after **5 consecutive failed login attempts**.
+* **Feature Management:** * **Feature Flags:** A server-side toggle to enable/disable "Add to Apple Wallet" remotely.
+    * **Force Update:** A mandatory mechanism to push users to the latest app version for security patches.
+
+## Apple Design & Asset Guidelines
+Consistency with Apple’s ecosystem is mandatory for approval.
+
+### Button Usage
+You must use official, Apple-designed buttons for all provisioning and payment actions. Refer to the following Apple design guides for implementation:
+
+* [Add to Apple Wallet Button Guidelines](https://developer.apple.com/wallet/add-to-apple-wallet-guidelines/)
+* [Pay with Apple Pay Button Guidelines](https://developer.apple.com/design/human-interface-guidelines/apple-pay)
+
+### Digital Card Art Specifications
+Digital card images provided to CoinBridge must follow these exact layout rules:
+
+| Attribute | Requirement |
 | :--- | :--- |
-| **Identity** | Application Name |
-| **App Identifier** | ADAM ID / Apple ID / App ID |
-| **Development** | Team ID, Bundle ID, App Groups |
-| **Security/APNs** | APNs Key ID, APNs Key File (.p8) |
+| **Format** | Vector PDF (recommended) or raster PNG |
+| **Resolution** | 1536 x 969 px |
+| **Orientation** | Landscape with squared corners |
+| **App Icon** | 100 x 100 px PNG (no text allowed) |
+
+<Info> **Note on Layout:** Do not include physical card elements like card numbers, holograms, or chips. Apple will automatically overlay the last 4 digits (FPAN suffix) in the bottom-left corner of the image. </Info>
