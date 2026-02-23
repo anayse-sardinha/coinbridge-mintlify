@@ -137,7 +137,7 @@
                 ]
               },
               {
-                "group": "Methods",
+                "group": "Webhooks",
                 "openapi": "docs/openapi.json"
               }
             ]

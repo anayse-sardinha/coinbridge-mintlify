@@ -1,18 +1,41 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "CoinBridge Application Back-End API",
-    "description": "This API is used by the CoinBridge system to interact with the application's back-end for user validation, balance fetching, spending policies, and transaction processing.",
-    "version": "1.0.0"
+    "title": "Backend Connector",
+    "description": "The Backend Connector facilitates real-time data exchange between CoinBridge and your management platform. This connection allows for user validation, real-time transaction authorization, and reporting of financial events.",
+    "version": "2.1.0"
   },
+  "tags": [
+    {
+      "name": "Payment Operations",
+      "description": "Time-critical endpoints for retrieving user data, balances, and authorizing transactions in real-time."
+    },
+    {
+      "name": "Refunds",
+      "description": "Endpoints for reporting returned funds and credited amounts to the user's account."
+    },
+    {
+      "name": "Corrections",
+      "description": "Endpoints for adjusting balances due to technical errors, settlement differences, or expirations."
+    },
+    {
+      "name": "User Events",
+      "description": "Asynchronous notifications regarding user activity, such as card provisioning or eligibility status updates."
+    }
+  ],
   "paths": {
     "/coinbridge/api/v1/user/{userId}/details": {
       "get": {
+        "tags": [
+          "Payment Operations"
+        ],
         "summary": "End-User Details Fetch",
+        "description": "### Process Explanation\nUsed during onboarding to validate a user. The authentication process will fail if your back-end returns `valid: false`. This endpoint is a key part of the user authentication flow to verify eligibility criteria.",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
+            "description": "Unique identifier of the user within the CoinBridge system.",
             "required": true,
             "schema": {
               "type": "string"
@@ -21,7 +44,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of user validation status.",
             "content": {
               "application/json": {
                 "schema": {
@@ -35,11 +58,16 @@
     },
     "/coinbridge/api/v1/user/{userId}/balance": {
       "get": {
+        "tags": [
+          "Payment Operations"
+        ],
         "summary": "End-User Balance Fetch",
+        "description": "### Process Explanation\nRetrieves the current available spending balance of a user immediately prior to a transaction. This is triggered when a 'Prepare To Pay' call is initiated by the mobile app.",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
+            "description": "Unique identifier of the user to retrieve the balance for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -48,7 +76,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful retrieval of user balance.",
             "content": {
               "application/json": {
                 "schema": {
@@ -60,37 +88,15 @@
         }
       }
     },
-    "/coinbridge/api/v1/user/{userId}/rules": {
-      "get": {
-        "summary": "End-User Spending Policy Fetch",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndUserRulesDTO"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/coinbridge/api/v2/authorize": {
       "post": {
-        "summary": "Transaction Authorization",
+        "tags": [
+          "Payment Operations"
+        ],
+        "summary": "Transaction Authorization Request",
+        "description": "### Process Explanation\nForwards incoming transaction details to your back-end for real-time authorization. Your system must check the balance and spending rules to approve or decline. This is a synchronous flow limited by card scheme time constraints; failure to respond in time results in an automatic decline.",
         "requestBody": {
+          "description": "Transaction details for authorization.",
           "required": true,
           "content": {
             "application/json": {
@@ -102,7 +108,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Authorization decision successfully processed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -116,20 +122,38 @@
     },
     "/coinbridge/api/v2/transaction": {
       "post": {
-        "summary": "Transaction Report",
+        "tags": [
+          "Payment Operations"
+        ],
+        "summary": "Transaction Result Reporting",
+        "description": "### Process Explanation\nReports the outcome (approved or declined) of a transaction. If approved, you must charge the transaction amount from the end-user's account. If declined, do not charge the user and display the provided decline reason.",
         "requestBody": {
+          "description": "Outcome of the transaction including status and final amounts.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TransactionReportDTO"
+                "type": "object",
+                "properties": {
+                  "transactionId": {
+                    "type": "string",
+                    "description": "Unique identifier for the reported transaction."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "APPROVED",
+                      "DECLINED"
+                    ]
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Transaction report acknowledged.",
             "content": {
               "application/json": {
                 "schema": {
@@ -143,8 +167,13 @@
     },
     "/coinbridge/api/v2/refund": {
       "post": {
-        "summary": "Refund Report",
+        "tags": [
+          "Refunds"
+        ],
+        "summary": "Refund Transaction Report",
+        "description": "### Process Explanation\nTransmits feedback for refund transactions. Refunds appear as independent transactions with unique IDs and are always 'approved'. You must credit the user's account by the refund amount.",
         "requestBody": {
+          "description": "Details regarding the refund to be applied to the user account.",
           "required": true,
           "content": {
             "application/json": {
@@ -156,7 +185,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Refund report acknowledged.",
             "content": {
               "application/json": {
                 "schema": {
@@ -170,8 +199,13 @@
     },
     "/coinbridge/api/v2/correction": {
       "post": {
-        "summary": "Transaction Correction Report",
+        "tags": [
+          "Corrections"
+        ],
+        "summary": "Manual or System Balance Correction",
+        "description": "### Process Explanation\nHandles adjustments for previously reported transactions. \n- **TRANSACTION_CANCELLED**: Errored at POS after approval; refund the user.\n- **SETTLEMENT_DIFF**: Final settlement differs from authorized amount; adjust balance (+/-).\n- **TRANSACTION_EXPIRED**: No settlement arrived within time limit; refund the user.\n- **SETTLEMENT_POST_TRANSACTION_EXPIRATION**: Settlement arrives after an expiration refund; re-charge the user.",
         "requestBody": {
+          "description": "Correction details specifying the reason and the amount adjustment required.",
           "required": true,
           "content": {
             "application/json": {
@@ -183,7 +217,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Correction report acknowledged.",
             "content": {
               "application/json": {
                 "schema": {
@@ -197,20 +231,34 @@
     },
     "/coinbridge/api/v2/user-event": {
       "post": {
-        "summary": "User Event Notifications",
+        "tags": [
+          "User Events"
+        ],
+        "summary": "Asynchronous User Life-cycle Events",
+        "description": "### Process Explanation\nNotifies your system about specific user-related triggers. \n- **APPLE_EMAIL_...**: Mandatory email notifications for card provisioning status.\n- **ELIGIBILITY_STATUS**: Informs your platform if a user meets criteria to use CoinBridge services.\n- **CARD_ISSUED**: Information-only event when a new virtual card is created.",
         "requestBody": {
+          "description": "Event notification payload containing the event type and relevant user data.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserEventDTO"
+                "type": "object",
+                "required": [
+                  "eventType"
+                ],
+                "properties": {
+                  "eventType": {
+                    "type": "string",
+                    "description": "The specific type of event being reported."
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Event notification acknowledged.",
             "content": {
               "application/json": {
                 "schema": {
@@ -232,13 +280,8 @@
         ],
         "properties": {
           "valid": {
-            "type": "boolean"
-          },
-          "personalId": {
-            "type": "string"
-          },
-          "countryOfResidence": {
-            "type": "string"
+            "type": "boolean",
+            "description": "If false, the user is barred from onboarding or using the service."
           }
         }
       },
@@ -251,76 +294,17 @@
         "properties": {
           "amount": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "description": "The current net available funds for the user."
           },
           "currencyCode": {
-            "type": "string"
+            "type": "string",
+            "description": "3-letter ISO currency code (e.g., USD, EUR)."
           },
           "validUntil": {
-            "type": "string"
-          }
-        }
-      },
-      "EndUserRulesDTO": {
-        "type": "object",
-        "required": [
-          "rules"
-        ],
-        "properties": {
-          "rules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SpendingRuleDTO"
-            }
-          }
-        }
-      },
-      "SpendingRuleDTO": {
-        "type": "object",
-        "properties": {
-          "allowOnlyMccCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "restrictMccCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "allowOnlyMerchantIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "restrictMerchantIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "allowOnlyCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "restrictCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "maxTransactionCardAmount": {
-            "type": "number",
-            "format": "float"
-          },
-          "minTransactionCardAmount": {
-            "type": "number",
-            "format": "float"
+            "type": "string",
+            "format": "date-time",
+            "description": "The expiration time for this balance snapshot."
           }
         }
       },
@@ -333,13 +317,16 @@
         ],
         "properties": {
           "reportId": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique request identifier for idempotency."
           },
           "userId": {
-            "type": "string"
+            "type": "string",
+            "description": "Identifier for the user attempting the transaction."
           },
           "details": {
-            "$ref": "#/components/schemas/TransactionDetailsDTO"
+            "type": "object",
+            "description": "Detailed transaction metadata (merchant, location, etc.)."
           }
         }
       },
@@ -351,169 +338,24 @@
         ],
         "properties": {
           "authId": {
-            "type": "string"
+            "type": "string",
+            "description": "Authorization reference ID generated by your system."
           },
           "decision": {
-            "$ref": "#/components/schemas/AuthorizationDecisionDTO"
-          }
-        }
-      },
-      "AuthorizationDecisionDTO": {
-        "type": "object",
-        "required": [
-          "approved"
-        ],
-        "properties": {
-          "approved": {
-            "type": "boolean"
-          },
-          "declineReason": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionReportDTO": {
-        "type": "object",
-        "required": [
-          "reportId",
-          "userId",
-          "eventTimestamp",
-          "transaction"
-        ],
-        "properties": {
-          "reportId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "eventTimestamp": {
-            "type": "string"
-          },
-          "transaction": {
-            "$ref": "#/components/schemas/TransactionDTO"
-          }
-        }
-      },
-      "TransactionDTO": {
-        "type": "object",
-        "required": [
-          "approved",
-          "details"
-        ],
-        "properties": {
-          "approved": {
-            "type": "boolean"
-          },
-          "declineReason": {
-            "$ref": "#/components/schemas/DeclineReason"
-          },
-          "declineDetails": {
-            "type": "string"
-          },
-          "details": {
-            "$ref": "#/components/schemas/TransactionDetailsDTO"
-          }
-        }
-      },
-      "TransactionDetailsDTO": {
-        "type": "object",
-        "required": [
-          "id",
-          "timestamp",
-          "billingAmount",
-          "billingCurrencyCode",
-          "countryCode",
-          "transactionAmount",
-          "transactionCurrencyCode",
-          "source",
-          "merchant"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "timestamp": {
-            "type": "string"
-          },
-          "billingAmount": {
-            "type": "number",
-            "format": "float"
-          },
-          "billingCurrencyCode": {
-            "type": "string"
-          },
-          "countryCode": {
-            "type": "string"
-          },
-          "transactionAmount": {
-            "type": "number",
-            "format": "float"
-          },
-          "transactionCurrencyCode": {
-            "type": "string"
-          },
-          "authCode": {
-            "type": "string"
-          },
-          "mccCode": {
-            "type": "string"
-          },
-          "source": {
-            "$ref": "#/components/schemas/TransactionSource"
-          },
-          "wallet": {
-            "type": "string"
-          },
-          "merchant": {
-            "$ref": "#/components/schemas/MerchantDTO"
-          },
-          "rrn": {
-            "type": "string"
-          }
-        }
-      },
-      "MerchantDTO": {
-        "type": "object",
-        "required": [
-          "id",
-          "name"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "countryCode": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "region": {
-            "type": "string"
-          },
-          "street": {
-            "type": "string"
-          },
-          "tel": {
-            "type": "string"
-          },
-          "nameOther": {
-            "type": "string"
-          },
-          "contact": {
-            "type": "string"
-          }
-        }
-      },
-      "ReportResDTO": {
-        "type": "object",
-        "properties": {
-          "eventId": {
-            "type": "string"
+            "type": "object",
+            "required": [
+              "approved"
+            ],
+            "properties": {
+              "approved": {
+                "type": "boolean",
+                "description": "Whether the transaction is permitted based on balance and rules."
+              },
+              "declineReason": {
+                "type": "string",
+                "description": "Mandatory explanation string if approved is set to false."
+              }
+            }
           }
         }
       },
@@ -522,136 +364,63 @@
         "required": [
           "reportId",
           "userId",
-          "eventTimestamp",
           "refundDetails"
         ],
         "properties": {
           "reportId": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this specific refund event."
           },
           "userId": {
-            "type": "string"
-          },
-          "eventTimestamp": {
-            "type": "string"
+            "type": "string",
+            "description": "The user whose account should be credited."
           },
           "originalTransactionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the purchase transaction this refund is reversing."
           },
           "refundDetails": {
-            "$ref": "#/components/schemas/TransactionDetailsDTO"
+            "type": "object",
+            "description": "Financial and merchant details for the refund."
           }
         }
       },
       "CorrectionReportDTO": {
         "type": "object",
         "required": [
-          "reportId",
-          "userId",
-          "eventTimestamp",
-          "originalTransactionId",
           "correctionReason",
-          "correctionAmount",
-          "correctionCurrency",
-          "originalTransactionDetails"
+          "correctionAmount"
         ],
         "properties": {
-          "reportId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "eventTimestamp": {
-            "type": "string"
-          },
-          "originalTransactionId": {
-            "type": "string"
-          },
           "correctionReason": {
-            "$ref": "#/components/schemas/CorrectionReason"
+            "type": "string",
+            "enum": [
+              "TRANSACTION_CANCELLED",
+              "SETTLEMENT_DIFF",
+              "TRANSACTION_EXPIRED",
+              "SETTLEMENT_POST_TRANSACTION_EXPIRATION"
+            ],
+            "description": "The technical or administrative reason for the balance adjustment."
           },
           "correctionAmount": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "description": "Adjustment value. Positive values credit the user; negative values debit the user."
           },
           "correctionCurrency": {
-            "type": "string"
-          },
-          "originalTransactionDetails": {
-            "$ref": "#/components/schemas/TransactionDetailsDTO"
+            "type": "string",
+            "description": "ISO currency code of the correction amount."
           }
         }
       },
-      "UserEventDTO": {
+      "ReportResDTO": {
         "type": "object",
-        "required": [
-          "reportId",
-          "userId",
-          "eventType"
-        ],
         "properties": {
-          "reportId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "eventType": {
-            "$ref": "#/components/schemas/UserEventType"
-          },
-          "eventMetadata": {
-            "type": "object"
+          "eventId": {
+            "type": "string",
+            "description": "Your internal tracking ID for the acknowledged event or report."
           }
         }
-      },
-      "TransactionSource": {
-        "type": "string",
-        "enum": [
-          "E_COMMERCE",
-          "E_COMMERCE_WALLET",
-          "WALLET",
-          "PHYSICAL_CARD",
-          "MANUAL_PAN",
-          "OTHER",
-          "UNKNOWN"
-        ]
-      },
-      "DeclineReason": {
-        "type": "string",
-        "enum": [
-          "INSUFFICIENT_END_USER_FUNDS",
-          "INSUFFICIENT_APPLICATION_FUNDS",
-          "MCC_NOT_ALLOWED",
-          "MID_NOT_ALLOWED",
-          "COUNTRY_NOT_ALLOWED",
-          "AMOUNT_BELOW_THRESHOLD",
-          "AMOUNT_EXCEEDS_THRESHOLD",
-          "CB_PAYMENT_UNPREPARED",
-          "CB_SYSTEM_ERROR",
-          "INTEGRATION_ERROR"
-        ]
-      },
-      "CorrectionReason": {
-        "type": "string",
-        "enum": [
-          "TRANSACTION_CANCELLED",
-          "SETTLEMENT_DIFF",
-          "TRANSACTION_EXPIRED",
-          "SETTLEMENT_POST_TRANSACTION_EXPIRATION"
-        ]
-      },
-      "UserEventType": {
-        "type": "string",
-        "enum": [
-          "APPLE_EMAIL_CARD_PROVISIONED",
-          "APPLE_EMAIL_CARD_NOT_PROVISIONED",
-          "APPLE_EMAIL_PROVISIONING_ABANDONED",
-          "APPLE_EMAIL_USER_INACTIVE",
-          "APPLE_EMAIL_OFFER_INCENTIVE",
-          "USER_ELIGIBILITY_STATE_CHANGED",
-          "CARD_ISSUED"
-        ]
       }
     }
   }
