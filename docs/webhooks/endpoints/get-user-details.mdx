@@ -1,4 +1,65 @@
 ---
-title: "Get User Details"
-description: "Schema for the real-time request to fetch user profile data."
+title: "End-User Details Fetch"
+api: "GET /coinbridge/api/v1/user/{userId}/details"
+description: "Validates user eligibility and retrieves profile status during onboarding."
+layout: "regular"
 ---
+
+This endpoint is an optional step in the user authentication flow. It is triggered by the **CoinBridge Backend** immediately after an `Authentication` request is initiated by the mobile app. 
+
+Its primary purpose is to verify if the user exists and meets the specific eligibility criteria defined by your application's logic back-end.
+
+### User Eligibility Flow
+This flow illustrates the end-to-end authentication handshake required to verify user status across back-end systems.
+![User Eligibility Flow](/images/end-user-details.jpg)
+
+The following steps break down the sequential logic of the validation process:
+1.  The **Application** initiates a `Login` request to the **Application Back-End**.
+2.  The **Application Back-End** returns a `UserId` to the **Application**.
+3.  Using the retrieved ID, the **Application** calls `Authenticate (with userId)` on the **CoinBridge SDK**.
+4.  The **CoinBridge SDK** passes the `Authentication` request to the **Coinbridge Backend**.
+5.  **User Data Validation**:
+    * The **Coinbridge Backend** performs an `End-User Details Fetch` from the **Application Back-End**.
+    * The **Application Back-End** provides `User details`, confirming if the user is **Valid** or **Invalid**.
+6.  **Final Result**:
+    * The **Coinbridge Backend** returns the `Authentication Result` to the **CoinBridge SDK**.
+    * The **CoinBridge SDK** delivers the final `Authentication Result` to the **Application** to complete the flow.
+
+<Note>
+  If your application needs to supply additional data to enable specific services, use this endpoint to transmit that information. Please consult the **CoinBridge Product Team** before modifying the response schema.
+</Note>
+
+### Path Parameters
+
+<ResponseField name="valid" type="boolean" required>
+  Validates that the userId exists. Controls whether the onboarding process can proceed.
+</ResponseField>
+
+<ResponseField name="personalId" type="string">
+  Personal identification number for the given `userId`.
+</ResponseField>
+
+<ResponseField name="countryOfResidence" type="string">
+  The ISO-31661 country code representing the country of residence for a given `userId`.
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "valid": true
+}
+```
+</ResponseExample>
+
+See more about this process:
+
+<CardGroup cols={2}>
+  <Card title="User Eligibility (Android SDK)" icon="android" href="/docs/android-sdk/sdk/installation/user-eligibility">
+    Verify user eligibility for card issuance and services to ensure regulatory compliance.
+  </Card>
+
+  <Card title="User Eligibility (iOS SDK)" icon="apple" href="/docs/ios-sdk/sdk/installation/user-eligibility">
+    Verify user eligibility for card issuance and services to ensure regulatory compliance.
+  </Card>
+</CardGroup>

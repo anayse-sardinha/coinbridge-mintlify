@@ -138,7 +138,20 @@
               },
               {
                 "group": "Webhooks",
-                "openapi": "docs/openapi.json"
+                "pages": [
+                  "docs/payments/transaction-report",
+                  "docs/payments/refund-report",
+                  "docs/payments/transaction-corrections"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages":[
+                   "docs/webhooks/endpoints/get-user-details"
+                ] ,
+                "openapi":[ 
+                "docs/openapi.json"
+              ]
               }
             ]
           },
