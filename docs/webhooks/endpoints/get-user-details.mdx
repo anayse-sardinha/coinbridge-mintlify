@@ -7,23 +7,28 @@ layout: "regular"
 
 This endpoint is an optional step in the user authentication flow. It is triggered by the **CoinBridge Backend** immediately after an `Authentication` request is initiated by the mobile app. 
 
-Its primary purpose is to verify if the user exists and meets the specific eligibility criteria defined by your application's logic back-end.
+Its primary purpose is to verify if the user exists and meets the specific eligibility criteria (such as Know Your Customer (KYC) requirements or country-specific regulations) defined by your application's logic back-end.
 
-### User Eligibility Flow
+<Note> It is strongly recommended to check eligibility before introducing the service to the user to prevent frustration if they are found to be ineligible. </Note>
+
+## User Eligibility Flow
 This flow illustrates the end-to-end authentication handshake required to verify user status across back-end systems.
+
+<Note>
+### Prerequisites:
+To ensure a successful eligibility check, the CoinBridge SDK must be [initialized](/ios-sdk/get-started/how-the-coinbridge-payment-process-works) before you call the eligibility method.
+</Note>
+
 ![User Eligibility Flow](/images/end-user-details.jpg)
 
 The following steps break down the sequential logic of the validation process:
-1.  The **Application** initiates a `Login` request to the **Application Back-End**.
-2.  The **Application Back-End** returns a `UserId` to the **Application**.
-3.  Using the retrieved ID, the **Application** calls `Authenticate (with userId)` on the **CoinBridge SDK**.
-4.  The **CoinBridge SDK** passes the `Authentication` request to the **Coinbridge Backend**.
-5.  **User Data Validation**:
-    * The **Coinbridge Backend** performs an `End-User Details Fetch` from the **Application Back-End**.
-    * The **Application Back-End** provides `User details`, confirming if the user is **Valid** or **Invalid**.
-6.  **Final Result**:
-    * The **Coinbridge Backend** returns the `Authentication Result` to the **CoinBridge SDK**.
-    * The **CoinBridge SDK** delivers the final `Authentication Result` to the **Application** to complete the flow.
+
+1. The **Application** starts the process by sending a `Login` request to the **Application Back-End**.
+2. The **Application Back-End** identifies the user and sends a `UserId` back to the **Application**.
+3. With this ID in hand, the **Application** asks the **CoinBridge SDK** to `Authenticate (with userId)`.
+4. The **CoinBridge SDK** forwards this `Authentication` request to the **Coinbridge Backend**.
+5. To verify the request, the **Coinbridge Backend** reaches out to the **Application Back-End** to pull specific user info and confirms if the user is **Valid** or **Invalid**.
+6. Once verified, the **Coinbridge Backend** sends the `Authentication Result` back through the **CoinBridge SDK**, which passes the final status to the **Application** to wrap up the process.
 
 <Note>
   If your application needs to supply additional data to enable specific services, use this endpoint to transmit that information. Please consult the **CoinBridge Product Team** before modifying the response schema.
