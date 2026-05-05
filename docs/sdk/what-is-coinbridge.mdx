@@ -8,46 +8,59 @@ import WhatIsCoinBridge from '/snippets/what-is-coinbridge.mdx'
 
 ## System Architecture
 
-The diagram below shows how each component fits together: from the SDK embedded in your app, through the CoinBridge platform, to your backend and the card networks.
-
-<Note>
-  This diagram is a placeholder for a final visual design to be provided by the CoinBridge team.
-</Note>
+The diagram below shows how each component interacts: from card setup through to a completed payment.
 
 ```mermaid
-graph TD
-    subgraph App["Your Mobile App"]
-        SDK["CoinBridge SDK"]
+sequenceDiagram
+    participant App as Mobile App
+    participant SDK as CoinBridge SDK
+    participant CB as CoinBridge Backend
+    participant Cust as Your Backend
+    participant Wallet as Device Wallet
+    participant Net as Visa / Mastercard
+
+    rect rgba(255, 253, 231, 0.8)
+        Note over App,Net: Card Setup — One-Time Onboarding
+        App->>SDK: Authenticate (JWT)
+        SDK->>CB: Verify User
+        opt Eligibility Check
+            CB->>Cust: Get User Eligibility
+            Cust-->>CB: Valid / Invalid
+        end
+        CB-->>SDK: Auth Confirmed
+        App->>SDK: Issue Card
+        SDK->>CB: Issue Card Request
+        CB-->>SDK: Card Credential
+        SDK->>Wallet: Provision Token
+        Wallet-->>SDK: Token Active
     end
 
-    subgraph CBP["CoinBridge Platform"]
-        Backend["CoinBridge Backend"]
+    rect rgba(255, 236, 179, 0.8)
+        Note over App,Net: Payment — Per Transaction
+        Wallet->>Net: NFC Tap
+        Net->>CB: Authorization Request
+        CB->>Cust: Check Balance
+        Cust-->>CB: Available Balance
+        opt Policy Check
+            CB->>Cust: Verify Policies
+            Cust-->>CB: Policy Decision
+        end
+        CB-->>Net: Approve / Decline
+        CB-->>App: Push Notification
     end
 
-    subgraph Cust["Your Infrastructure"]
-        CustBack["Loyalty / CRM Backend"]
-        DevWallet["Device Wallet\nApple Pay / Google Pay"]
-    end
-
-    subgraph Net["Card Network"]
-        Schemes["Visa / Mastercard"]
-    end
-
-    SDK -->|"Card Setup\nAuth · Issue · Provision"| Backend
-    SDK -->|"Tokenization"| DevWallet
-    DevWallet -->|"NFC Tap & Pay"| Schemes
-    Schemes -->|"Authorization Request"| Backend
-    Backend <-->|"Backend Connector\nBalance · Policies · Reports"| CustBack
-    Backend -->|"Get User Eligibility"| CustBack
-
-    classDef sdkNode fill:#FFD54F,stroke:#FF8F00,stroke-width:3px,color:#000,font-weight:bold;
-    classDef cbNode fill:#FFECB3,stroke:#FFA000,stroke-width:2px,color:#5D4037;
-    classDef custNode fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,color:#5D4037;
-
-    class SDK sdkNode;
-    class Backend cbNode;
-    class CustBack,DevWallet,Schemes custNode;
+    link SDK: Authentication @ /docs/sdk/installation/authentication
+    link SDK: Issue Card @ /docs/sdk/installation/issue-card
+    link SDK: Add to Wallet @ /docs/sdk/installation/add-to-wallet
+    link Cust: User Eligibility @ /docs/webhooks/endpoints/get-user-details
+    link CB: Payment Lifecycle @ /docs/payments/payments
 ```
+
+| Symbol | Meaning |
+|:---|:---|
+| `——→` | Initiates a request or action |
+| `╌╌→` | Response or async notification |
+| `opt` | Optional step — may not apply to all integrations |
 
 ## Where to go next
 

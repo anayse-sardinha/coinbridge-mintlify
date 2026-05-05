@@ -1,6 +1,7 @@
 ---
 title: Change User Status
 description: "Suspend or unsuspend a user's CoinBridge account."
+api: "POST /api/v1/users/{userId}/status"
 ---
 
 Suspends or unsuspends a user. A suspended user's card is blocked immediately and they cannot make payments until you send an `UNSUSPEND` request.
