@@ -62,7 +62,7 @@
           "Payment Operations"
         ],
         "summary": "End-User Balance Fetch",
-        "description": "### Process Explanation\nRetrieves the current available spending balance of a user immediately prior to a transaction. This is triggered when a 'Prepare To Pay' call is initiated by the mobile app.",
+        "description": "### Process Explanation\nRetrieves the current available spending balance of a user immediately prior to a transaction. This is triggered during the payment authorization process.",
         "parameters": [
           {
             "name": "userId",

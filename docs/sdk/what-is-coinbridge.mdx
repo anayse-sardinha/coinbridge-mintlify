@@ -1,0 +1,60 @@
+---
+title: "What is CoinBridge?"
+---
+
+import WhatIsCoinBridge from '/snippets/what-is-coinbridge.mdx'
+
+<WhatIsCoinBridge />
+
+## System Architecture
+
+The diagram below shows how each component fits together: from the SDK embedded in your app, through the CoinBridge platform, to your backend and the card networks.
+
+<Note>
+  This diagram is a placeholder for a final visual design to be provided by the CoinBridge team.
+</Note>
+
+```mermaid
+graph TD
+    subgraph App["Your Mobile App"]
+        SDK["CoinBridge SDK"]
+    end
+
+    subgraph CBP["CoinBridge Platform"]
+        Backend["CoinBridge Backend"]
+    end
+
+    subgraph Cust["Your Infrastructure"]
+        CustBack["Loyalty / CRM Backend"]
+        DevWallet["Device Wallet\nApple Pay / Google Pay"]
+    end
+
+    subgraph Net["Card Network"]
+        Schemes["Visa / Mastercard"]
+    end
+
+    SDK -->|"Card Setup\nAuth · Issue · Provision"| Backend
+    SDK -->|"Tokenization"| DevWallet
+    DevWallet -->|"NFC Tap & Pay"| Schemes
+    Schemes -->|"Authorization Request"| Backend
+    Backend <-->|"Backend Connector\nBalance · Policies · Reports"| CustBack
+    Backend -->|"Get User Eligibility"| CustBack
+
+    classDef sdkNode fill:#FFD54F,stroke:#FF8F00,stroke-width:3px,color:#000,font-weight:bold;
+    classDef cbNode fill:#FFECB3,stroke:#FFA000,stroke-width:2px,color:#5D4037;
+    classDef custNode fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,color:#5D4037;
+
+    class SDK sdkNode;
+    class Backend cbNode;
+    class CustBack,DevWallet,Schemes custNode;
+```
+
+<CardGroup cols={2}>
+  <Card title="Before You Start" icon="arrow-right-arrow-left" href="/docs/sdk/to-start">
+    Get your environment set up with RSA keys and credentials.
+  </Card>
+
+  <Card title="Card Setup Overview" icon="gears" href="/docs/sdk/card-setup-overview">
+    Learn how to issue and provision a digital card.
+  </Card>
+</CardGroup>

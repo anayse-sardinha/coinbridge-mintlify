@@ -1,4 +1,59 @@
 ---
 title: "Report Correction"
-description: "Endpoint definition for system-level balance adjustments. "
+description: "Endpoint definition for system-level balance adjustments."
+api: "POST /coinbridge/api/v2/correction"
 ---
+
+The **Report Correction** endpoint handles post-authorization adjustments to previously reported transactions. Corrections occur during the card scheme's settlement phase and require your backend to update the user's balance accordingly.
+
+## Correction Types
+
+| `correctionReason` | Trigger | Required Action |
+| :--- | :--- | :--- |
+| `TRANSACTION_CANCELLED` | Transaction was approved at the terminal but timed out before finalization. | Refund the user the full authorized amount. |
+| `SETTLEMENT_DIFF` | The final settled amount differs from the authorized amount (e.g., currency fluctuation, gas station hold). | Adjust the user's balance by the difference (positive or negative). |
+| `TRANSACTION_EXPIRED` | No settlement arrived within the time limit (typically 30 days). | Refund the user the full authorized amount. |
+| `SETTLEMENT_POST_TRANSACTION_EXPIRATION` | Settlement arrives after an expiration refund has already been issued. | Re-charge the user for the settled amount. |
+
+## Request Body
+
+<ParamField body="correctionReason" type="string" required>
+  The reason for the balance adjustment. One of: `TRANSACTION_CANCELLED`, `SETTLEMENT_DIFF`, `TRANSACTION_EXPIRED`, `SETTLEMENT_POST_TRANSACTION_EXPIRATION`.
+</ParamField>
+
+<ParamField body="correctionAmount" type="float" required>
+  The adjustment value. Positive values credit the user; negative values debit the user.
+</ParamField>
+
+<ParamField body="correctionCurrency" type="string">
+  ISO 4217 currency code for the correction amount (e.g., `USD`, `EUR`).
+</ParamField>
+
+## Response Body
+
+<ResponseField name="eventId" type="string">
+  Your internal tracking ID for the acknowledged correction report.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "eventId": "evt_correction_abc"
+}
+```
+</ResponseExample>
+
+## Security
+
+This request includes a **JSON Web Token (JWT)** signed with the **RS256** algorithm in the `Authorization` header with the `Bearer` prefix. Your backend must verify the signature using the **RSA public key** provided by CoinBridge during initial setup.
+
+| Header | Value |
+| :--- | :--- |
+| **Authorization** | `Bearer <JWT_TOKEN>` |
+
+### JWT Payload Details
+
+* **iss**: Set to `CoinBridge`.
+* **sub**: Contains the unique `userId` affected by the correction.
+* **aud**: The name of your receiving application.
+* **exp**: Expiration time, typically no later than 1 minute after the issued time (`iat`).

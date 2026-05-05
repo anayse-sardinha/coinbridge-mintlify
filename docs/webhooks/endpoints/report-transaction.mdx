@@ -1,4 +1,57 @@
 ---
 title: "Report Transaction"
 description: "Endpoint definition for asynchronous transaction finalization data."
+api: "POST /coinbridge/api/v2/transaction"
 ---
+
+The **Report Transaction** endpoint delivers the final outcome of a payment tap to your backend. CoinBridge calls this endpoint after every transaction, regardless of outcome, so your system can charge the user or record the decline.
+
+<Info>
+**Idempotency**: Store the `transactionId` to detect and safely ignore duplicate reports.
+</Info>
+
+## Required Actions by Status
+
+| Status | Required Action |
+| :--- | :--- |
+| `APPROVED` | Charge the transaction amount from the user's account immediately. |
+| `DECLINED` | Do not charge the user. Display the provided decline reason. |
+
+## Request Body
+
+<ParamField body="transactionId" type="string" required>
+  Unique identifier for the reported transaction.
+</ParamField>
+
+<ParamField body="status" type="string" required>
+  Final outcome of the transaction. One of: `APPROVED` or `DECLINED`.
+</ParamField>
+
+## Response Body
+
+<ResponseField name="eventId" type="string">
+  Your internal tracking ID for the acknowledged transaction report.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "eventId": "evt_abc123"
+}
+```
+</ResponseExample>
+
+## Security
+
+This request includes a **JSON Web Token (JWT)** signed with the **RS256** algorithm in the `Authorization` header with the `Bearer` prefix. Your backend must verify the signature using the **RSA public key** provided by CoinBridge during initial setup.
+
+| Header | Value |
+| :--- | :--- |
+| **Authorization** | `Bearer <JWT_TOKEN>` |
+
+### JWT Payload Details
+
+* **iss**: Set to `CoinBridge`.
+* **sub**: Contains the unique `userId` for the transaction owner.
+* **aud**: The name of your receiving application.
+* **exp**: Expiration time, typically no later than 1 minute after the issued time (`iat`).

@@ -10,7 +10,16 @@ These are the characteristics of a refund report:
 * **Amount**: The refund amount will always be a non-negative (positive) value.
 
 ### Action Required
-1.  **Credit Account**: Top-up the end-user's account balance by the positive refund amount.
-2.  **Correlate (Optional)**: If historical transaction data is available, CoinBridge will provide the `originalTransactionId` to help you link the refund to the original purchase.
-3.  **History**: Update the transaction history to show the refund and the original transaction ID if available.
+
+<Steps>
+  <Step title="Credit Account">
+    Top-up the end-user's account balance by the positive refund amount.
+  </Step>
+  <Step title="Link to Original (Optional)">
+    If historical transaction data is available, CoinBridge will provide the `originalTransactionId` to help you link the refund to the original purchase.
+  </Step>
+  <Step title="Update History">
+    Update the transaction history to show the refund and the original transaction ID if available.
+  </Step>
+</Steps>
 

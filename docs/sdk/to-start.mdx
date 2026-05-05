@@ -1,0 +1,161 @@
+---
+title: "Before You Start"
+---
+
+To use the CoinBridge infrastructure, you must deploy the SDK into your mobile application. Follow the steps below for your platform to configure your environment and add the SDK.
+
+<Tabs>
+  <Tab title="Android">
+    Before starting the integration, ensure your environment meets the following requirements:
+
+    * **OS Version**: Android 8.0 Oreo (API level 26) or higher.
+    * **Tooling**: Use Android API level 30 for compilation.
+    * **Device**: Must be NFC-equipped and not rooted.
+
+    <Steps>
+      <Step title="Configure Credentials">
+        Add a `coinbridge.properties` file in the root folder of your project. Add the following lines using the credentials provided by the CoinBridge team:
+
+        ```
+        cbpr.url=https://maven.pkg.github.com/CoinBridgeGit/AndroidSDKRelease
+        cbpr.name=GitHubPackages
+        cbpr.user=<your-username>
+        cbpr.password=<your-password>
+        ```
+
+        <Note> For the Sandbox environment, change `AndroidSDKRelease` to `AndroidSDKSandbox`. </Note>
+
+        <Warning> Do not commit this file to source control as it contains private credentials. </Warning>
+      </Step>
+
+      <Step title="Add Maven Repositories">
+        In your project-level `build.gradle` file, add the following repository configuration:
+
+        ```
+        allprojects {
+          repositories {
+            //...
+            maven { url 'https://jitpack.io' }
+            maven {
+              def cbProperties = new Properties()
+              cbProperties.load(new FileInputStream(rootProject.file("coinbridge.properties")))
+
+              name = cbProperties[`cbpr.name`]
+              url = uri(cbProperties[`cbpr.url`])
+              credentials {
+                username = cbProperties[`cbpr.user`]
+                password = cbProperties[`cbpr.password`]
+              }
+            }
+          }
+        }
+        ```
+      </Step>
+
+      <Step title="Add Module Dependencies">
+        In your module's `build.gradle` file, add the SDK declaration and mandatory native library protection.
+
+        ```
+        android {
+          packagingOptions {
+            // Required to prevent integrity check failures for libscm.so
+            doNotStrip "*/*/libscm.so"
+
+            // Required if minSdkVersion is 23+ or using Gradle 8+
+            jniLibs {
+              useLegacyPackaging = true
+            }
+          }
+        }
+
+        dependencies {
+          // Replace x.y.z with the required version
+          implementation 'com.coinbridge:cbsdk:x.y.z'
+        }
+        ```
+
+        <Note> For the Sandbox environment, change `cbsdk` to `cbsdk-sb`. </Note>
+      </Step>
+
+      <Step title="App Bundle Configuration">
+        If you are building your application as an Android App Bundle, set the following in your `gradle.properties` file to ensure native library integrity checks pass:
+
+        ```
+        android.bundle.enableUncompressedNativeLibs=false
+        ```
+      </Step>
+
+      <Step title="ProGuard Rules">
+        If your app uses code shrinking or obfuscation, add the following rules to your ProGuard configuration file to prevent the SDK from being stripped at build time:
+
+        ```
+        # keep coinbridge secure classes
+        -keep public class com.coinbridge.sdk.** {*;}
+        -keep public class com.coinbridge.cbsdk.* { *; }
+
+        # Sandbox environment only
+        -keep public class com.nayax.coinbridgewallet.* { *; }
+
+        # keep google classes
+        -keepclassmembers class * extends
+          com.google.crypto.tink.shaded.protobuf.GeneratedMessageLite {
+          <fields>;
+        }
+
+        # notification classes
+        -keep public class * extends com.coinbridge.sdk.CBNotificationServiceCallBack
+        -keep public class * extends com.coinbridge.sdk.delegations.CBTerminalTapListener
+
+        # third party secure classes
+        -keep class fr.antelop.exposed.** { *; }
+        -adaptresourcefilecontents !lib/*/libscm.so
+        ```
+
+        <Note>Remove the Sandbox-only rule (`com.nayax.coinbridgewallet`) before submitting a production build.</Note>
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="iOS">
+    Before starting the integration, ensure your environment meets the following requirements:
+
+    | Requirement | iOS Specifications |
+    | :--- | :--- |
+    | **OS Version** | iOS 13.4 or higher |
+    | **Development Tool** | Xcode 12.5.1 or later |
+    | **Credentials** | Repository URL and credentials (unique Application Key and repository login) |
+    | **Hardware** | iPhone 7 or newer; NFC-equipped |
+
+    To add the CoinBridge SDK to your iOS application using Swift Package Manager:
+
+    <Steps>
+      <Step title="Open your project in Xcode" />
+      <Step title="Add Package Dependency">
+        Navigate to **File > Swift Packages > Add Package Dependency**.
+      </Step>
+      <Step title="Enter the repository URL">
+        Use the URL provided by CoinBridge: `https://github.com/CoinBridgeGit/IosSDKSandbox`
+      </Step>
+      <Step title="Complete the setup">
+        Follow the prompts to select the version and add it to your app target.
+      </Step>
+    </Steps>
+
+    For the sandbox environment, use the following:
+
+    ```
+    https://github.com/CoinBridgeGit/IosSDKSandbox
+    with specific version, or up to next major
+    ```
+  </Tab>
+</Tabs>
+
+<CardGroup cols={2}>
+  <Card title="What is CoinBridge?" icon="circle-info" href="/docs/sdk/what-is-coinbridge">
+    Discover how CoinBridge converts digital assets into usable currency with Tap & Go payments.
+  </Card>
+
+  <Card title="Card Setup Overview" icon="gears" href="/docs/sdk/card-setup-overview">
+    Learn how to issue and provision a digital card.
+  </Card>
+</CardGroup>

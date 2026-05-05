@@ -2,3 +2,34 @@
 title: "User Status Events"
 description: "Handling 'Eligibility Status' updates and 'Card Issued' informational events."
 ---
+
+User status events are asynchronous notifications about changes to a user's standing within the CoinBridge system. They arrive via the [Notify User Event](/docs/webhooks/endpoints/notify-user-event) endpoint with specific `eventType` values.
+
+## Event Types
+
+### Eligibility Status
+
+**`eventType`: `ELIGIBILITY_STATUS`**
+
+Informs your platform whether a user meets the criteria to use CoinBridge services. This event may fire after onboarding or when eligibility changes (e.g., due to a KYC review outcome or account suspension).
+
+**Required action**: Update your system's record of the user's eligibility. If the user is no longer eligible, prevent access to CoinBridge payment features in your app.
+
+| Outcome | Description |
+| :--- | :--- |
+| Eligible | User meets all criteria. Allow card issuance and payment flows. |
+| Not eligible | User does not meet criteria. Block onboarding or suspend services as appropriate. |
+
+---
+
+### Card Issued
+
+**`eventType`: `CARD_ISSUED`**
+
+An informational event sent when a new virtual card is created for a user. This is a confirmation-only notification. No balance or account action is required.
+
+**Required action**: None required. Use this event to update your internal records or trigger a welcome communication if desired.
+
+<Note>
+This event does not mean the card is ready for payments. The card still needs to be provisioned to a wallet before the user can tap to pay. Monitor `tokenStatus` via the SDK initialization callbacks for provisioning state.
+</Note>

@@ -1,4 +1,62 @@
 ---
 title: "Report Refund"
 description: "Endpoint definition for processing merchant refunds."
+api: "POST /coinbridge/api/v2/refund"
 ---
+
+The **Report Refund** endpoint notifies your backend when a merchant initiates a refund at the terminal. Refunds are processed independently from the original transaction and always arrive pre-approved. You must credit the user's account for the refund amount.
+
+<Note>
+Refunds carry their own unique `reportId` and are not linked by ID to the original transaction. Use the `originalTransactionId` field to reconcile refunds against prior charges in your system.
+</Note>
+
+## Request Body
+
+<ParamField body="reportId" type="string" required>
+  Unique identifier for this refund event. Use for idempotency.
+</ParamField>
+
+<ParamField body="userId" type="string" required>
+  The user whose account must be credited.
+</ParamField>
+
+<ParamField body="originalTransactionId" type="string">
+  The ID of the original purchase transaction this refund is reversing.
+</ParamField>
+
+<ParamField body="refundDetails" type="object" required>
+  Financial and merchant details for the refund, including amount and currency.
+</ParamField>
+
+## Required Action
+
+Credit the user's account by the refund amount specified in `refundDetails`. No approval decision is required. All refunds are pre-approved by the card scheme.
+
+## Response Body
+
+<ResponseField name="eventId" type="string">
+  Your internal tracking ID for the acknowledged refund report.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "eventId": "evt_refund_xyz"
+}
+```
+</ResponseExample>
+
+## Security
+
+This request includes a **JSON Web Token (JWT)** signed with the **RS256** algorithm in the `Authorization` header with the `Bearer` prefix. Your backend must verify the signature using the **RSA public key** provided by CoinBridge during initial setup.
+
+| Header | Value |
+| :--- | :--- |
+| **Authorization** | `Bearer <JWT_TOKEN>` |
+
+### JWT Payload Details
+
+* **iss**: Set to `CoinBridge`.
+* **sub**: Contains the unique `userId` for the refund recipient.
+* **aud**: The name of your receiving application.
+* **exp**: Expiration time, typically no later than 1 minute after the issued time (`iat`).

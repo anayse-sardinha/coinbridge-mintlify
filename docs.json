@@ -9,158 +9,115 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "versions": [
+    "tabs": [
       {
-        "version": "1.37",
-        "tabs": [
+        "tab": "Home",
+        "pages": [
+          "index"
+        ]
+      },
+      {
+        "tab": "Guides",
+        "anchors": [
           {
-            "tab": "Home",
-            "pages": [
-              "index"
-            ]
-          },
-          {
-            "tab": "Guides",
-            "anchors": [
+            "anchor": "SDK",
+            "icon": "mobile",
+            "groups": [
               {
-                "anchor": "Android",
-                "icon": "android",
-                "groups": [
-                  {
-                    "group": "How CoinBridge Works",
-                    "pages": [
-                      "docs/android-sdk/get-started/what-is-coinbridge",
-                      "docs/android-sdk/get-started/how-the-coinbridge-payment-process-works"
-                    ]
-                  },
-                  {
-                    "group": "Get Started",
-                    "pages": [
-                      "docs/android-sdk/implementation-roadmap-android",
-                      "docs/android-sdk/get-started/to-start",
-                      "docs/android-sdk/get-started/card-setup-overview"
-                    ]
-                  },
-                  {
-                    "group": "Requirements",
-                    "pages": [
-                      "docs/android-sdk/sdk/requirements/coinbridge",
-                      "docs/android-sdk/sdk/requirements/customer-technology"
-                    ]
-                  },
-                  {
-                    "group": "Set Up Your Card",
-                    "pages": [
-                      "docs/android-sdk/sdk/installation/authentication",
-                      {
-                        "group": "Initialize",
-                        "pages": [
-                          "docs/android-sdk/sdk/installation/initialize",
-                          "docs/android-sdk/sdk/installation/user-eligibility"
-                        ]
-                      },
-                      "docs/android-sdk/sdk/installation/issue-card",
-                      "docs/android-sdk/sdk/installation/wallets",
-                      "docs/android-sdk/sdk/installation/add-to-wallet"
-                    ]
-                  },
-                  {
-                    "group": "Error Codes",
-                    "pages": [
-                      "docs/ios-sdk/error-codes"
-                    ]
-                  }
+                "group": "Integration Journey",
+                "pages": [
+                  "docs/sdk/integration-journey"
                 ]
               },
               {
-                "anchor": "iOS",
-                "icon": "apple",
-                "groups": [
+                "group": "How CoinBridge Works",
+                "pages": [
+                  "docs/sdk/what-is-coinbridge"
+                ]
+              },
+              {
+                "group": "Get Started",
+                "pages": [
+                  "docs/sdk/implementation-roadmap",
+                  "docs/sdk/to-start",
+                  "docs/sdk/card-setup-overview"
+                ]
+              },
+              {
+                "group": "Requirements",
+                "pages": [
+                  "docs/sdk/requirements/coinbridge",
+                  "docs/sdk/requirements/customer-technology"
+                ]
+              },
+              {
+                "group": "Set Up Your Card",
+                "pages": [
+                  "docs/sdk/installation/authentication",
                   {
-                    "group": "How CoinBridge Works",
+                    "group": "Initialize",
+                    "root": "docs/sdk/installation/initialize",
                     "pages": [
-                      "docs/ios-sdk/get-started/what-is-coinbridge",
-                      "docs/ios-sdk/get-started/how-the-coinbridge-payment-process-works"
+                      "docs/sdk/installation/user-eligibility"
                     ]
                   },
-                  {
-                    "group": "Get Started",
-                    "pages": [
-                      "docs/ios-sdk/sdk/implementation-roadmap-ios",
-                      "docs/ios-sdk/get-started/to-start",
-                      "docs/ios-sdk/get-started/card-setup-overview"
-                    ]
-                  },
-                  {
-                    "group": "Requirements",
-                    "pages": [
-                      "docs/ios-sdk/sdk/requirements/apple",
-                      "docs/ios-sdk/sdk/requirements/customer-technology"
-                    ]
-                  },
-                  {
-                    "group": "Set Up Your Card",
-                    "pages": [
-                      "docs/ios-sdk/sdk/installation/authentication",
-                      {
-                        "group": "Initialize",
-                        "pages": [
-                          "docs/ios-sdk/sdk/installation/initialize",
-                          "docs/ios-sdk/sdk/installation/user-eligibility"
-                        ]
-                      },
-                      "docs/ios-sdk/sdk/installation/issue-card",
-                      "docs/ios-sdk/sdk/installation/wallets",
-                      "docs/ios-sdk/sdk/installation/add-to-wallet"
-                    ]
-                  },
-                  {
-                    "group": "Error Codes",
-                    "pages": [
-                      "docs/ios-sdk/error-codes"
-                    ]
-                  }
+                  "docs/sdk/installation/issue-card",
+                  "docs/sdk/installation/add-to-wallet"
+                ]
+              },
+              {
+                "group": "Error Codes",
+                "pages": [
+                  "docs/sdk/error-codes"
                 ]
               }
             ]
           },
           {
-            "tab": "Webhooks",
-            "pages": [
-              "docs/payments/payments",
+            "anchor": "Backend Connector",
+            "icon": "server",
+            "groups": [
               {
-                "group": "Reporting",
+                "group": "Overview",
                 "pages": [
+                  "docs/webhooks/index",
+                  "docs/webhooks/authentication",
+                  "docs/webhooks/environments"
+                ]
+              },
+              {
+                "group": "Endpoints",
+                "pages": [
+                  "docs/webhooks/endpoints/get-user-details",
+                  "docs/webhooks/endpoints/get-user-balance",
+                  "docs/webhooks/endpoints/get-spending-policies",
+                  "docs/webhooks/endpoints/authorize-transaction",
+                  "docs/webhooks/endpoints/report-transaction",
+                  "docs/webhooks/endpoints/report-refund",
+                  "docs/webhooks/endpoints/report-correction",
+                  "docs/webhooks/endpoints/notify-user-event",
+                  "docs/webhooks/endpoints/apple-compliance-events",
+                  "docs/webhooks/endpoints/user-status-events",
+                  "docs/webhooks/endpoints/data-transfer-objects"
+                ]
+              },
+              {
+                "group": "Payments",
+                "pages": [
+                  "docs/payments/payments",
                   "docs/payments/transaction-report",
                   "docs/payments/refund-report",
                   "docs/payments/transaction-corrections"
                 ]
-              },
-              {
-                "group": "Webhooks",
-                "pages": [
-                  "docs/payments/transaction-report",
-                  "docs/payments/refund-report",
-                  "docs/payments/transaction-corrections"
-                ]
-              },
-              {
-                "group": "Webhooks",
-                "pages":[
-                   "docs/webhooks/endpoints/get-user-details"
-                ] ,
-                "openapi":[ 
-                "docs/openapi.json"
-              ]
               }
-            ]
-          },
-          {
-            "tab": "API",
-            "pages": [
-              "docs/coinbridge-api/coinbridge-api"
             ]
           }
+        ]
+      },
+      {
+        "tab": "API",
+        "pages": [
+          "docs/coinbridge-api/coinbridge-api"
         ]
       }
     ]

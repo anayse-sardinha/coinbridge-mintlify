@@ -6,7 +6,7 @@ api: "GET /coinbridge/api/v1/user/{userId}/balance"
 
 The **Get User Balance** endpoint is a critical data-fetching component used to retrieve a user's currently available balance immediately prior to a transaction. 
 
-This call is triggered by the CoinBridge Backend when a user initiates a `prepareToPay` request from the mobile SDK. Upon successful retrieval, the SDK enables the device's NFC component to proceed with the payment.
+This call is triggered by the CoinBridge Backend during the payment authorization process. Upon successful retrieval, the backend proceeds with transaction authorization.
 
 ### Performance Requirements
 As a data-fetching endpoint, this must meet strict performance standards to ensure a smooth user experience:

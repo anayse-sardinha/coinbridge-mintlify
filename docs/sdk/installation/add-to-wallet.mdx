@@ -1,0 +1,162 @@
+---
+title: "Add Card to Wallet (Provisioning)"
+---
+
+Provisioning adds your user's virtual card to their device wallet for contactless payments. Choose the appropriate tab for your platform.
+
+<Tabs>
+  <Tab title="Android">
+    Provisioning pushes the user's virtual card to **Google Wallet**. Once provisioned, the card becomes **ACTIVE** and the user can make contactless "Tap & Go" payments directly from the Google Wallet app. No further action is required from your app during payment.
+
+    <Steps>
+      <Step title="Prerequisites">
+        Before provisioning, ensure the user is in the correct state. Check the `userState` returned during [Initialization](/docs/sdk/installation/initialize):
+        * **Has Card**: Must be `TRUE`.
+        * **Card Status**: Must be `Active`.
+        * **Token Status**: Should be `NONE` (meaning the card is not yet in Google Wallet on this device).
+      </Step>
+
+      <Step title="Implement Provisioning">
+        Call `provisionCard()` from your activity. This launches the Google Wallet provisioning flow.
+
+        ```java title="Provisioning"
+        CoinBridgeSDK.getInstance().provisionCard(activity, new OnCardProvisioningCallback() {
+            @Override
+            public void onProvisioningSuccess() {
+                // Provisioning accepted. Wait for onPaymentMethodStatusChange
+                // via CBNotificationServiceCallBack for the updated tokenStatus.
+            }
+
+            @Override
+            public void onError(CBError<CardProvisioningError> error) {
+                // Handle error (e.g., GOOGLE_WALLET_UNAVAILABLE, PROVISION_NOT_COMPLETED)
+            }
+        });
+        ```
+      </Step>
+
+      <Step title="Forward Activity Results">
+        Google Wallet provisioning uses `Activity#onActivityResult()`. You **must** forward this to `CBActivityResult` or the provisioning flow will silently fail to complete.
+
+        ```java title="Activity Result Forwarding"
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if (CBActivityResult.getInstance().handleActivityResult(requestCode, resultCode, data)) {
+                return;
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        ```
+      </Step>
+
+      <Step title="Confirm Activation">
+        `onProvisioningSuccess` means the flow was accepted, not that the card is immediately ready to use. Listen for the `onPaymentMethodStatusChange` event via **CBNotificationService** to confirm the `tokenStatus` has transitioned to **ACTIVE**.
+
+        <Tip>
+          Only show payment-ready UI (e.g., a "Card is ready" screen) once `tokenStatus` confirms **ACTIVE**.
+        </Tip>
+      </Step>
+    </Steps>
+
+    ### After Provisioning: UX Options
+    Once the card is in Google Wallet, your app can offer one of two UX options:
+    * **Open Google Wallet**: A button that launches the Google Wallet app via a standard Android deep link Intent. Note: Google does not support deep-linking to a specific card.
+    * **Informational text**: A confirmation message telling the user their card is ready in Google Wallet.
+
+    <Note>
+    **WearOS**: Google Wallet provisioning via the CoinBridge SDK does not support WearOS.
+    </Note>
+
+    ## Mandatory Communications
+    To stay compliant with financial regulations, you must notify users about their card status via Email or SMS:
+
+    | Scenario | Trigger | Requirement |
+    | :--- | :--- | :--- |
+    | **Success** | Card is activated. | Send confirmation within 1 hour. |
+    | **Abandoned** | Flow started but not finished. | Follow up within 24 hours. |
+    | **Inactive** | Provisioned but not used. | If unused for 7 days, send a "Benefits" reminder. |
+
+    <Warning>
+    ### Mandatory Logout
+    When a user logs out of your app, you **must** call `CoinBridgeSDK.getInstance().logout()`. With Google Wallet, the card token is **not** destroyed on logout; the card remains in the user's Google Wallet. On re-login, the SDK automatically recognizes the existing token after `authenticate()` and `init()` complete.
+    </Warning>
+  </Tab>
+
+  <Tab title="iOS">
+    On iOS, users must add the virtual card to their iPhone or Apple Watch. This process uses Apple's native provisioning forms and does not require two-factor authentication.
+
+    ### Prerequisites
+    To add a card to Apple Wallet, you need:
+    * **OS/Hardware**: iOS 13.4+ and iPhone 7 or newer.
+    * **Security**: Users must have Face ID, Touch ID, or a device passcode configured.
+    * **Card State**: The card must be `active` and the `tokenStatus` for the device must be `none`.
+
+    ### Provisioning Flow
+
+    <Steps>
+      <Step title="Check compatibility">
+        Call `cardCanAddToApplePay` to verify whether the device or a paired Apple Watch still has a wallet the card can be provisioned to. Call this only when the user already has an active card provisioned to at least one wallet.
+
+        ```swift
+        CoinBridge.sharedInstance.cardCanAddToApplePay { result in
+            switch result {
+            case .onSuccess(let isCanPushCard):
+                // isCanPushCard == true: card can still be added to at least one wallet
+                // Show the "Add to Apple Wallet" button
+            case .onError(let error):
+                // Card is already in all available wallets, or no watch is paired
+                // Hide the "Add to Apple Wallet" button
+            }
+        }
+        ```
+      </Step>
+      <Step title="Initiate provisioning">
+        Call `addToApplePay` to open the native Apple Wallet overlay.
+      </Step>
+      <Step title="Confirm activation">
+        Wait for the `onPaymentMethodStatusChange` notification via the `CBNotification` service to confirm the `tokenStatus` has transitioned to `active`.
+      </Step>
+    </Steps>
+
+    ### UI & Logic Guidelines
+    Here are some important UI and logic considerations:
+    * **Button Visibility**: You must keep the **"Add to Apple Wallet"** button visible on the main screen until the user has provisioned all paired devices (e.g., both iPhone and Apple Watch).
+    * **Apple Watch**: Provide a dedicated screen for watch provisioning if available.
+
+    ### Paying with Apple Pay
+    Once all available wallets are provisioned, show a **"Pay with Apple Pay"** button. Tapping it calls `payWithApplePay`, which opens the Apple Wallet overlay with the CoinBridge card ready for payment.
+
+    ```swift
+    CoinBridge.sharedInstance.payWithApplePay { completion in
+        switch completion {
+        case .onSuccess:
+            // Apple Wallet opened successfully with CoinBridge card
+        case .onError(let error):
+            // Handle PayWithApplePayError
+        }
+    }
+    ```
+
+    <Note>
+    Only show the **"Pay with Apple Pay"** button and call `payWithApplePay` when **all** available Apple Wallets are provisioned (`tokenStatus = active` for both `deviceWallet` and `watchWallet`, where applicable).
+    </Note>
+
+    ## Mandatory Communication Requirements
+    You must send notifications via Email or SMS to comply with regulations.
+    The following table outlines when to send notifications and what's required:
+
+    | Scenario | Trigger | Mandatory Requirement |
+    | :--- | :--- | :--- |
+    | **Provisioning Success** | Successful activation. | Send confirmation within 1 hour of activation. |
+    | **Abandoned Flow** | User started but did not finish. | Notify the user within 24 hours explaining how to complete activation. |
+    | **Inactive Users** | Provisioned but unused. | If no transaction occurs within 7 days, send an email highlighting Apple Pay benefits. |
+    | **User Incentives** | iOS-specific: Incomplete flow. | A minimum **20 ILS** incentive must be offered if provisioning is not completed within 7 days or first use within 14 days. |
+
+    <Info>
+    ### Mandatory Logout
+    When a user logs out of your application, you **must** call the `logout` method.
+    This clears user-specific payment data and destroys the digital wallet on the CoinBridge system.
+    Failing to call `logout` results in multiple active wallets for a single user, leading to identification mismatches and server overload.
+    </Info>
+  </Tab>
+</Tabs>

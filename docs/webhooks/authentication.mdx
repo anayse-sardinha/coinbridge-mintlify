@@ -9,9 +9,17 @@ The CoinBridge Back-End API v2 utilizes JSON Web Token (JWT) for secure authenti
 
 To secure the communication, CoinBridge uses an asymmetric RSA signing process:
 
-1.  **Public Key Provisioning**: Before integration begins, CoinBridge will provide an RSA public key to your back-end development team.
-2.  **Signing**: With each outgoing request, the CoinBridge back-end generates and signs a JWT token using its RSA private key.
-3.  **Verification**: Your system must use the provided public key to verify the signature of the incoming JWT to ensure the request originated from CoinBridge.
+<Steps>
+  <Step title="Public Key Provisioning">
+    Before integration begins, CoinBridge will provide an RSA public key to your back-end development team.
+  </Step>
+  <Step title="Signing">
+    With each outgoing request, the CoinBridge back-end generates and signs a JWT token using its RSA private key.
+  </Step>
+  <Step title="Verification">
+    Your system must use the provided public key to verify the signature of the incoming JWT to ensure the request originated from CoinBridge.
+  </Step>
+</Steps>
 
 ## JWT Structure
 
@@ -43,4 +51,4 @@ CoinBridge provides the signed JWT in the Authorization header of the HTTP reque
 ```http
 Authorization: Bearer <signed_jwt_token>
 ```
->💡**Note:** While RS256 is the standard, CoinBridge can support alternative authorization types if your back-end architecture requires a specific protocol.
+<Note>While RS256 is the standard, CoinBridge can support alternative authorization types if your back-end architecture requires a specific protocol.</Note>

@@ -14,10 +14,19 @@ Immediately after this decision, CoinBridge sends a `POST` request to your Trans
 
 ### Implementation Steps
 
-1. **Receive the report**: Check for the incoming `TransactionReportDTO` at your endpoint.
-2. **Verify the result**: Confirm the `approved` status within the `transaction` object.
-3. **Process the balance**:
-    * **Approved Transaction**: Charge the transaction amount from the end-user’s account balance. 
+<Steps>
+  <Step title="Receive the report">
+    Check for the incoming `TransactionReportDTO` at your endpoint.
+  </Step>
+  <Step title="Verify the result">
+    Confirm the `approved` status within the `transaction` object.
+  </Step>
+  <Step title="Process the balance">
+    * **Approved Transaction**: Charge the transaction amount from the end-user’s account balance.
     * **Declined Transaction**: Do not charge the user. Capture the `declineReason` to explain the failure.
-4. **Update History**: Reflect the transaction status, merchant name, and amount in the user's transaction history.
+  </Step>
+  <Step title="Update History">
+    Reflect the transaction status, merchant name, and amount in the user’s transaction history.
+  </Step>
+</Steps>
 

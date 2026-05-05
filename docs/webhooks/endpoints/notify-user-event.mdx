@@ -1,4 +1,49 @@
 ---
 title: "Notify User Event"
 description: "Webhook payload details for general user notifications."
+api: "POST /coinbridge/api/v2/user-event"
 ---
+
+The **Notify User Event** endpoint delivers asynchronous lifecycle notifications to your backend. CoinBridge sends these events when user state changes, such as a card being issued or a provisioning email being required. Your system must acknowledge each event with a `200` response.
+
+## Event Type Categories
+
+| Category | `eventType` Prefix | Description |
+| :--- | :--- | :--- |
+| [Apple Compliance Events](/docs/webhooks/endpoints/apple-compliance-events) | `APPLE_EMAIL_*` | Mandatory email triggers for provisioning status and inactivity. |
+| [User Status Events](/docs/webhooks/endpoints/user-status-events) | `ELIGIBILITY_STATUS`, `CARD_ISSUED` | User eligibility changes and card issuance confirmations. |
+
+## Request Body
+
+<ParamField body="eventType" type="string" required>
+  The specific lifecycle event being reported. See the event category pages for the full list of values and their required actions.
+</ParamField>
+
+## Response Body
+
+<ResponseField name="eventId" type="string">
+  Your internal tracking ID for the acknowledged event.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "eventId": "evt_user_event_001"
+}
+```
+</ResponseExample>
+
+## Security
+
+This request includes a **JSON Web Token (JWT)** signed with the **RS256** algorithm in the `Authorization` header with the `Bearer` prefix. Your backend must verify the signature using the **RSA public key** provided by CoinBridge during initial setup.
+
+| Header | Value |
+| :--- | :--- |
+| **Authorization** | `Bearer <JWT_TOKEN>` |
+
+### JWT Payload Details
+
+* **iss**: Set to `CoinBridge`.
+* **sub**: Contains the unique `userId` for the affected user.
+* **aud**: The name of your receiving application.
+* **exp**: Expiration time, typically no later than 1 minute after the issued time (`iat`).

@@ -2,3 +2,58 @@
 title: "Apple Compliance Events"
 description: "Mandatory email triggers for Provisioning, Inactivity, and Incentives."
 ---
+
+Apple Pay compliance requires you to send specific communications to users at defined points in the provisioning lifecycle. CoinBridge triggers these as `APPLE_EMAIL_*` events via the [Notify User Event](/docs/webhooks/endpoints/notify-user-event) endpoint.
+
+<Warning>
+These email communications are **mandatory** for Apple Pay certification. Failure to implement them will block your app from passing Apple's compliance review.
+</Warning>
+
+## Event Types and Required Actions
+
+### Provisioning Success
+
+**`eventType`: `APPLE_EMAIL_PROVISIONING_SUCCESS`**
+
+Triggered when a user's card is successfully activated in Apple Wallet.
+
+**Required action**: Send a confirmation email or SMS within **1 hour** of activation.
+
+---
+
+### Abandoned Flow
+
+**`eventType`: `APPLE_EMAIL_PROVISIONING_ABANDONED`**
+
+Triggered when a user started the "Add to Apple Wallet" flow but did not complete it.
+
+**Required action**: Notify the user within **24 hours** explaining how to complete activation.
+
+---
+
+### Inactive User
+
+**`eventType`: `APPLE_EMAIL_INACTIVE_USER`**
+
+Triggered when a user has provisioned their card but has not made any transaction within 7 days.
+
+**Required action**: Send an email within **7 days** of provisioning highlighting Apple Pay benefits.
+
+---
+
+### User Incentive
+
+**`eventType`: `APPLE_EMAIL_INCENTIVE`**
+
+Triggered when a user has not completed provisioning within 7 days or has not made a first purchase within 14 days.
+
+**Required action**: Offer a minimum **20 ILS** incentive to encourage activation and first use.
+
+## Communications Summary
+
+| Event | Deadline | Channel |
+| :--- | :--- | :--- |
+| Provisioning Success | Within 1 hour of activation | Email or SMS |
+| Abandoned Flow | Within 24 hours | Email or SMS |
+| Inactive User | Within 7 days of provisioning | Email |
+| User Incentive | At 7 days (no provisioning) or 14 days (no first use) | Email |

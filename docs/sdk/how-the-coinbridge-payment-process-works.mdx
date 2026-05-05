@@ -1,4 +1,8 @@
-The CoinBridge solution relies on two primary components working together:
+---
+title: "How the CoinBridge Payment Process Works"
+---
+
+The CoinBridge solution relies on two primary components working in together:
 1. **CoinBridge Mobile SDK**: Embeds an internal e-Wallet into your app to handle user interactions and NFC communication.
 2. **Back-End Connector**: Links your CRM or loyalty platform to CoinBridge to authorize transactions and sync data in real-time.
 
@@ -18,32 +22,30 @@ Before a user can make their first payment, you must complete a one-time setup t
     * **Manual Flow**: If required by local regulations, the user may need to provide details like a National ID or SSN.
   </Step>
   <Step title="Add Card to Wallet">
-    The card must be provisioned (tokenized) to a wallet to enable "Tap & Go."
-    * **iOS**: Users must use the "Add to Apple Wallet" flow to push the token to their iPhone or Apple Watch.
-    * **Android**: The SDK pushes the token to the internal application wallet or Google Wallet.
+    The card must be provisioned (tokenized) to a wallet to enable "Tap & Go." For **Android**, the SDK pushes the token to Google Wallet. For **iOS**, users must use the "Add to Apple Wallet" flow to push the token to their iPhone or Apple Watch.
   </Step>
 </Steps>
 
 ## Phase 2: Payment Journey
-Once setup is complete, the app only need to be initialized and the user will be ready to pay. 
+Once setup is complete, you no longer need to call onboarding methods. You must only initialize the SDK during every app launch to sync the card status and enable payments.
 
-### [Start the Payment Process](/docs/payments/payments)
-When a user holds their device near a merchant's EMV terminal:
+### [The Payment Flow](/docs/payments/payments)
+When a user initiates a payment:
 
 <Steps>
   <Step title="Biometric Prompt">
     The app requests Face ID, fingerprint, or passcode authentication.
   </Step>
   <Step title="NFC Communication">
-    The terminal and device exchange encrypted information via the card scheme (Visa/Mastercard).
+    The terminal and device exchange encrypted info via the card scheme (Visa/Mastercard).
   </Step>
-  <Step title="Confirmation">
-    A "check" or "V" on the device indicates successful *communication* with the terminal, not necessarily transaction *approval*.
+  <Step title="Communication Confirmation">
+    A "check" or "V" on the device indicates successful *communication* with the terminal, not transaction *approval*.
   </Step>
 </Steps>
 
 ## Phase 3: Authorization and Reporting
-CoinBridge handles the complex financial heavy lifting between the card scheme and the backend through webhooks.
+CoinBridge manages all financial transactions through the Backend Connector using secure webhooks.
 
 <Steps>
   <Step title="Authorization Flow">
@@ -64,7 +66,6 @@ CoinBridge handles the complex financial heavy lifting between the card scheme a
   </Step>
 </Steps>
 
-#### User Logout (`Logout`)
-When a user logs out of your application, you **must** notify the CoinBridge SDK.
-* **Technical Requirement**: This triggers an "unbind" request that clears user-specific payment data and destroys the digital wallet instance in the CoinBridge system.
-* **Warning**: Failing to call logout can cause mismatched user identification and system performance issues from multiple orphaned active wallets.
+### User Logout
+When a user logs out, you **must** notify the CoinBridge SDK. This triggers an **unbind** request that clears user-specific data and destroys the digital wallet instance in our system. 
+  Failing to call `Logout` can result in a single user having hundreds of orphaned "active" wallets, leading to identification mismatches and system performance issues.

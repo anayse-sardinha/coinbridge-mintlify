@@ -1,4 +1,358 @@
 ---
-title: Coinbridge API
+title: CoinBridge Client API
+description: "Management and query API for transactions, refunds, and user administration."
 ---
-TBD
+
+The CoinBridge Client API is a REST API your backend calls on the CoinBridge server. It is separate from the [Backend Connector](/docs/webhooks/index) webhooks (which CoinBridge calls on your server).
+
+Use this API to query transaction and refund history, manage user accounts, and retrieve data for reconciliation or support workflows.
+
+<Info>
+**Base URL (Sandbox):** `https://api-test.coinbridge.com`
+
+Contact CoinBridge for your production base URL and credentials.
+</Info>
+
+---
+
+## Authentication
+
+The Client API uses **OAuth2** with short-lived access tokens. All endpoints except `/auth/getTokens` and `/auth/refreshAccessToken` require a `Bearer` token in the `Authorization` header.
+
+### Get Tokens
+
+**`POST /api/v1/auth/getTokens`**
+
+Exchange your credentials for an OAuth2 token pair.
+
+#### Request Body
+
+<ParamField body="username" type="string" required>
+  Your CoinBridge API username.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Your CoinBridge API password. Must be at least 12 characters and include uppercase, lowercase, a number, and a special character.
+</ParamField>
+
+#### Response
+
+<ResponseField name="token_type" type="string">
+  Always `Bearer`.
+</ResponseField>
+
+<ResponseField name="expires_in" type="number">
+  Token lifetime in seconds.
+</ResponseField>
+
+<ResponseField name="access_token" type="string">
+  Short-lived JWT used in the `Authorization` header for all API calls.
+</ResponseField>
+
+<ResponseField name="refresh_token" type="string">
+  Long-lived token used to obtain a new access token without re-entering credentials.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJhbGci...",
+  "refresh_token": "dGhpcyBp..."
+}
+```
+</ResponseExample>
+
+---
+
+### Refresh Access Token
+
+**`POST /api/v1/auth/refreshAccessToken`**
+
+Exchange a refresh token for a new access token.
+
+#### Request Body
+
+<ParamField body="refresh_token" type="string" required>
+  The refresh token received from `/auth/getTokens`.
+</ParamField>
+
+#### Response
+
+<ResponseField name="token_type" type="string">
+  Always `Bearer`.
+</ResponseField>
+
+<ResponseField name="expires_in" type="number">
+  Token lifetime in seconds.
+</ResponseField>
+
+<ResponseField name="access_token" type="string">
+  New short-lived JWT for API requests.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJhbGci..."
+}
+```
+</ResponseExample>
+
+---
+
+## Transactions
+
+### Get Transaction
+
+**`GET /api/v1/transactions/{transactionId}`**
+
+Retrieve the full details of a single transaction by its UUID.
+
+#### Path Parameters
+
+<ParamField path="transactionId" type="string (UUIDv4)" required>
+  The unique identifier of the transaction.
+</ParamField>
+
+#### Response
+
+<ResponseField name="approved" type="boolean">
+  Whether the transaction was approved.
+</ResponseField>
+
+<ResponseField name="declineReason" type="string">
+  Human-readable decline reason, if the transaction was not approved.
+</ResponseField>
+
+<ResponseField name="declineDetails" type="string">
+  Additional technical detail about the decline, if available.
+</ResponseField>
+
+<ResponseField name="transactionDetails" type="object">
+  Full transaction metadata. See [ApiTransactionDetailsDTO](#apitransactiondetailsdto).
+</ResponseField>
+
+<ResponseField name="linkedRefunds" type="array">
+  List of refund events linked to this transaction. Each item follows the [EventDTO](#eventdto) structure.
+</ResponseField>
+
+<ResponseField name="linkedCorrections" type="array">
+  List of correction events linked to this transaction. Each item follows the [EventDTO](#eventdto) structure.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "approved": true,
+  "transactionDetails": {
+    "id": "txn_uuid_001",
+    "timestamp": "2026-04-15T10:23:00Z",
+    "billingAmount": 42.50,
+    "billingCurrencyCode": "EUR",
+    "transactionAmount": 42.50,
+    "transactionCurrencyCode": "EUR",
+    "countryCode": "DEU",
+    "mccCode": "5411",
+    "authCode": "AUTH123",
+    "source": "NFC",
+    "wallet": "GOOGLE_WALLET",
+    "rrn": "123456789012"
+  },
+  "linkedRefunds": [],
+  "linkedCorrections": []
+}
+```
+</ResponseExample>
+
+---
+
+### List Transactions
+
+**`GET /api/v1/transactions`**
+
+Retrieve a paginated list of transactions for a given date.
+
+#### Query Parameters
+
+<ParamField query="date" type="string (YYYY-MM-DD)" required>
+  The date to retrieve transactions for.
+</ParamField>
+
+<ParamField query="page" type="number">
+  Page number (1-based). Defaults to `1`.
+</ParamField>
+
+#### Response
+
+<ResponseField name="transactions" type="array">
+  List of transactions for the requested date and page. Each item follows the [GetTransactionResDTO](#gettransactionresdto) structure.
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Pagination metadata including total count, current page, and page size.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "transactions": [
+    {
+      "approved": true,
+      "transactionDetails": {
+        "id": "txn_uuid_001",
+        "timestamp": "2026-04-15T10:23:00Z",
+        "billingAmount": 42.50,
+        "billingCurrencyCode": "EUR"
+      }
+    }
+  ],
+  "pagination": {
+    "total": 84,
+    "page": 1,
+    "pageSize": 20
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Refunds
+
+### Get Refund
+
+**`GET /api/v1/refunds/{refundId}`**
+
+Retrieve details of a specific refund by its UUID.
+
+#### Path Parameters
+
+<ParamField path="refundId" type="string (UUIDv4)" required>
+  The unique identifier of the refund.
+</ParamField>
+
+#### Response
+
+<ResponseField name="reportId" type="string">
+  Unique identifier for this refund event.
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  The user whose account was credited.
+</ResponseField>
+
+<ResponseField name="eventTimestamp" type="string (ISO 8601)">
+  When the refund event was processed.
+</ResponseField>
+
+<ResponseField name="originalTransactionId" type="string">
+  The ID of the original purchase transaction this refund reverses.
+</ResponseField>
+
+<ResponseField name="originalTransactionTimestamp" type="string (ISO 8601)">
+  Timestamp of the original transaction.
+</ResponseField>
+
+<ResponseField name="refundDetails" type="object">
+  Financial details of the refund including amount and currency.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "reportId": "ref_uuid_002",
+  "userId": "user_abc",
+  "eventTimestamp": "2026-04-16T08:00:00Z",
+  "originalTransactionId": "txn_uuid_001",
+  "originalTransactionTimestamp": "2026-04-15T10:23:00Z",
+  "refundDetails": {
+    "amount": 42.50,
+    "currencyCode": "EUR"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Users
+
+### Change User Status
+
+**`POST /api/v1/users/{userId}/status`**
+
+Suspend or unsuspend a user's CoinBridge account. A suspended user cannot make payments.
+
+#### Path Parameters
+
+<ParamField path="userId" type="string" required>
+  The unique identifier of the user.
+</ParamField>
+
+#### Request Body
+
+<ParamField body="status" type="string" required>
+  The action to apply. One of: `SUSPEND` or `UNSUSPEND`.
+</ParamField>
+
+<ResponseExample>
+```json Request
+{
+  "status": "SUSPEND"
+}
+```
+</ResponseExample>
+
+---
+
+### Delete User
+
+**`DELETE /api/v1/users/{userId}`**
+
+Permanently delete a user's CoinBridge account and associated data.
+
+<Warning>
+This action is irreversible. The user's card and wallet data will be permanently removed from the CoinBridge system.
+</Warning>
+
+#### Path Parameters
+
+<ParamField path="userId" type="string" required>
+  The unique identifier of the user to delete.
+</ParamField>
+
+---
+
+## Schema Reference
+
+### ApiTransactionDetailsDTO
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | string | Unique transaction identifier. |
+| `timestamp` | string (ISO 8601) | When the transaction occurred. |
+| `billingAmount` | float | Amount charged in the billing currency. |
+| `billingCurrencyCode` | string | ISO 4217 billing currency (e.g., `EUR`). |
+| `transactionAmount` | float | Amount in the original transaction currency. |
+| `transactionCurrencyCode` | string | ISO 4217 transaction currency. |
+| `countryCode` | string | ISO 3166 country code where the transaction occurred. |
+| `mccCode` | string | Merchant Category Code. |
+| `authCode` | string | Authorization code returned by the card scheme. |
+| `source` | string | Payment source (e.g., `NFC`). |
+| `wallet` | string | Wallet used (e.g., `GOOGLE_WALLET`, `APPLE_WALLET`). |
+| `rrn` | string | Retrieval Reference Number from the card scheme. |
+
+### EventDTO
+
+Used in `linkedRefunds` and `linkedCorrections` arrays on a transaction response.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string (ISO 8601) | When the event occurred. |
+| `type` | string | One of: `TRANSACTION`, `REFUND`, `CORRECTION`. |
+| `amount` | float | Amount associated with the event. |
+| `currencyCode` | string | ISO 4217 currency code. |

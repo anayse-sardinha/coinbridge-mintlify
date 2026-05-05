@@ -2,7 +2,7 @@
 title: "Check User Eligibility"
 ---
 
-Before a user can subscribe to CoinBridge services or issue a virtual card, you can have them pass a eligibility check to ensure they meet all financial and regulatory criteria.
+Before a user can subscribe to CoinBridge services or issue a virtual card, you can have them pass an eligibility check to ensure they meet all financial and regulatory criteria.
 
 ## Why Check Eligibility?
 You might want to check eligibility for the following reasons:
@@ -17,18 +17,28 @@ While optional, calling this method allows you to disable the feature for inelig
 ## Implementation
 The `isEligible` method validates the user. The only requirement is that `initialize` must be called first.
 
-#### iOS Implementation
-Use the `isEligible` method within the `CoinBridge` singleton class: 
+<Tabs>
+  <Tab title="Android">
+    Use the `isEligible` method from the `CoinBridgeSDK` instance:
 
-```swift
-CoinBridge.sharedInstance.isEligible { result in
-    switch result {
-    case .onSuccess:
-        // User is eligible. 
-        // Redirect the user to the onboarding process.
-    case .onError(let error):
-        // User is NOT eligible. 
-        // The reason for ineligibility is provided through the Backend Connector.
+    ```java
+    CoinBridgeSDK.getInstance().isEligible(context, OnIsEligibleCallback onIsEligibleCallback)
+    ```
+  </Tab>
+  <Tab title="iOS">
+    Use the `isEligible` method within the `CoinBridge` singleton class:
+
+    ```swift
+    CoinBridge.sharedInstance.isEligible { result in
+        switch result {
+        case .onSuccess:
+            // User is eligible. 
+            // Redirect the user to the onboarding process.
+        case .onError(let error):
+            // User is NOT eligible. 
+            // The reason for ineligibility is provided through the Backend Connector.
+        }
     }
-}
-```
+    ```
+  </Tab>
+</Tabs>

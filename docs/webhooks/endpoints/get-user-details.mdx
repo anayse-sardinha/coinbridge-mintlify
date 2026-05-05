@@ -16,19 +16,33 @@ This flow illustrates the end-to-end authentication handshake required to verify
 
 <Note>
 ### Prerequisites:
-To ensure a successful eligibility check, the CoinBridge SDK must be [initialized](/ios-sdk/get-started/how-the-coinbridge-payment-process-works) before you call the eligibility method.
+To ensure a successful eligibility check, the CoinBridge SDK must be [initialized](/docs/sdk/installation/initialize) before you call the eligibility method.
 </Note>
 
 ![User Eligibility Flow](/images/end-user-details.jpg)
 
 The following steps break down the sequential logic of the validation process:
 
-1. The **Application** starts the process by sending a `Login` request to the **Application Back-End**.
-2. The **Application Back-End** identifies the user and sends a `UserId` back to the **Application**.
-3. With this ID in hand, the **Application** asks the **CoinBridge SDK** to `Authenticate (with userId)`.
-4. The **CoinBridge SDK** forwards this `Authentication` request to the **Coinbridge Backend**.
-5. To verify the request, the **Coinbridge Backend** reaches out to the **Application Back-End** to pull specific user info and confirms if the user is **Valid** or **Invalid**.
-6. Once verified, the **Coinbridge Backend** sends the `Authentication Result` back through the **CoinBridge SDK**, which passes the final status to the **Application** to wrap up the process.
+<Steps>
+  <Step title="Login Request">
+    The **Application** sends a `Login` request to the **Application Back-End**.
+  </Step>
+  <Step title="User Identification">
+    The **Application Back-End** identifies the user and sends a `UserId` back to the **Application**.
+  </Step>
+  <Step title="SDK Authentication">
+    The **Application** asks the **CoinBridge SDK** to `Authenticate (with userId)`.
+  </Step>
+  <Step title="Backend Request">
+    The **CoinBridge SDK** forwards the `Authentication` request to the **CoinBridge Backend**.
+  </Step>
+  <Step title="User Verification">
+    The **CoinBridge Backend** reaches out to the **Application Back-End** to verify the user is **Valid** or **Invalid**.
+  </Step>
+  <Step title="Authentication Result">
+    The **CoinBridge Backend** sends the result back through the **CoinBridge SDK** to the **Application**.
+  </Step>
+</Steps>
 
 <Note>
   If your application needs to supply additional data to enable specific services, use this endpoint to transmit that information. Please consult the **CoinBridge Product Team** before modifying the response schema.
@@ -59,12 +73,8 @@ The following steps break down the sequential logic of the validation process:
 
 See more about this process:
 
-<CardGroup cols={2}>
-  <Card title="User Eligibility (Android SDK)" icon="android" href="/docs/android-sdk/sdk/installation/user-eligibility">
-    Verify user eligibility for card issuance and services to ensure regulatory compliance.
-  </Card>
-
-  <Card title="User Eligibility (iOS SDK)" icon="apple" href="/docs/ios-sdk/sdk/installation/user-eligibility">
+<CardGroup cols={1}>
+  <Card title="Check User Eligibility" icon="mobile" href="/docs/sdk/installation/user-eligibility">
     Verify user eligibility for card issuance and services to ensure regulatory compliance.
   </Card>
 </CardGroup>

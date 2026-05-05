@@ -2,7 +2,7 @@
 title: "Payment Process Overview"
 ---
 
-Once you complete the [Card Setup](docs/android-sdk/get-started/card-setup-overview.mdx), the primary role of the SDK is complete. From this point, payments are managed through real-time communication between the CoinBridge webhooks and your own servers.
+Once you complete the [Card Setup](/docs/sdk/card-setup-overview), the primary role of the SDK is complete. From this point, payments are managed through real-time communication between the CoinBridge webhooks and your own servers.
 
 ## Authorization Models
 CoinBridge operates similarly to a debit card issuer. When a user taps their device, the system authorizes the transaction using one of two models:
@@ -15,21 +15,30 @@ CoinBridge operates similarly to a debit card issuer. When a user taps their dev
 ## The Payment Lifecycle
 Every transaction follows this four-step sequence to verify funds and permissions.
 
-1. **The Tap**: The user taps their phone or watch at an EMV terminal. This action triggers the `prepareToPay` method via the **CoinBridge SDK**.
-2. **Scheme Notify**: Mastercard or Visa recognizes the card and requests transaction approval from CoinBridge.
-3. **Resolution**: The **CoinBridge Backend** fetches data from your **Customer Backend** to authorize the tap:
+<Steps>
+  <Step title="The Tap">
+    The user taps their phone or watch at an EMV terminal, initiating the payment authorization.
+  </Step>
+  <Step title="Scheme Notify">
+    Mastercard or Visa recognizes the card and requests transaction approval from CoinBridge.
+  </Step>
+  <Step title="Resolution">
+    The **CoinBridge Backend** fetches data from your **Customer Backend** to authorize the tap:
     * **Check Balance (Required)**: Your system returns the user’s available funds and currency.
     * **Verify Policy (Optional)**: Your system enforces rules like Merchant Category Code (MCC) restrictions or Country Code blocking.
-4. **Notification**: 
-    * **SDK Side**: CoinBridge sends a `Prepare Result` to your app. A success response enables the device's NFC component to complete the transaction.
+  </Step>
+  <Step title="Notification">
+    * **SDK Side**: CoinBridge notifies your app of the authorization result. An approval enables the device’s NFC component to complete the transaction.
     * **User Side**: The user receives an immediate notification from their mobile wallet and your application.
+  </Step>
+</Steps>
 
 ## Required Backend Integration
 Your backend must implement these endpoints to sync with the payment lifecycle and manage post-authorization events:
 
-* **[Transaction Report](/docs/backend/transaction-report)**: This confirms if the system successfully charged the user or declined the transaction.
-* **[Refund Report](/docs/backend/refund-report)**: This triggers when a merchant initiates a refund at the terminal. The card scheme approves these automatically.
-* **[Corrections](/docs/backend/corrections)**: These update previously approved transactions during the "Settlement" phase, handling issues like currency fluctuations or transaction expirations.
+* **[Transaction Report](/docs/payments/transaction-report)**: This confirms if the system successfully charged the user or declined the transaction.
+* **[Refund Report](/docs/payments/refund-report)**: This triggers when a merchant initiates a refund at the terminal. The card scheme approves these automatically.
+* **[Corrections](/docs/payments/transaction-corrections)**: These update previously approved transactions during the "Settlement" phase, handling issues like currency fluctuations or transaction expirations.
 
 ```mermaid
 graph TD

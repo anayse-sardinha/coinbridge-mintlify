@@ -1,0 +1,142 @@
+---
+title: "Initialization"
+---
+
+Initialization synchronizes the CoinBridge SDK with the backend. Call it on every app launch to verify payment readiness and retrieve the latest card status.
+
+<Tabs>
+  <Tab title="First-Time Setup">
+    For new users who have no existing digital card.
+
+    <Steps>
+      1. **Authenticate**: Link the logged-in user to the SDK and backend.
+      2. **Initialize**: Start the backend synchronization. You must wait for the `onInitComplete` callback before proceeding.
+      3. **Check Eligibility (Optional)**: If configured, verify the user is eligible for a card before starting the issuing flow.
+      4. **Issue Card**: Call `issueCard` to create the digital payment method.
+      5. **Add Card to Wallet**: Push the new virtual card to the device's native wallet.
+    </Steps>
+    <Note> These are the required steps for a new user's first login. If this process is interrupted, resume from the last checkpoint. </Note>
+  </Tab>
+
+  <Tab title="The Re-login">
+    For users who log back in or reinstall the app but already have a card associated with their ID. Use this flow when `hasCard` returns true during authentication.
+
+    <Steps>
+      1. **Authenticate**: Re-establish the user session with the backend.
+      2. **Initialize**: Fetch existing card details and token states. The backend will identify that a card already exists.
+      3. **Add Card to Wallet**: Do **not** call `issueCard`. Simply add the existing card to the native wallet on the new device.
+    </Steps>
+
+  </Tab>
+
+  <Tab title="Standard App Launch">
+    Day-to-day use to ensure the SDK has the most up-to-date security and balance information.
+
+    <Steps>
+      1. **Initialize**: Re-sync with the backend to get the latest parameters. No wallet re-creation occurs.
+      2. **Sync UI**: Update your interface using the `CBPaymentStatus` object to reflect changes in eligibility, fraud locks, or card state.
+    </Steps>
+
+  </Tab>
+</Tabs>
+
+<Warning>
+  Always call `logout` when a user exits your application. Skipping this leaves multiple active wallets open for a single user, causing identification mismatches and server overload.
+</Warning>
+
+## Platform Implementation
+
+<Note>
+  You must wait for the successful [`onAuthenticated`](/docs/sdk/installation/authentication) callback before calling `initialize`.
+</Note>
+
+Once authenticated, call `initialize` to start the backend synchronization. The callback returns `hasCard` and `CBPaymentStatus`, which determine which flow applies to the current user.
+
+<Tabs>
+  <Tab title="Android">
+    Call `init` within your activity's `onCreate()` method:
+
+    ```java
+    CoinBridgeSDK.getInstance().init(activity, new OnInitCallback() {
+        @Override
+        public void onInitComplete(boolean hasCard, CBPaymentStatus cbPaymentStatus) {
+        }
+
+        @Override
+        public void onError(CBError<InitError> cbError) {
+        }
+    });
+    ```
+  </Tab>
+  <Tab title="iOS">
+    Call `initilize` within the primary View Controller of your payment flow:
+
+    ```swift
+    CoinBridge.sharedInstance.initilize { cbInitCompletion in
+        switch cbInitCompletion {
+        case .initCompleted(let hasCard, let status):
+            // Continue pre-payment flow
+        case .onError(let error):
+            // Handle InitError (see Backup and Reinstall Handling below for mandatory case)
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## UI Logic with CBPaymentStatus
+`CBPaymentStatus` returns the current state of the user's payment method. Use these values to decide what to display:
+
+| Component | Response | Required UI Action |
+| :--- | :--- | :--- |
+| **`CBCardStatus`** | `ACTIVE` | Display card art and allow payment flow. |
+| | `NOT_ACTIVE` | Disable payments; prompt user to contact support. |
+| **`hasCard`** | `false` | Redirect user to onboarding/subscription process. |
+| **`TokenStatus`** | `NONE` | Display the **"Add to Wallet"** button. |
+| | `ACTIVE` | Display **"Pay"** button and hide provisioning options. |
+
+## Backup and Reinstall Handling <Badge icon="apple" color="blue">iOS only</Badge>
+
+When an iPhone is restored from an iCloud backup or the app is reinstalled, keychain credentials become invalid. The SDK signals this with the `authenticationStateInvalid` error. Detect this case, call `logout()`, and redirect the user to re-authenticate.
+
+<Warning>
+  This handler is mandatory. Without it, `initilize()` fails on every call, leaving the user stuck until they log out manually.
+</Warning>
+
+```swift
+CoinBridge.sharedInstance.initilize { cbInitCompletion in
+    switch cbInitCompletion {
+    case .initCompleted(let hasCard, let status):
+        // Continue pre-payment flow
+    case .onError(let error):
+        switch error.errorCode {
+        case .authenticationStateInvalid:
+            // Keychain credentials stale: iPhone restored or app reinstalled
+            // Force logout and require the user to re-authenticate
+            CoinBridge.sharedInstance.logout()
+            // Navigate to your login screen
+        default:
+            // Handle other init errors
+        }
+    }
+}
+```
+
+## Payment Status Notifications <Badge icon="apple" color="blue">iOS only</Badge>
+
+The SDK delivers card and token status updates through `CBNotificationService`. Your class must conform to `CBNotificationServiceObserver` and subscribe to receive `onPaymentMethodStatusChange` callbacks.
+
+```swift
+class MyClass: CBNotificationServiceObserver {
+
+    // Subscribe to notifications
+    let observerID = CBNotificationService.subscribe(observer: self)
+
+    // Unsubscribe when done
+    CBNotificationService.unsubscribe(observerID: observerID)
+}
+```
+
+<Note>
+If `onPaymentMethodStatusChange` does not fire within 10 seconds after initialization, re-run the pre-payment flow. This may occur during testing and should not happen in production.
+</Note>
