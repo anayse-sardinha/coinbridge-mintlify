@@ -25,11 +25,11 @@
             "groups": [
               {
                 "group": "Integration Journey",
-                "page": "docs/sdk/integration-journey"
+                "pages": ["docs/sdk/integration-journey"]
               },
               {
                 "group": "How CoinBridge Works",
-                "page": "docs/sdk/what-is-coinbridge"
+                "pages": ["docs/sdk/what-is-coinbridge"]
               },
               {
                 "group": "Get Started",
@@ -63,7 +63,7 @@
               },
               {
                 "group": "Error Codes",
-                "root": "docs/sdk/error-codes"
+                "pages": "docs/sdk/error-codes"
               }
             ]
           },
