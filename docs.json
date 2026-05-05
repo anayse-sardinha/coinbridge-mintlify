@@ -15,36 +15,31 @@
         "pages": ["index"]
       },
       {
-        "tab": "Guides",
+        "tab": "Platform",
+        "pages": [
+          "docs/sdk/what-is-coinbridge",
+          "docs/sdk/how-the-coinbridge-payment-process-works",
+          "docs/sdk/integration-journey",
+          "docs/sdk/implementation-roadmap",
+          "docs/sdk/requirements/coinbridge",
+          "docs/sdk/requirements/customer-technology",
+          "resources/roadmap"
+        ]
+      },
+      {
+        "tab": "Developer Guides",
         "groups": [
-          {
-            "group": "Integration Journey",
-            "pages": ["docs/sdk/integration-journey"]
-          },
-          {
-            "group": "How CoinBridge Works",
-            "pages": [
-              "docs/sdk/what-is-coinbridge",
-              "docs/sdk/how-the-coinbridge-payment-process-works"
-            ]
-          },
           {
             "group": "Get Started",
             "pages": [
-              "docs/sdk/implementation-roadmap",
               "docs/sdk/to-start",
-              "docs/sdk/card-setup-overview"
+              "docs/sdk/card-setup-overview",
+              "docs/developer/requirements/coinbridge",
+              "docs/developer/requirements/customer-technology"
             ]
           },
           {
-            "group": "Requirements",
-            "pages": [
-              "docs/sdk/requirements/coinbridge",
-              "docs/sdk/requirements/customer-technology"
-            ]
-          },
-          {
-            "group": "Set Up Your Card",
+            "group": "Mobile SDK",
             "pages": [
               "docs/sdk/installation/authentication",
               "docs/sdk/installation/initialize",
@@ -54,20 +49,11 @@
             ]
           },
           {
-            "group": "Error Codes",
-            "pages": ["docs/sdk/error-codes"]
-          },
-          {
-            "group": "Connector Overview",
+            "group": "Backend Connector",
             "pages": [
               "docs/webhooks/index",
               "docs/webhooks/authentication",
-              "docs/webhooks/environments"
-            ]
-          },
-          {
-            "group": "Endpoints",
-            "pages": [
+              "docs/webhooks/environments",
               "docs/webhooks/endpoints/get-user-details",
               "docs/webhooks/endpoints/get-user-balance",
               "docs/webhooks/endpoints/get-spending-policies",
@@ -82,12 +68,13 @@
             ]
           },
           {
-            "group": "Payments",
+            "group": "Reference",
             "pages": [
               "docs/payments/payments",
               "docs/payments/transaction-report",
               "docs/payments/refund-report",
-              "docs/payments/transaction-corrections"
+              "docs/payments/transaction-corrections",
+              "docs/sdk/error-codes"
             ]
           }
         ]
@@ -125,18 +112,6 @@
             "pages": ["docs/coinbridge-api/schema-reference"]
           }
         ]
-      }
-    ],
-    "anchors": [
-      {
-        "anchor": "SDK",
-        "icon": "mobile",
-        "url": "docs/sdk"
-      },
-      {
-        "anchor": "Backend Connector",
-        "icon": "server",
-        "url": "docs/webhooks"
       }
     ]
   },
