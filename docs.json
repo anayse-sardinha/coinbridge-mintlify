@@ -16,14 +16,24 @@
       },
       {
         "tab": "Platform",
-        "pages": [
-          "docs/sdk/what-is-coinbridge",
-          "docs/sdk/how-the-coinbridge-payment-process-works",
-          "docs/sdk/integration-journey",
-          "docs/sdk/implementation-roadmap",
-          "docs/sdk/requirements/coinbridge",
-          "docs/sdk/requirements/customer-technology",
-          "resources/roadmap"
+        "groups": [
+          {
+            "group": "About CoinBridge",
+            "pages": [
+              "docs/sdk/what-is-coinbridge",
+              "docs/sdk/how-the-coinbridge-payment-process-works"
+            ]
+          },
+          {
+            "group": "Integration Planning",
+            "pages": [
+              "docs/sdk/integration-journey",
+              "docs/sdk/implementation-roadmap",
+              "docs/sdk/requirements/coinbridge",
+              "docs/sdk/requirements/customer-technology",
+              "resources/roadmap"
+            ]
+          }
         ]
       },
       {
@@ -83,33 +93,22 @@
         "tab": "API",
         "groups": [
           {
-            "group": "API Overview",
+            "group": "Overview",
             "pages": [
               "docs/coinbridge-api/overview",
               "docs/coinbridge-api/authentication"
             ]
           },
           {
-            "group": "Transactions",
+            "group": "Endpoints",
             "pages": [
               "docs/coinbridge-api/get-transaction",
-              "docs/coinbridge-api/list-transactions"
-            ]
-          },
-          {
-            "group": "Refunds",
-            "pages": ["docs/coinbridge-api/get-refund"]
-          },
-          {
-            "group": "Users",
-            "pages": [
+              "docs/coinbridge-api/list-transactions",
+              "docs/coinbridge-api/get-refund",
               "docs/coinbridge-api/change-user-status",
-              "docs/coinbridge-api/delete-user"
+              "docs/coinbridge-api/delete-user",
+              "docs/coinbridge-api/schema-reference"
             ]
-          },
-          {
-            "group": "Reference",
-            "pages": ["docs/coinbridge-api/schema-reference"]
           }
         ]
       }
