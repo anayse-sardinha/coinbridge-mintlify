@@ -1,0 +1,51 @@
+---
+title: List Transactions
+description: "Retrieve a paginated list of transactions for a given date."
+---
+
+Returns all transactions for a given calendar date, paginated at 20 per page. Use this for end-of-day reconciliation or to populate a transaction history view.
+
+**`GET /api/v1/transactions`**
+
+## Query Parameters
+
+<ParamField query="date" type="string (YYYY-MM-DD)" required>
+  The date to retrieve transactions for.
+</ParamField>
+
+<ParamField query="page" type="number">
+  Page number (1-based). Defaults to `1`.
+</ParamField>
+
+## Response
+
+<ResponseField name="transactions" type="array">
+  List of transactions for the requested date and page. Each item follows the [GetTransactionResDTO](/docs/coinbridge-api/get-transaction) structure.
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Pagination metadata including total count, current page, and page size.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "transactions": [
+    {
+      "approved": true,
+      "transactionDetails": {
+        "id": "txn_uuid_001",
+        "timestamp": "2026-04-15T10:23:00Z",
+        "billingAmount": 42.50,
+        "billingCurrencyCode": "EUR"
+      }
+    }
+  ],
+  "pagination": {
+    "total": 84,
+    "page": 1,
+    "pageSize": 20
+  }
+}
+```
+</ResponseExample>

@@ -25,15 +25,11 @@
             "groups": [
               {
                 "group": "Integration Journey",
-                "pages": [
-                  "docs/sdk/integration-journey"
-                ]
+                "root": "docs/sdk/integration-journey"
               },
               {
                 "group": "How CoinBridge Works",
-                "pages": [
-                  "docs/sdk/what-is-coinbridge"
-                ]
+                "root": "docs/sdk/what-is-coinbridge"
               },
               {
                 "group": "Get Started",
@@ -67,9 +63,7 @@
               },
               {
                 "group": "Error Codes",
-                "pages": [
-                  "docs/sdk/error-codes"
-                ]
+                "root": "docs/sdk/error-codes"
               }
             ]
           },
@@ -116,8 +110,40 @@
       },
       {
         "tab": "API",
-        "pages": [
-          "docs/coinbridge-api/coinbridge-api"
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "docs/coinbridge-api/overview",
+              "docs/coinbridge-api/authentication"
+            ]
+          },
+          {
+            "group": "Transactions",
+            "pages": [
+              "docs/coinbridge-api/get-transaction",
+              "docs/coinbridge-api/list-transactions"
+            ]
+          },
+          {
+            "group": "Refunds",
+            "pages": [
+              "docs/coinbridge-api/get-refund"
+            ]
+          },
+          {
+            "group": "Users",
+            "pages": [
+              "docs/coinbridge-api/change-user-status",
+              "docs/coinbridge-api/delete-user"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "docs/coinbridge-api/schema-reference"
+            ]
+          }
         ]
       }
     ]

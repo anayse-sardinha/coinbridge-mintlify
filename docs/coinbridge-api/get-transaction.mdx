@@ -1,0 +1,64 @@
+---
+title: Get Transaction
+description: "Retrieve the full details of a single transaction by its UUID."
+---
+
+Returns everything CoinBridge has on a single transaction: approval status, merchant details, and any refunds or corrections linked to it. Good for transaction detail screens or investigating a specific payment.
+
+**`GET /api/v1/transactions/{transactionId}`**
+
+## Path Parameters
+
+<ParamField path="transactionId" type="string (UUIDv4)" required>
+  The unique identifier of the transaction.
+</ParamField>
+
+## Response
+
+<ResponseField name="approved" type="boolean">
+  Whether the transaction was approved.
+</ResponseField>
+
+<ResponseField name="declineReason" type="string">
+  Human-readable decline reason, if the transaction was not approved.
+</ResponseField>
+
+<ResponseField name="declineDetails" type="string">
+  Additional technical detail about the decline, if available.
+</ResponseField>
+
+<ResponseField name="transactionDetails" type="object">
+  Full transaction metadata. See [ApiTransactionDetailsDTO](/docs/coinbridge-api/schema-reference#apitransactiondetailsdto).
+</ResponseField>
+
+<ResponseField name="linkedRefunds" type="array">
+  List of refund events linked to this transaction. Each item follows the [EventDTO](/docs/coinbridge-api/schema-reference#eventdto) structure.
+</ResponseField>
+
+<ResponseField name="linkedCorrections" type="array">
+  List of correction events linked to this transaction. Each item follows the [EventDTO](/docs/coinbridge-api/schema-reference#eventdto) structure.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "approved": true,
+  "transactionDetails": {
+    "id": "txn_uuid_001",
+    "timestamp": "2026-04-15T10:23:00Z",
+    "billingAmount": 42.50,
+    "billingCurrencyCode": "EUR",
+    "transactionAmount": 42.50,
+    "transactionCurrencyCode": "EUR",
+    "countryCode": "DEU",
+    "mccCode": "5411",
+    "authCode": "AUTH123",
+    "source": "NFC",
+    "wallet": "GOOGLE_WALLET",
+    "rrn": "123456789012"
+  },
+  "linkedRefunds": [],
+  "linkedCorrections": []
+}
+```
+</ResponseExample>

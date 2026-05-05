@@ -1,0 +1,34 @@
+---
+title: Schema Reference
+description: "Data transfer object schemas used in the CoinBridge Client API."
+---
+
+Field definitions for the objects returned by the transaction and refund endpoints.
+
+## ApiTransactionDetailsDTO
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | string | Unique transaction identifier. |
+| `timestamp` | string (ISO 8601) | When the transaction occurred. |
+| `billingAmount` | float | Amount charged in the billing currency. |
+| `billingCurrencyCode` | string | ISO 4217 billing currency (e.g., `EUR`). |
+| `transactionAmount` | float | Amount in the original transaction currency. |
+| `transactionCurrencyCode` | string | ISO 4217 transaction currency. |
+| `countryCode` | string | ISO 3166 country code where the transaction occurred. |
+| `mccCode` | string | Merchant Category Code. |
+| `authCode` | string | Authorization code returned by the card scheme. |
+| `source` | string | Payment source (e.g., `NFC`). |
+| `wallet` | string | Wallet used (e.g., `GOOGLE_WALLET`, `APPLE_WALLET`). |
+| `rrn` | string | Retrieval Reference Number from the card scheme. |
+
+## EventDTO
+
+Used in `linkedRefunds` and `linkedCorrections` arrays on a transaction response.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `timestamp` | string (ISO 8601) | When the event occurred. |
+| `type` | string | One of: `TRANSACTION`, `REFUND`, `CORRECTION`. |
+| `amount` | float | Amount associated with the event. |
+| `currencyCode` | string | ISO 4217 currency code. |

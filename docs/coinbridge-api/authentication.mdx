@@ -1,0 +1,89 @@
+---
+title: Authentication
+description: "Obtain and refresh OAuth2 access tokens for the CoinBridge Client API."
+---
+
+The Client API uses **OAuth2** with short-lived access tokens. All endpoints except `/auth/getTokens` and `/auth/refreshAccessToken` require a `Bearer` token in the `Authorization` header.
+
+## Get Tokens
+
+**`POST /api/v1/auth/getTokens`**
+
+Exchange your credentials for an OAuth2 token pair.
+
+### Request Body
+
+<ParamField body="username" type="string" required>
+  Your CoinBridge API username.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Your CoinBridge API password. Must be at least 12 characters and include uppercase, lowercase, a number, and a special character.
+</ParamField>
+
+### Response
+
+<ResponseField name="token_type" type="string">
+  Always `Bearer`.
+</ResponseField>
+
+<ResponseField name="expires_in" type="number">
+  Token lifetime in seconds.
+</ResponseField>
+
+<ResponseField name="access_token" type="string">
+  Short-lived JWT used in the `Authorization` header for all API calls.
+</ResponseField>
+
+<ResponseField name="refresh_token" type="string">
+  Long-lived token used to obtain a new access token without re-entering credentials.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJhbGci...",
+  "refresh_token": "dGhpcyBp..."
+}
+```
+</ResponseExample>
+
+---
+
+## Refresh Access Token
+
+**`POST /api/v1/auth/refreshAccessToken`**
+
+Exchange a refresh token for a new access token.
+
+### Request Body
+
+<ParamField body="refresh_token" type="string" required>
+  The refresh token received from `/auth/getTokens`.
+</ParamField>
+
+### Response
+
+<ResponseField name="token_type" type="string">
+  Always `Bearer`.
+</ResponseField>
+
+<ResponseField name="expires_in" type="number">
+  Token lifetime in seconds.
+</ResponseField>
+
+<ResponseField name="access_token" type="string">
+  New short-lived JWT for API requests.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJhbGci..."
+}
+```
+</ResponseExample>

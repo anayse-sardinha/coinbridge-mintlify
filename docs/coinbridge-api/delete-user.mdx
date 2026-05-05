@@ -1,0 +1,18 @@
+---
+title: Delete User
+description: "Permanently delete a user's CoinBridge account and associated data."
+---
+
+Permanently removes a user's account from CoinBridge, including their virtual card and wallet tokens. Use this when a user closes their account on your platform.
+
+**`DELETE /api/v1/users/{userId}`**
+
+<Warning>
+This action is irreversible. The user's card and wallet data will be permanently removed from the CoinBridge system.
+</Warning>
+
+## Path Parameters
+
+<ParamField path="userId" type="string" required>
+  The unique identifier of the user to delete.
+</ParamField>

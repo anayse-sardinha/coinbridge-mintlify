@@ -1,0 +1,56 @@
+---
+title: Get Refund
+description: "Retrieve details of a specific refund by its UUID."
+---
+
+Returns the details of a single refund event, including the credited amount, the original transaction it reverses, and when it was processed.
+
+**`GET /api/v1/refunds/{refundId}`**
+
+## Path Parameters
+
+<ParamField path="refundId" type="string (UUIDv4)" required>
+  The unique identifier of the refund.
+</ParamField>
+
+## Response
+
+<ResponseField name="reportId" type="string">
+  Unique identifier for this refund event.
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  The user whose account was credited.
+</ResponseField>
+
+<ResponseField name="eventTimestamp" type="string (ISO 8601)">
+  When the refund event was processed.
+</ResponseField>
+
+<ResponseField name="originalTransactionId" type="string">
+  The ID of the original purchase transaction this refund reverses.
+</ResponseField>
+
+<ResponseField name="originalTransactionTimestamp" type="string (ISO 8601)">
+  Timestamp of the original transaction.
+</ResponseField>
+
+<ResponseField name="refundDetails" type="object">
+  Financial details of the refund including amount and currency.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "reportId": "ref_uuid_002",
+  "userId": "user_abc",
+  "eventTimestamp": "2026-04-16T08:00:00Z",
+  "originalTransactionId": "txn_uuid_001",
+  "originalTransactionTimestamp": "2026-04-15T10:23:00Z",
+  "refundDetails": {
+    "amount": 42.50,
+    "currencyCode": "EUR"
+  }
+}
+```
+</ResponseExample>
